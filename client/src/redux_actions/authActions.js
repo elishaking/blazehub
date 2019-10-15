@@ -1,0 +1,58 @@
+import axios from 'axios';
+import jwt_decode from 'jwt-decode';
+import { GET_ERRORS, SET_CURRENT_USER } from './types';
+
+// ===ACTIONS===
+
+const getErrors = (errorData) => ({
+  type: GET_ERRORS,
+  payload: errorData
+});
+
+const setCurrentUser = (userData) => ({
+  type: SET_CURRENT_USER,
+  payload: userData
+});
+
+// ===ACTION CREATORS===
+
+// @action-type GET_ERRORS
+// @description sign-up user
+export const signupUser = (userData, history) => (dispatch) => {
+  axios.post('/api/users/signup', userData)
+    .then((res) => history.push('/login'))
+    .catch((err) => dispatch(getErrors(err.response.data)));
+};
+
+// @action-type GET_ERRORS
+// @description sign-in/authenticate user
+export const signinUser = (userData) => (dispatch) => {
+  axios.post("/api/users/signin", userData)
+    .then((res) => {
+      // save token to localStorage to enable global access
+      const token = res.data.token;
+      localStorage.setItem('jwtToken', token);
+
+      // add token to axios Authorization Header
+      setAuthToken(token);
+
+      // get user data from jwt-token
+      const decodedUserData = jwt_decode(token);
+
+      dispatch(setCurrentUser(decodedUserData));
+    })
+    .catch((err) => dispatch(getErrors(err.response.data)));
+}
+
+
+// ===UTILS===
+// adds/deletes @token from the Authorization Header
+const setAuthToken = (token) => {
+  if (token) {
+    // Apply token to every request
+    axios.defaults.headers.common['Authorization'] = token;
+  } else {
+    // Delete Auth Header
+    delete axios.defaults.headers.common['Authorization'];
+  }
+}
