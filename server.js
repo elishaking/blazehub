@@ -4,6 +4,9 @@ const dotenv = require('dotenv');
 
 const server = express();
 
+// load environment variables
+dotenv.config();
+
 server.use(helmet());
 
 server.use(express.json());
@@ -18,8 +21,9 @@ server.get("/", (req, res) => {
   res.send("Welcome");
 });
 
-// load environment variables
-dotenv.config();
+const users = require('./routes/api/users');
+
+server.use("/api/users", users);
 
 server.listen(process.env.PORT, () => {
   console.log("Server online");
