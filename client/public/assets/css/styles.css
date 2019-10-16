@@ -22,3 +22,12 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
 }
+
+@media (max-width: 1000px) {
+  .content .left {
+    background-image: url(../img/info-bg.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+}

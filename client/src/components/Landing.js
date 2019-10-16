@@ -17,7 +17,7 @@ export default class Landing extends Component {
   }
 
   resize = () => {
-    const newMethod = document.body.clientWidth > 1300 ? "POST" : "GET";
+    const newMethod = document.body.clientWidth > 1550 ? "POST" : "GET";
     if (this.state.method !== newMethod) {
       this.setState({
         ...this.state,
@@ -32,7 +32,7 @@ export default class Landing extends Component {
         <header>
           <nav>
             <h1>
-              <img src={logo} alt="Logo" srcSet="" /> BlazeChat
+              <img src={logo} alt="Logo" srcSet="" /> <span>BlazeChat</span>
             </h1>
 
             <div className="nav-right">
