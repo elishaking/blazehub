@@ -61,6 +61,33 @@ select {
   border: 1px solid #7C62A9;
   border-radius: 5px;
   padding: 0.8em 2em;
+  transition: 0.3s ease-in-out;
+}
+
+input[type="text"]:focus {
+  /* border: 2px solid #7C62A9; */
+  box-shadow: 0 0 8px 0 #B1A3E1;
+  outline: none;
+}
+
+.icon-input {
+  position: relative;
+}
+
+.icon-input input {
+  display: block;
+  padding-left: 3em;
+}
+
+.icon-input .icon {
+  position: absolute;
+  top: 0.8em;
+  left: 0.8em;
+  color: #B1A3E1;
+}
+
+input[type="text"]:focus+.icon {
+  color: #7C62A9;
 }
 
 .btn-input {
