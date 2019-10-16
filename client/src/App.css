@@ -55,12 +55,34 @@ nav .text-input {
   display: initial;
 }
 
+.auth-nav .auth-nav-right,
+.auth-nav .logo {
+  flex-grow: 1;
+}
+
+.auth-nav .search {
+  flex: auto
+}
+
+.auth-nav .search input {
+  width: 100%;
+}
+
+.auth-nav-right {
+  text-align: end;
+}
+
+.auth-nav-right img,
+.auth-nav-right span {
+  margin-right: 1em;
+}
+
 input,
 select {
   font-family: 'Poppins', sans-serif;
   border: 1px solid #7C62A9;
   border-radius: 5px;
-  padding: 0.8em 2em;
+  padding: 0.7em 1.3em;
   transition: 0.3s ease-in-out;
 }
 
