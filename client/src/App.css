@@ -69,7 +69,14 @@ nav .text-input {
 }
 
 .auth-nav-right {
-  text-align: end;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.auth-nav-right svg {
+  height: 2em;
+  width: 2em !important;
 }
 
 .auth-nav-right img,

@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faUserCircle } from '@fortawesome/free-solid-svg-icons';
 
 class Home extends Component {
   render() {
+    const hasProfilePic = false;
     const { firstName, lastName } = this.props.auth.user;
     return (
       <div className="container">
@@ -22,7 +23,7 @@ class Home extends Component {
             </div>
 
             <div className="auth-nav-right">
-              <img src="" alt={firstName} srcset="" />
+              {hasProfilePic ? <img src="" alt={firstName} srcset="" /> : <FontAwesomeIcon icon={faUserCircle} className="icon" />} &nbsp;&nbsp;&nbsp;
               <span>{`${firstName} ${lastName}`}</span>
               <input type="button" value="Sign Out" className="btn-input" />
             </div>
