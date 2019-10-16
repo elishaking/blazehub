@@ -91,9 +91,9 @@ router.post('/signin', (req, res) => {
         // JWT payload
         const jwtPayload = {
           id: userKey,
-          firstName: req.body.firstName,
-          lastName: req.body.lastName,
-          email: req.body.email
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email
         };
 
         // Sign Token <==> encodes payload into token
