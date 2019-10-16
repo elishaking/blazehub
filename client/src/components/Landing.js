@@ -1,16 +1,33 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
-export default class Landing extends Component {
+import { signinUser, signupUser } from '../redux_actions/authActions';
+
+class Landing extends Component {
   constructor() {
     super();
     this.state = {
       method: "POST",
-      navLogo: "logo.svg"
+      navLogo: "logo.svg",
+
+      signinEmail: '',
+      signinPassword: '',
+
+      signupEmail: '',
+      signupPassword: '',
+      firstName: '',
+      lastName: '',
+      gender: '',
     };
   }
 
   componentDidMount() {
     window.addEventListener('resize', this.resize);
+
+    // if user is already authenticated, redirect to dashboard
+    if (this.props.auth.isAuthenticated) {
+      this.props.history.push('/home');
+    }
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.resize);
@@ -20,7 +37,6 @@ export default class Landing extends Component {
     const newMethod = document.body.clientWidth > 1550 ? "POST" : "GET";
     if (this.state.method !== newMethod) {
       this.setState({
-        ...this.state,
         method: newMethod
       });
     }
@@ -28,9 +44,25 @@ export default class Landing extends Component {
     const newLogo = document.body.clientWidth > 1000 ? "logo.svg" : "logo-pri.svg";
     if (this.state.navLogo !== newLogo) {
       this.setState({
-        ...this.state,
         navLogo: newLogo
       });
+    }
+  }
+
+  onChange = (event) => {
+    this.setState({
+      [event.target.name]: event.target.value
+    });
+  }
+
+  onSubmitSignin = (event) => {
+    event.preventDefault();
+    if (this.state.method === "POST") {
+      const userData = {
+        email: this.state.signinEmail,
+        password: this.state.signinPassword
+      };
+      this.props.signinUser(userData);
     }
   }
 
@@ -44,10 +76,10 @@ export default class Landing extends Component {
             </h1>
 
             <div className="nav-right">
-              <form action="/signin" method={this.state.method}>
+              <form id="signin-form" method={this.state.method} onSubmit={this.onSubmitSignin}>
                 <div className="signin-input">
-                  <input type="email" name="email" placeholder="email" className="text-input" />
-                  <input type="password" name="password" placeholder="password" className="text-input" />
+                  <input type="email" name="signinEmail" placeholder="email" className="text-input" onChange={this.onChange} />
+                  <input type="password" name="signinPassword" placeholder="password" className="text-input" onChange={this.onChange} />
                 </div>
                 <input type="submit" value="Sign In" className="btn-input" />
               </form>
@@ -87,12 +119,12 @@ export default class Landing extends Component {
               <form action="/signup">
                 <div>
                   <div className="name">
-                    <input type="text" name="firstName" id="firstName" placeholder="first name" />
-                    <input type="text" name="lastName" id="lastName" placeholder="last name" />
+                    <input type="text" name="firstName" id="firstName" placeholder="first name" onChange={this.onChange} />
+                    <input type="text" name="lastName" placeholder="last name" onChange={this.onChange} />
                   </div>
-                  <input type="email" name="email" id="email" placeholder="email" className="fill-parent" />
-                  <input type="password" name="password" id="password" placeholder="password" className="fill-parent" />
-                  <select name="gender" id="gender" className="fill-parent">
+                  <input type="email" name="signupEmail" placeholder="email" className="fill-parent" onChange={this.onChange} />
+                  <input type="password" name="signupPassword" id="password" placeholder="password" className="fill-parent" onChange={this.onChange} />
+                  <select name="gender" id="gender" className="fill-parent" onChange={this.onChange}>
                     <option hidden disabled selected value="other">gender</option>
                     <option value="male">Male</option>
                     <option value="female">Female</option>
@@ -108,3 +140,9 @@ export default class Landing extends Component {
     )
   }
 }
+
+const mapStateToProps = (state) => ({
+  auth: state.auth
+});
+
+export default connect(mapStateToProps, { signinUser, signupUser })(Landing);
