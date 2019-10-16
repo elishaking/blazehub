@@ -224,6 +224,43 @@ select {
   width: fit-content;
 }
 
+.main {
+  display: flex;
+}
+
+.main-nav {
+  width: 25%;
+  background-color: #F2EFF6;
+  padding: 1em 2em;
+  border-radius: 5px;
+}
+
+.main-nav h2 {
+  margin-bottom: .5em;
+}
+
+.main-nav h2 span {
+  font-weight: 500;
+}
+
+.main-nav ul {
+  list-style: none;
+}
+
+.main-nav li {
+  padding: 1.3em 0;
+}
+
+.main-nav a {
+  text-decoration: none;
+  color: #7C62A9;
+}
+
+.main-nav nav svg {
+  width: 1.3em !important;
+  height: 1.3em;
+}
+
 @media (max-width: 1550px) {
   .signin-input {
     display: none;

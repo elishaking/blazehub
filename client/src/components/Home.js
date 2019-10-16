@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faUserCircle } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faUserCircle, faHome, faUserAlt, faComments, faBookmark, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
 class Home extends Component {
   render() {
@@ -17,7 +18,7 @@ class Home extends Component {
 
             <div className="search">
               <div className="icon-input">
-                <input type="text" />
+                <input type="text" placeholder="Search" />
                 <FontAwesomeIcon icon={faSearch} className="icon" />
               </div>
             </div>
@@ -30,7 +31,53 @@ class Home extends Component {
           </nav>
         </header>
 
+        <div className="main">
+          <div className="main-nav">
+            <header>
+              <h2>
+                {hasProfilePic ? <img src="" alt={firstName} srcset="" /> : <FontAwesomeIcon icon={faUserCircle} className="icon" />} &nbsp;&nbsp;&nbsp;
+                <span>{`${firstName} ${lastName}`}</span>
+              </h2>
+            </header>
+            <nav>
+              <ul>
+                <li>
+                  <Link to="/home">
+                    <FontAwesomeIcon icon={faHome} /> &nbsp;&nbsp;&nbsp; Home
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/chat">
+                    <FontAwesomeIcon icon={faComments} /> &nbsp;&nbsp;&nbsp; Chat
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/profile">
+                    <FontAwesomeIcon icon={faUserAlt} /> &nbsp;&nbsp;&nbsp; Profile
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/bookmarks">
+                    <FontAwesomeIcon icon={faBookmark} /> &nbsp;&nbsp;&nbsp; Bookmarks
+                  </Link>
+                </li>
+                <li>
+                  <Link onClick={((e) => { console.log(e) })}>
+                    <FontAwesomeIcon icon={faSignOutAlt} /> &nbsp;&nbsp;&nbsp; Sign Out
+                  </Link>
+                </li>
+              </ul>
+            </nav>
+          </div>
 
+          <div className="main-feed">
+
+          </div>
+
+          <div className="extras">
+
+          </div>
+        </div>
       </div>
     )
   }
