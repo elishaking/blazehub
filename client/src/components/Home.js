@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faUserCircle, faHome, faUserAlt, faComments, faBookmark, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faUserCircle, faHome, faUserAlt, faComments, faBookmark, faSignOutAlt, faImage, faSmile } from '@fortawesome/free-solid-svg-icons';
 
 class Home extends Component {
   render() {
@@ -71,7 +71,29 @@ class Home extends Component {
           </div>
 
           <div className="main-feed">
+            <header>
+              <div className="create-post">
+                <h3>Create Post</h3>
 
+                <div className="icon-input">
+                  <textarea name="post" id="post" placeholder="Share your thoughts" cols="30"></textarea>
+                  <FontAwesomeIcon icon={faUserAlt} className="icon" />
+                </div>
+
+                <div className="post-actions">
+                  <div className="icon-btns">
+                    <button>
+                      <FontAwesomeIcon icon={faImage} />
+                    </button>
+
+                    <button>
+                      <FontAwesomeIcon icon={faSmile} />
+                    </button>
+                  </div>
+                  <button className="btn">Post</button>
+                </div>
+              </div>
+            </header>
           </div>
 
           <div className="extras">
