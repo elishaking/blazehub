@@ -45,6 +45,10 @@ nav .text-input {
   margin-right: 1em;
 }
 
+.signin-input {
+  display: initial;
+}
+
 input,
 select {
   font-family: 'Poppins', sans-serif;
@@ -131,4 +135,10 @@ select {
 
 .fill-parent {
   width: 100%;
+}
+
+@media (max-width: 1300px) {
+  .signin-input {
+    display: none;
+  }
 }

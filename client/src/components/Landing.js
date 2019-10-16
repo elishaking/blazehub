@@ -2,19 +2,45 @@ import React, { Component } from 'react';
 import logo from './logo.svg'
 
 export default class Landing extends Component {
+  constructor() {
+    super();
+    this.state = {
+      method: "POST"
+    };
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.resize);
+  }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.resize);
+  }
+
+  resize = () => {
+    const newMethod = document.body.clientWidth > 1300 ? "POST" : "GET";
+    if (this.state.method !== newMethod) {
+      this.setState({
+        ...this.state,
+        method: newMethod
+      });
+    }
+  }
+
   render() {
     return (
       <div className="container landing-bg">
         <header>
           <nav>
             <h1>
-              <img src={logo} alt="Logo" srcset="" /> BlazeChat
+              <img src={logo} alt="Logo" srcSet="" /> BlazeChat
             </h1>
 
             <div className="nav-right">
-              <form action="/signin">
-                <input type="email" name="email" placeholder="email" className="text-input" />
-                <input type="password" name="password" placeholder="password" className="text-input" />
+              <form action="/signin" method={this.state.method}>
+                <div className="signin-input">
+                  <input type="email" name="email" placeholder="email" className="text-input" />
+                  <input type="password" name="password" placeholder="password" className="text-input" />
+                </div>
                 <input type="submit" value="Sign In" className="btn-input" />
               </form>
             </div>
@@ -27,15 +53,15 @@ export default class Landing extends Component {
               <div className="info">
                 <ul>
                   <li>
-                    <img src="./assets/img/connect.svg" alt="Connection" srcset="" />
+                    <img src="./assets/img/connect.svg" alt="Connection" srcSet="" />
                     <h2>Connect With Friends</h2>
                   </li>
                   <li>
-                    <img src="./assets/img/converse.svg" alt="Conversation" srcset="" />
+                    <img src="./assets/img/converse.svg" alt="Conversation" srcSet="" />
                     <h2>Chat, Share Photos, Videos and more</h2>
                   </li>
                   <li>
-                    <img src="./assets/img/commune.svg" alt="Community" srcset="" />
+                    <img src="./assets/img/commune.svg" alt="Community" srcSet="" />
                     <h2>Be a part of a growing community</h2>
                   </li>
                 </ul>
@@ -46,7 +72,7 @@ export default class Landing extends Component {
           <div className="right">
             <div className="inner">
               <div className="welcome">
-                <img src={logo} alt="Logo" srcset="" />
+                <img src={logo} alt="Logo" srcSet="" />
                 <h1>Join BlazeChat Today</h1>
               </div>
 
