@@ -25,10 +25,6 @@
   padding: 2em 3vw;
 }
 
-.content {
-  height: 100vh;
-}
-
 nav {
   display: flex;
   justify-content: space-between;
@@ -49,7 +45,8 @@ nav .text-input {
   margin-right: 1em;
 }
 
-input {
+input,
+select {
   font-family: 'Poppins', sans-serif;
   border: 1px solid #7C62A9;
   border-radius: 5px;
@@ -60,4 +57,65 @@ input {
   background: white;
   font-weight: 600;
   color: #7C62A9;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+}
+
+.btn-input:hover {
+  background: #B1A3E1;
+  color: white;
+  border-color: #B1A3E1;
+  ;
+}
+
+.btn-pri {
+  background: #7C62A9;
+  color: white;
+}
+
+.content {
+  height: 85vh;
+  display: flex;
+  justify-content: space-between;
+}
+
+.content .left,
+.right {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.content .right h1 {
+  color: #7C62A9;
+  margin-bottom: 1em;
+}
+
+.content .right input,
+select {
+  display: block;
+  margin-bottom: 1em;
+}
+
+.content .right .name {
+  display: flex;
+  justify-content: space-between;
+}
+
+.content .right .name input {
+  width: 49%;
+}
+
+.content .right .name input:first-child {
+  margin-right: 1em;
+}
+
+.inner {
+  position: relative;
+  bottom: 10%;
+}
+
+.fill-parent {
+  width: 100%;
 }
