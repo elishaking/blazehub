@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import logo from './logo.svg'
 
 export default class Landing extends Component {
   constructor() {
     super();
     this.state = {
-      method: "POST"
+      method: "POST",
+      navLogo: "logo.svg"
     };
   }
 
@@ -24,6 +24,14 @@ export default class Landing extends Component {
         method: newMethod
       });
     }
+
+    const newLogo = document.body.clientWidth > 1000 ? "logo.svg" : "logo-pri.svg";
+    if (this.state.navLogo !== newLogo) {
+      this.setState({
+        ...this.state,
+        navLogo: newLogo
+      });
+    }
   }
 
   render() {
@@ -32,7 +40,7 @@ export default class Landing extends Component {
         <header>
           <nav>
             <h1>
-              <img src={logo} alt="Logo" srcSet="" /> <span>BlazeChat</span>
+              <img src={`./assets/img/${this.state.navLogo}`} alt="Logo" srcSet="" /> <span>BlazeChat</span>
             </h1>
 
             <div className="nav-right">
@@ -72,7 +80,7 @@ export default class Landing extends Component {
           <div className="right">
             <div className="inner">
               <div className="welcome">
-                <img src={logo} alt="Logo" srcSet="" />
+                <img src="./assets/img/logo-pri.svg" alt="Logo" srcSet="" />
                 <h1>Join BlazeChat Today</h1>
               </div>
 
