@@ -20,6 +20,9 @@
 .App-link {
   color: #09d3ac;
 } */
+body {
+  color: #7C62A9;
+}
 
 .container {
   padding: 2em 10vw;
@@ -34,6 +37,9 @@ nav {
 nav h1 {
   display: flex;
   align-items: center;
+}
+
+.landing-bg nav h1 {
   color: white;
 }
 
@@ -84,6 +90,12 @@ select {
   justify-content: space-between;
 }
 
+.block {
+  flex-direction: column;
+  justify-content: initial;
+  align-items: center;
+}
+
 .content .left,
 .right {
   width: 40%;
@@ -92,12 +104,11 @@ select {
   justify-content: center;
 }
 
-.content .right h1 {
-  color: #7C62A9;
+.content h1 {
   margin-bottom: 1em;
 }
 
-.content .right input,
+.content input,
 select {
   display: block;
   margin-bottom: 1em;
@@ -142,6 +153,21 @@ select {
   width: 100%;
 }
 
+.form-container {
+  width: 50vw;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.form-container input {
+  width: 100%;
+}
+
+.form-container .btn-input {
+  width: fit-content;
+}
+
 @media (max-width: 1550px) {
   .signin-input {
     display: none;
@@ -178,8 +204,18 @@ select {
   }
 }
 
+@media (max-width: 760px) {
+  .form-container {
+    width: 70vw;
+  }
+}
+
 @media (max-width: 470px) {
   nav h1 span {
     display: none;
   }
+
+  /* .form-container h1 {
+    text-align: center;
+  } */
 }

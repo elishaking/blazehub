@@ -5,12 +5,14 @@ import './App.css';
 import store from './store';
 
 import Landing from './components/Landing';
+import Signin from './components/Signin';
 
 function App() {
   return (
     <Provider store={store}>
       <Router>
         <Route exact path="/" component={Landing} />
+        <Route exact path="/signin" component={Signin} />
       </Router>
     </Provider>
   );

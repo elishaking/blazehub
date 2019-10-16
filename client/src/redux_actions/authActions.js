@@ -20,7 +20,7 @@ const setCurrentUser = (userData) => ({
 // @description sign-up user
 export const signupUser = (userData, history) => (dispatch) => {
   axios.post('/api/users/signup', userData)
-    .then((res) => history.push('/login'))
+    .then((res) => history.push('/signin'))
     .catch((err) => dispatch(getErrors(err.response.data)));
 };
 

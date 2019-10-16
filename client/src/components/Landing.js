@@ -75,7 +75,7 @@ class Landing extends Component {
       email: this.state.signupEmail,
       password: this.state.signupPassword
     };
-    this.props.signupUser(userData);
+    this.props.signupUser(userData, this.props.history);
   }
 
   render() {
