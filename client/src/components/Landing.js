@@ -66,6 +66,18 @@ class Landing extends Component {
     }
   }
 
+  onSubmitSignup = (event) => {
+    event.preventDefault();
+    const userData = {
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      gender: this.state.gender,
+      email: this.state.signupEmail,
+      password: this.state.signupPassword
+    };
+    this.props.signupUser(userData);
+  }
+
   render() {
     return (
       <div className="container landing-bg">
@@ -116,7 +128,7 @@ class Landing extends Component {
                 <h1>Join BlazeChat Today</h1>
               </div>
 
-              <form action="/signup">
+              <form onSubmit={this.onSubmitSignup}>
                 <div>
                   <div className="name">
                     <input type="text" name="firstName" id="firstName" placeholder="first name" onChange={this.onChange} />
