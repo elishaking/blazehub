@@ -28,15 +28,15 @@ export default class Landing extends Component {
                 <ul>
                   <li>
                     <img src="./assets/img/connect.svg" alt="Connection" srcset="" />
-                    <p>Connect With Friends</p>
+                    <h2>Connect With Friends</h2>
                   </li>
                   <li>
                     <img src="./assets/img/converse.svg" alt="Conversation" srcset="" />
-                    <p>Chat, Share Photos, Videos and more</p>
+                    <h2>Chat, Share Photos, Videos and more</h2>
                   </li>
                   <li>
                     <img src="./assets/img/commune.svg" alt="Community" srcset="" />
-                    <p>Be a part of a growing community</p>
+                    <h2>Be a part of a growing community</h2>
                   </li>
                 </ul>
               </div>

@@ -111,6 +111,19 @@ select {
   margin-right: 1em;
 }
 
+.content .left .info h2 {
+  color: white;
+}
+
+.content .left .info li {
+  display: flex;
+  margin-bottom: 3em;
+}
+
+.content .left .info li img {
+  margin-right: 2em;
+}
+
 .inner {
   position: relative;
   bottom: 10%;
