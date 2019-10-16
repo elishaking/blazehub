@@ -9,8 +9,32 @@ class Signin extends Component {
 
     this.state = {
       email: '',
-      password: ''
+      password: '',
+      errors: {}
     };
+  }
+
+  componentDidMount() {
+    this.redirectIfAuthenticated(this.props.auth.isAuthenticated);
+  }
+
+  // after redux store is update, this life cycle method will be called
+  componentWillReceiveProps(nextProps) {
+    this.redirectIfAuthenticated(this.props.auth.isAuthenticated);
+
+    if (nextProps.auth.errors) {
+      this.setState({
+        errors: nextProps.auth.errors
+      });
+    }
+  }
+
+  /** @param {boolean} isAuthenticated */
+  redirectIfAuthenticated = (isAuthenticated) => {
+    // redirect authenticated user to home-page
+    if (isAuthenticated) {
+      this.props.history.push('/home');
+    }
   }
 
   /**  @param {React.ChangeEvent<HTMLInputElement>} event */

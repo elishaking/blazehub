@@ -4,12 +4,12 @@ import { GET_ERRORS, SET_CURRENT_USER } from './types';
 
 // ===ACTIONS===
 
-const getErrors = (errorData) => ({
+export const getErrors = (errorData) => ({
   type: GET_ERRORS,
   payload: errorData
 });
 
-const setCurrentUser = (userData) => ({
+export const setCurrentUser = (userData) => ({
   type: SET_CURRENT_USER,
   payload: userData
 });
@@ -24,7 +24,7 @@ export const signupUser = (userData, history) => (dispatch) => {
     .catch((err) => dispatch(getErrors(err.response.data)));
 };
 
-// @action-type GET_ERRORS
+// @action-types SET_CURRENT_USER, GET_ERRORS
 // @description sign-in/authenticate user
 export const signinUser = (userData) => (dispatch) => {
   axios.post("/api/users/signin", userData)
@@ -44,10 +44,18 @@ export const signinUser = (userData) => (dispatch) => {
     .catch((err) => dispatch(getErrors(err.response.data)));
 }
 
+// @action-type SET_CURRENT_USER
+// @description sign-in/authenticate user
+export const signoutUser = () => (dispatch) => {
+  localStorage.removeItem('jwtToken');
+  setAuthToken(false);
+  dispatch(setCurrentUser({}));
+}
+
 
 // ===UTILS===
 // adds/deletes @token from the Authorization Header
-const setAuthToken = (token) => {
+export const setAuthToken = (token) => {
   if (token) {
     // Apply token to every request
     axios.defaults.headers.common['Authorization'] = token;
