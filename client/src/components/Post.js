@@ -10,7 +10,8 @@ export default class Post extends Component {
     this.state = {
       post: {
         ...this.props.post
-      }
+      },
+      showComments: false
     };
   }
 
@@ -30,10 +31,16 @@ export default class Post extends Component {
         [this.props.user.firstName]: 1
       });
     }
-  }
+  };
+
+  toggleComments = () => {
+    this.setState({
+      showComments: !this.state.showComments
+    });
+  };
 
   render() {
-    const { post } = this.state;
+    const { post, showComments } = this.state;
     return (
       <div className="post">
         <header>
@@ -56,7 +63,7 @@ export default class Post extends Component {
             <FontAwesomeIcon icon={faThumbsUp} />
             <span>{Object.keys(post.likes).length - 1}</span>
           </button>
-          <button className="post-action">
+          <button className="post-action" onClick={this.toggleComments}>
             <FontAwesomeIcon icon={faComments} />
             <span>{Object.keys(post.comments).length - 1}</span>
           </button>
@@ -65,7 +72,20 @@ export default class Post extends Component {
             <span>{Object.keys(post.shares).length - 1}</span>
           </button>
         </div>
+
+        {
+          showComments &&
+          (
+            <div className="comments">
+              <hr />
+              <div className="comment-input">
+                <FontAwesomeIcon icon={faUserCircle} />
+                <input type="text" placeholder="Write a comment" />
+              </div>
+            </div>
+          )
+        }
       </div>
-    )
+    );
   }
 }
