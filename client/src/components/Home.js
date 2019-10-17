@@ -21,23 +21,13 @@ class Home extends Component {
 
   componentDidMount() {
     this.postsRef.on('child_added', (newPostSnapShot) => {
-      console.log(newPostSnapShot.val());
+      this.setState({
+        posts: [
+          newPostSnapShot.val(),
+          ...this.state.posts
+        ]
+      });
     });
-
-    // this.setState({
-    //   posts: [
-    //     {
-    //       user: this.props.auth.user,
-    //       text: "New Post",
-    //       date: Date.now(),
-    //       imageUrl: '',
-    //       likes: [],
-    //       comments: [],
-    //       shares: []
-    //     },
-    //     ...this.state.posts
-    //   ]
-    // });
   }
 
   createPost = () => {
@@ -46,28 +36,14 @@ class Home extends Component {
       text: this.state.postText,
       date: Date.now(),
       imageUrl: '',
-      likes: [],
-      comments: [],
-      shares: []
+      likes: { name: "likes" },
+      comments: { name: "comments" },
+      shares: { name: "shares" }
     };
     this.postsRef.push(newPost, (err) => {
       if (err) console.error(err);
       else console.log('post created');
     });
-    // this.setState({
-    //   posts: [
-    //     {
-    //       user: this.props.auth.user,
-    //       text: this.state.postText,
-    //       date: Date.now(),
-    //       imageUrl: '',
-    //       likes: [],
-    //       comments: [],
-    //       shares: []
-    //     },
-    //     ...this.state.posts
-    //   ]
-    // });
   };
 
   /** @param {React.ChangeEvent<HTMLTextAreaElement>} event */
@@ -188,15 +164,15 @@ class Home extends Component {
                     <div className="post-actions">
                       <button className="post-action">
                         <FontAwesomeIcon icon={faThumbsUp} />
-                        <span>{post.likes.length}</span>
+                        <span>{Object.keys(post.likes).length - 1}</span>
                       </button>
                       <button className="post-action">
                         <FontAwesomeIcon icon={faComments} />
-                        <span>{post.comments.length}</span>
+                        <span>{Object.keys(post.comments).length - 1}</span>
                       </button>
                       <button className="post-action">
                         <FontAwesomeIcon icon={faShare} />
-                        <span>{post.shares.length}</span>
+                        <span>{Object.keys(post.shares).length - 1}</span>
                       </button>
                     </div>
                   </div>
