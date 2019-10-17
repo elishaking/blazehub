@@ -7,7 +7,12 @@ import { faSearch, faUserCircle, faHome, faUserAlt, faComments, faBookmark, faSi
 import app from 'firebase/app';
 import 'firebase/database';
 
+import Post from './Post';
+
 class Home extends Component {
+  /**
+   * @param {any} props
+   */
   constructor(props) {
     super(props);
 
@@ -21,9 +26,13 @@ class Home extends Component {
 
   componentDidMount() {
     this.postsRef.on('child_added', (newPostSnapShot) => {
+      const newPost = {
+        key: newPostSnapShot.key,
+        ...newPostSnapShot.val()
+      }
       this.setState({
         posts: [
-          newPostSnapShot.val(),
+          newPost,
           ...this.state.posts
         ]
       });
@@ -55,7 +64,8 @@ class Home extends Component {
 
   render() {
     const hasProfilePic = false;
-    const { firstName, lastName } = this.props.auth.user;
+    const { user } = this.props.auth;
+    const { firstName, lastName } = user;
     return (
       <div className="container">
         <header>
@@ -142,40 +152,15 @@ class Home extends Component {
                 </div>
               </div>
             </header>
+
             <div className="posts">
               {
                 this.state.posts.map((post) => (
-                  <div className="post">
-                    <header>
-                      <FontAwesomeIcon icon={faUserCircle} />
-                      <div>
-                        <h4>{`${post.user.firstName}  ${post.user.lastName}`}</h4>
-                        <small>{new Date(post.date).toTimeString()}</small>
-                      </div>
-                    </header>
-
-                    <p>{post.text}</p>
-                    {post.imageUrl && (
-                      <img src={post.imageUrl} alt="" srcSet="" />
-                    )}
-
-                    <hr />
-
-                    <div className="post-actions">
-                      <button className="post-action">
-                        <FontAwesomeIcon icon={faThumbsUp} />
-                        <span>{Object.keys(post.likes).length - 1}</span>
-                      </button>
-                      <button className="post-action">
-                        <FontAwesomeIcon icon={faComments} />
-                        <span>{Object.keys(post.comments).length - 1}</span>
-                      </button>
-                      <button className="post-action">
-                        <FontAwesomeIcon icon={faShare} />
-                        <span>{Object.keys(post.shares).length - 1}</span>
-                      </button>
-                    </div>
-                  </div>
+                  <Post
+                    key={post.key}
+                    postRef={this.postsRef.child(post.key)}
+                    post={post}
+                    user={user} />
                 ))
               }
             </div>
@@ -190,6 +175,9 @@ class Home extends Component {
   }
 }
 
+/**
+ * @param {{ auth: any; }} state
+ */
 const mapStateToProps = (state) => ({
   auth: state.auth
 });
