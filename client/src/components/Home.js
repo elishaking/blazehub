@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faUserCircle, faHome, faUserAlt, faComments, faBookmark, faSignOutAlt, faImage, faSmile, faThumbsUp, faShare } from '@fortawesome/free-solid-svg-icons';
+import app from 'firebase/app';
+import 'firebase/database';
 
 class Home extends Component {
   constructor(props) {
@@ -13,40 +15,59 @@ class Home extends Component {
       postText: '',
       posts: []
     }
+
+    this.postsRef = app.database().ref('posts');
   }
 
   componentDidMount() {
-    this.setState({
-      posts: [
-        {
-          user: this.props.auth.user,
-          text: "New Post",
-          date: Date.now(),
-          imageUrl: '',
-          likes: [],
-          comments: [],
-          shares: []
-        },
-        ...this.state.posts
-      ]
+    this.postsRef.on('child_added', (newPostSnapShot) => {
+      console.log(newPostSnapShot.val());
     });
+
+    // this.setState({
+    //   posts: [
+    //     {
+    //       user: this.props.auth.user,
+    //       text: "New Post",
+    //       date: Date.now(),
+    //       imageUrl: '',
+    //       likes: [],
+    //       comments: [],
+    //       shares: []
+    //     },
+    //     ...this.state.posts
+    //   ]
+    // });
   }
 
   createPost = () => {
-    this.setState({
-      posts: [
-        {
-          user: this.props.auth.user,
-          text: this.state.postText,
-          date: Date.now(),
-          imageUrl: '',
-          likes: [],
-          comments: [],
-          shares: []
-        },
-        ...this.state.posts
-      ]
+    const newPost = {
+      user: this.props.auth.user,
+      text: this.state.postText,
+      date: Date.now(),
+      imageUrl: '',
+      likes: [],
+      comments: [],
+      shares: []
+    };
+    this.postsRef.push(newPost, (err) => {
+      if (err) console.error(err);
+      else console.log('post created');
     });
+    // this.setState({
+    //   posts: [
+    //     {
+    //       user: this.props.auth.user,
+    //       text: this.state.postText,
+    //       date: Date.now(),
+    //       imageUrl: '',
+    //       likes: [],
+    //       comments: [],
+    //       shares: []
+    //     },
+    //     ...this.state.posts
+    //   ]
+    // });
   };
 
   /** @param {React.ChangeEvent<HTMLTextAreaElement>} event */
