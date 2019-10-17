@@ -292,7 +292,7 @@ select {
   ;
 }
 
-.post-actions {
+.create-post-actions {
   display: flex;
   justify-content: space-between;
   padding: 0.3em 2em 1em 2.5em;
@@ -300,6 +300,7 @@ select {
 
 button {
   cursor: pointer;
+  transition: 0.3s ease-in-out;
 }
 
 button:focus {
@@ -312,12 +313,11 @@ button:focus {
 }
 
 .icon-btns button svg {
-  width: 2em !important;
-  height: 1.7em;
+  font-size: x-large;
   color: #7C62A9;
 }
 
-.post-actions .icon-btns button {
+.create-post-actions .icon-btns button {
   margin-right: 1.7em;
 }
 
@@ -329,7 +329,65 @@ button:focus {
   border-radius: 5px;
   font-family: 'Poppins', sans-serif;
   font-weight: 500;
+  outline: none;
 }
+
+.post {
+  padding: 1em 2em;
+  margin: 1em 0 0 0;
+  border-radius: 5px;
+  background: #F2EFF6;
+}
+
+.post header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.7em;
+}
+
+.post header svg {
+  font-size: 2.7rem;
+  margin-right: 0.5em;
+}
+
+.post header small {
+  color: #7c62a9bf;
+}
+
+.post hr {
+  margin: 0.7em 0;
+  border: 0.5px solid #7c62a91c;
+}
+
+.post-action {
+  background: none;
+  color: #7C62A9;
+  border: none;
+  padding: 0.5em 0.7em;
+  margin-right: 3em;
+  border-radius: 5px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  outline: none;
+}
+
+.post-action svg {
+  font-size: medium;
+}
+
+.post-action span {
+  font-size: medium;
+  margin-left: 1em;
+  color: #7c62a9bf;
+}
+
+.post-action:hover {
+  background-color: #7c62a940;
+}
+
+/* .post-action:focus{
+  background-color: #7c62a940;
+} */
 
 .extras {
   flex: 1;
