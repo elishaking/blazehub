@@ -50,7 +50,7 @@ class Signin extends Component {
 
     const userData = {
       email: this.state.email,
-      passsword: this.state.passsword
+      password: this.state.password
     }
     this.props.signinUser(userData);
   }
