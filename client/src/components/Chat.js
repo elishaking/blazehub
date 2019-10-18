@@ -50,6 +50,7 @@ class Chat extends Component {
     const hasProfilePic = false;
     const { user } = this.props.auth;
     const { firstName, lastName } = user;
+    const { friends } = this.state;
 
     return (
       <div className="container">
@@ -134,7 +135,18 @@ class Chat extends Component {
           </div>
 
           <div className="friends">
+            {
+              Object.keys(friends).map((friendKey) => {
+                const friend = friends[friendKey];
 
+                return (
+                  <div key={friendKey} className="friend">
+                    <FontAwesomeIcon icon={faUserCircle} />
+                    <p>{friend.name}</p>
+                  </div>
+                );
+              })
+            }
           </div>
         </div>
       </div>

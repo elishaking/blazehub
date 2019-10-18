@@ -235,7 +235,8 @@ select {
   display: flex;
 }
 
-.main-nav {
+.main-nav,
+.friends {
   flex: 1;
   background-color: #F2EFF6;
   padding: 1em 2em;
@@ -405,7 +406,8 @@ small {
 }
 
 .comment-input svg,
-.comment-display svg {
+.comment-display svg,
+.friend svg {
   font-size: 2.3rem;
   margin-right: 0.5em;
 }
@@ -481,6 +483,12 @@ small {
 
 .chat-input input {
   width: 100%;
+}
+
+.friend {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
 }
 
 @media (max-width: 1550px) {
