@@ -31,9 +31,12 @@ export default class Post extends Component {
       });
     });
 
-    this.props.postRef.child('comments').on('value', (updatedCommentsSnapShot) => {
+    this.props.postRef.child('comments').on('child_added', (newCommentSnapShot) => {
       const { post } = this.state;
-      post.comments = updatedCommentsSnapShot.val();
+      post.comments = {
+        [newCommentSnapShot.key]: newCommentSnapShot.val(),
+        ...post.comments
+      };
       this.setState({
         post
       });
