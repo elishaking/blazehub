@@ -55,7 +55,6 @@ export default class Post extends Component {
   };
 
   toggleComments = () => {
-    window.post = this.state.post;
     this.setState({
       showComments: !this.state.showComments
     });
