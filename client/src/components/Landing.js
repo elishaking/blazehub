@@ -22,6 +22,7 @@ class Landing extends Component {
   }
 
   componentDidMount() {
+    this.resize();
     window.addEventListener('resize', this.resize);
 
     // if user is already authenticated, redirect to dashboard
@@ -63,6 +64,8 @@ class Landing extends Component {
         password: this.state.signinPassword
       };
       this.props.signinUser(userData);
+    } else {
+      this.props.history.push('/signin');
     }
   }
 
