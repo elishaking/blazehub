@@ -70,6 +70,7 @@ export default class Post extends Component {
         user: post.user
       };
       commentText = '';
+      // @ts-ignore
       event.target.value = '';
       this.props.postRef.child('comments').push(newComment, (err) => {
         if (err) return console.error(err);
