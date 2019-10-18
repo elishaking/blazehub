@@ -268,7 +268,8 @@ select {
   height: 1.3em;
 }
 
-.main-feed {
+.main-feed,
+.chat-space {
   flex: 2;
   margin: 0 1em;
 }
@@ -440,8 +441,46 @@ small {
   margin-left: 1em;
 }
 
-.extras {
+.extras,
+.friends {
   flex: 1;
+}
+
+.chat-space header div {
+  display: flex;
+  align-items: center;
+  color: white;
+  border-radius: 5px 5px 0 0;
+}
+
+.chat-space header div,
+.chat-input {
+  padding: 1em 2em;
+  background-color: #B1A3E1;
+}
+
+.chat-space header svg {
+  font-size: 2.7em;
+  margin-right: 0.5em;
+}
+
+.chats {
+  height: 75vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-messages {
+  flex: 1;
+}
+
+.chat-input {
+  padding: 1em 2em;
+  border-radius: 0 0 5px 5px;
+}
+
+.chat-input input {
+  width: 100%;
 }
 
 @media (max-width: 1550px) {

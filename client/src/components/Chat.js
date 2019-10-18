@@ -3,69 +3,46 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faUserCircle, faHome, faUserAlt, faComments, faBookmark, faSignOutAlt, faImage, faSmile, faThumbsUp, faShare } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faUserCircle, faHome, faUserAlt, faComments, faBookmark, faSignOutAlt, faImage, faSmile } from '@fortawesome/free-solid-svg-icons';
 import app from 'firebase/app';
 import 'firebase/database';
 
-import Post from './Post';
-
-class Home extends Component {
-  /**
-   * @param {any} props
-   */
+class Chat extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      postText: '',
-      posts: []
-    }
+      commentText: '',
+      chats: {},
+      friends: {}
+    };
 
-    this.postsRef = app.database().ref('posts');
+    this.userRef = app.database().ref('users').child(this.getUserKey(props.auth.user.email));
   }
 
   componentDidMount() {
-    this.postsRef.on('child_added', (newPostSnapShot) => {
-      const newPost = {
-        key: newPostSnapShot.key,
-        ...newPostSnapShot.val()
-      }
+    this.userRef.child('friends').once('value', (friendsSnapShot) => {
       this.setState({
-        posts: [
-          newPost,
-          ...this.state.posts
-        ]
+        friends: friendsSnapShot.val()
       });
     });
   }
 
-  createPost = () => {
-    const newPost = {
-      user: this.props.auth.user,
-      text: this.state.postText,
-      date: Date.now(),
-      imageUrl: '',
-      // likes: { name: "likes" },
-      // comments: { name: "comments" },
-      // shares: { name: "shares" }
-    };
-    this.postsRef.push(newPost, (err) => {
-      if (err) console.error(err);
-      else console.log('post created');
-    });
-  };
-
-  /** @param {React.ChangeEvent<HTMLTextAreaElement>} event */
   onChange = (event) => {
     this.setState({
       [event.target.name]: event.target.value
-    });
+    })
   };
+
+  /** @param {string} userEmail */
+  getUserKey = (userEmail) =>
+    userEmail.replace(/\./g, "~").replace(/@/g, "~~");
 
   render() {
     const hasProfilePic = false;
     const { user } = this.props.auth;
     const { firstName, lastName } = user;
+
     return (
       <div className="container">
         <header>
@@ -73,13 +50,6 @@ class Home extends Component {
             <h1 className="logo">
               <img src={`./assets/img/logo-pri.svg`} alt="Logo" srcSet="" /> <span>BlazeChat</span>
             </h1>
-
-            <div className="search">
-              <div className="icon-input">
-                <input type="text" placeholder="Search" />
-                <FontAwesomeIcon icon={faSearch} className="icon" />
-              </div>
-            </div>
 
             <div className="auth-nav-right">
               {hasProfilePic ? <img src="" alt={firstName} srcSet="" /> : <FontAwesomeIcon icon={faUserCircle} className="icon" />} &nbsp;&nbsp;&nbsp;
@@ -133,45 +103,29 @@ class Home extends Component {
             </nav>
           </div>
 
-          <div className="main-feed">
+          <div className="chat-space">
             <header>
-              <div className="create-post">
-                <h3>Create Post</h3>
-
-                <div className="icon-input">
-                  <textarea name="postText" placeholder="Share your thoughts" rows={3} onChange={this.onChange}></textarea>
-                  <FontAwesomeIcon icon={faUserAlt} className="icon" />
-                </div>
-
-                <div className="create-post-actions">
-                  <div className="icon-btns">
-                    <button>
-                      <FontAwesomeIcon icon={faImage} />
-                    </button>
-
-                    <button>
-                      <FontAwesomeIcon icon={faSmile} />
-                    </button>
-                  </div>
-                  <button className="btn" onClick={this.createPost}>Post</button>
-                </div>
+              <div>
+                <FontAwesomeIcon icon={faUserCircle} />
+                <h3>{`${firstName} ${lastName}`}</h3>
               </div>
             </header>
 
-            <div className="posts">
-              {
-                this.state.posts.map((post) => (
-                  <Post
-                    key={post.key}
-                    postRef={this.postsRef.child(post.key)}
-                    post={post}
-                    user={user} />
-                ))
-              }
+            <div className="chats">
+              <div className="chat-messages">
+
+              </div>
+
+              <div className="chat-input">
+                <input type="text" name="messageText" placeholder="Type a message" onChange={this.onChange} />
+                {/* <button>
+                  <FontAwesomeIcon icon={faSmile} className="icon" />
+                </button> */}
+              </div>
             </div>
           </div>
 
-          <div className="extras">
+          <div className="friends">
 
           </div>
         </div>
@@ -180,11 +134,8 @@ class Home extends Component {
   }
 }
 
-/**
- * @param {{ auth: any; }} state
- */
 const mapStateToProps = (state) => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps)(Home);
+export default connect(mapStateToProps)(Chat);

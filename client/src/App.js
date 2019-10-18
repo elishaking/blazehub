@@ -9,6 +9,7 @@ import { setAuthToken, setCurrentUser, signoutUser, } from './redux_actions/auth
 import Landing from './components/Landing';
 import Signin from './components/Signin';
 import Home from './components/Home';
+import Chat from './components/Chat';
 
 const updateAuthToken = () => {
   if (localStorage.jwtToken) {
@@ -39,6 +40,7 @@ function App() {
         <Route exact path="/" component={Landing} />
         <Route exact path="/signin" component={Signin} />
         <Route exact path="/home" component={Home} />
+        <Route exact path="/chat" component={Chat} />
       </Router>
     </Provider>
   );
