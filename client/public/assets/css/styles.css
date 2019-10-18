@@ -1,0 +1,33 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif !important;
+}
+
+/* .container {
+  padding: 2em 3vw;
+}
+
+.content {
+  height: 100vh;
+} */
+
+.landing-bg {
+  background-image: url(../img/landing-bg.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+@media (max-width: 1000px) {
+  .content .left {
+    background-image: url(../img/info-bg.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+}
