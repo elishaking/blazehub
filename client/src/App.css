@@ -78,6 +78,16 @@ nav .text-input {
   flex: auto
 }
 
+.alt-search {
+  display: none;
+  margin-bottom: 3em;
+  margin-right: 1em;
+}
+
+.alt-search input {
+  width: 100%;
+}
+
 .auth-nav .search input {
   width: 100%;
 }
@@ -543,6 +553,14 @@ small {
     color: #7C62A9;
   }
 
+  .auth-nav-right input {
+    display: none;
+  }
+
+  .logo span {
+    display: none;
+  }
+
   .landing-bg {
     background: white;
   }
@@ -584,6 +602,18 @@ small {
 
   .main-nav a svg {
     margin-right: 0;
+  }
+
+  .auth-nav {
+    margin-bottom: 1.5em;
+  }
+
+  .auth-nav .search {
+    display: none;
+  }
+
+  .alt-search {
+    display: block;
   }
 }
 

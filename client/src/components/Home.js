@@ -87,6 +87,13 @@ class Home extends Component {
               <input type="button" value="Sign Out" className="btn-input" />
             </div>
           </nav>
+
+          <div className="alt-search">
+            <div className="icon-input">
+              <input type="text" placeholder="Search" />
+              <FontAwesomeIcon icon={faSearch} className="icon" />
+            </div>
+          </div>
         </header>
 
         <div className="main">
