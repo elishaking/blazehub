@@ -1,8 +1,8 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const firebase = require('firebase');
 const passport = require('passport');
+const app = require('firebase/app');
 require('firebase/database');
 
 const validateSignupData = require('../../validation/signup');
@@ -18,7 +18,7 @@ const firebaseConfig = {
   appId: process.env.FIREBASE_APP_ID,
   measurementId: process.env.FIREBASE_MEASUREMENT_ID
 };
-const firebaseApp = firebase.initializeApp(firebaseConfig);
+const firebaseApp = app.initializeApp(firebaseConfig);
 
 const dbRef = firebaseApp.database().ref();
 

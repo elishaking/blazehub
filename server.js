@@ -1,6 +1,7 @@
 const express = require('express');
 const helmet = require('helmet');
 const dotenv = require('dotenv');
+const passport = require('passport');
 
 const server = express();
 
@@ -20,6 +21,13 @@ server.use((req, res, next) => {
 server.get("/", (req, res) => {
   res.send("Welcome");
 });
+
+//Passport Middleware
+server.use(passport.initialize());
+
+//Passport Config
+const passportConfig = require('./config/passport');
+passportConfig(passport);
 
 const users = require('./routes/api/users');
 
