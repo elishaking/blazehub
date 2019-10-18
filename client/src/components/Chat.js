@@ -14,12 +14,15 @@ class Chat extends Component {
     super(props);
 
     this.state = {
-      commentText: '',
-      chats: {},
-      friends: {}
+      chatText: '',
+      chats: [],
+      friends: {},
+      chatTitle: 'BlazeChat'
     };
 
-    this.userRef = app.database().ref('users').child(this.getUserKey(props.auth.user.email));
+    this.userKey = this.getUserKey(props.auth.user.email);
+    this.userRef = app.database().ref('users').child(this.userKey);
+    this.currentChatKey = '';
   }
 
   componentDidMount() {
@@ -40,17 +43,62 @@ class Chat extends Component {
   getUserKey = (userEmail) =>
     userEmail.replace(/\./g, "~").replace(/@/g, "~~");
 
+  /** @param {string} friendKey */
+  getChatKey = (friendKey) => [this.userKey, friendKey].sort().join("_");
+
+  openChat = (key) => {
+    this.state.chats = [];
+    this.currentChatKey = this.getChatKey(key);
+    this.setState({
+      chats: [],
+      chatTitle: this.state.friends[key].name
+    });
+    //todo: listen for all chats from all friends
+    // this.userRef.child('chats').child(this.currentFriendKey).off('child_added');
+
+    this.userRef.child('chats').child(this.currentChatKey).on('child_added', (chatSnapShot) => {
+      this.setState({
+        chats: [
+          ...this.state.chats,
+          {
+            key: chatSnapShot.key,
+            ...chatSnapShot.val()
+          }
+        ]
+      });
+    });
+  };
+
+  sendChat = (event) => {
+    const { chatText } = this.state;
+    if (event.which == 13 && chatText !== '') {
+      const { user } = this.props.auth;
+      const newChat = {
+        text: chatText,
+        date: Date.now(),
+        // todo: add user url (from profile: auto-generate if not manually set by user)
+        user: {
+          name: `${user.firstName}`,
+          key: this.userKey
+        },
+      };
+      this.userRef.child('chats').child(this.currentChatKey).push(newChat, (err) => {
+        if (err) console.error(err);
+        else console.log("chat added");
+      });
+    }
+  };
 
   signOut = () => {
     this.props.signoutUser();
     this.props.history.push('/');
-  }
+  };
 
   render() {
     const hasProfilePic = false;
     const { user } = this.props.auth;
     const { firstName, lastName } = user;
-    const { friends } = this.state;
+    const { friends, chatTitle } = this.state;
 
     return (
       <div className="container">
@@ -116,17 +164,27 @@ class Chat extends Component {
             <header>
               <div>
                 <FontAwesomeIcon icon={faUserCircle} />
-                <h3>{`${firstName} ${lastName}`}</h3>
+                <h3>{chatTitle}</h3>
               </div>
             </header>
 
             <div className="chats">
               <div className="chat-messages">
-
+                {
+                  this.state.chats.map((chat) => (
+                    <div className="chat">
+                      <FontAwesomeIcon icon={faUserCircle} />
+                      <div>
+                        <p>{chat.text}</p>
+                        <small>{new Date(chat.date).toLocaleTimeString()} </small>
+                      </div>
+                    </div>
+                  ))
+                }
               </div>
 
               <div className="chat-input">
-                <input type="text" name="messageText" placeholder="Type a message" onChange={this.onChange} />
+                <input type="text" name="chatText" placeholder="Type a message" onChange={this.onChange} onKeyPress={this.sendChat} />
                 {/* <button>
                   <FontAwesomeIcon icon={faSmile} className="icon" />
                 </button> */}
@@ -140,7 +198,7 @@ class Chat extends Component {
                 const friend = friends[friendKey];
 
                 return (
-                  <div key={friendKey} className="friend">
+                  <div key={friendKey} className="friend" onClick={(e) => this.openChat(friendKey)}>
                     <FontAwesomeIcon icon={faUserCircle} />
                     <p>{friend.name}</p>
                   </div>

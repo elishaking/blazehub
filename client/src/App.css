@@ -407,7 +407,8 @@ small {
 
 .comment-input svg,
 .comment-display svg,
-.friend svg {
+.friend svg,
+.chat svg {
   font-size: 2.3rem;
   margin-right: 0.5em;
 }
@@ -474,6 +475,7 @@ small {
 
 .chat-messages {
   flex: 1;
+  background-color: #F2EFF6;
 }
 
 .chat-input {
@@ -483,6 +485,21 @@ small {
 
 .chat-input input {
   width: 100%;
+  border-radius: 100px;
+  border: none;
+}
+
+.chat {
+  display: flex;
+  align-items: center;
+  margin: 2em 1em;
+}
+
+.chat div {
+  background-color: white;
+  border-radius: 100px;
+  padding: 0.5em 1.7em;
+  text-align: end;
 }
 
 .friend {
