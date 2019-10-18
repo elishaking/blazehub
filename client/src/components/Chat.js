@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faUserCircle, faHome, faUserAlt, faComments, faBookmark, faSignOutAlt, faImage, faSmile } from '@fortawesome/free-solid-svg-icons';
+import { faUserCircle, faHome, faUserAlt, faComments, faBookmark, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import app from 'firebase/app';
 import 'firebase/database';
 
@@ -47,7 +47,6 @@ class Chat extends Component {
   getChatKey = (friendKey) => [this.userKey, friendKey].sort().join("_");
 
   openChat = (key) => {
-    this.state.chats = [];
     this.currentChatKey = this.getChatKey(key);
     this.setState({
       chats: [],
@@ -83,7 +82,7 @@ class Chat extends Component {
         },
       };
 
-      this.state.chatText = '';
+      this.setState({ chatText: '' });
       event.target.value = '';
 
       this.userRef.child('chats').child(this.currentChatKey).push(newChat, (err) => {
