@@ -7,6 +7,8 @@ import { faSearch, faUserCircle, faHome, faUserAlt, faComments, faBookmark, faSi
 import app from 'firebase/app';
 import 'firebase/database';
 
+import { signoutUser } from '../redux_actions/authActions';
+
 class Chat extends Component {
   constructor(props) {
     super(props);
@@ -38,6 +40,12 @@ class Chat extends Component {
   getUserKey = (userEmail) =>
     userEmail.replace(/\./g, "~").replace(/@/g, "~~");
 
+
+  signOut = () => {
+    this.props.signoutUser();
+    this.props.history.push('/');
+  }
+
   render() {
     const hasProfilePic = false;
     const { user } = this.props.auth;
@@ -54,7 +62,7 @@ class Chat extends Component {
             <div className="auth-nav-right">
               {hasProfilePic ? <img src="" alt={firstName} srcSet="" /> : <FontAwesomeIcon icon={faUserCircle} className="icon" />} &nbsp;&nbsp;&nbsp;
               <span>{`${firstName} ${lastName}`}</span>
-              <input type="button" value="Sign Out" className="btn-input" />
+              <input type="button" value="Sign Out" className="btn-input" onClick={this.signOut} />
             </div>
           </nav>
         </header>
@@ -138,4 +146,4 @@ const mapStateToProps = (state) => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps)(Chat);
+export default connect(mapStateToProps, { signoutUser })(Chat);
