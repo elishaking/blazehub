@@ -51,6 +51,20 @@ nav .text-input {
   margin-right: 1em;
 }
 
+.welcome {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1em;
+}
+
+.mb-1 {
+  margin-bottom: 1em;
+}
+
+.welcome img {
+  margin-right: 1em;
+}
+
 .signin-input {
   display: initial;
 }
@@ -165,10 +179,6 @@ input[type="text"]:focus+.icon {
   display: flex;
   flex-direction: column;
   justify-content: center;
-}
-
-.content h1 {
-  margin-bottom: 1em;
 }
 
 .content input,

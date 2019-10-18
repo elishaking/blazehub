@@ -68,7 +68,7 @@ class Signin extends Component {
 
         <div className="content block">
           <div className="form-container">
-            <h1>Sign In to BlazeChat</h1>
+            <h1 className="mb-1">Sign In to BlazeChat</h1>
             <form onSubmit={this.onSubmit}>
               <input type="email" name="email" placeholder="email" className="text-input" onChange={this.onChange} />
               <input type="password" name="password" placeholder="password" className="text-input" onChange={this.onChange} />
