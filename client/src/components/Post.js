@@ -113,10 +113,10 @@ export default class Post extends Component {
             <FontAwesomeIcon icon={faComments} />
             <span>{post.comments ? Object.keys(post.comments).length : 0}</span>
           </button>
-          <button className="post-action">
+          {/* <button className="post-action">
             <FontAwesomeIcon icon={faShare} />
             <span>{post.shares ? Object.keys(post.shares).length : 0}</span>
-          </button>
+          </button> */}
         </div>
 
         {
