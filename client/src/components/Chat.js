@@ -82,6 +82,10 @@ class Chat extends Component {
           key: this.userKey
         },
       };
+
+      this.state.chatText = '';
+      event.target.value = '';
+
       this.userRef.child('chats').child(this.currentChatKey).push(newChat, (err) => {
         if (err) console.error(err);
         else console.log("chat added");
@@ -183,12 +187,16 @@ class Chat extends Component {
                 }
               </div>
 
-              <div className="chat-input">
-                <input type="text" name="chatText" placeholder="Type a message" onChange={this.onChange} onKeyPress={this.sendChat} />
-                {/* <button>
+              {
+                chatTitle != "BlazeChat" && (
+                  <div className="chat-input">
+                    <input type="text" name="chatText" placeholder="Type a message" onChange={this.onChange} onKeyPress={this.sendChat} />
+                    {/* <button>
                   <FontAwesomeIcon icon={faSmile} className="icon" />
                 </button> */}
-              </div>
+                  </div>
+                )
+              }
             </div>
           </div>
 
