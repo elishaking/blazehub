@@ -24,21 +24,28 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    axios.get('/api/users/firebase').then((res) => {
-      app.initializeApp(res.data);
+    if (app.apps) {
+      this.setupFirebase();
+    } else {
+      axios.get('/api/users/firebase').then((res) => {
+        app.initializeApp(res.data);
+        this.setupFirebase();
+      });
+    }
+  }
 
-      this.postsRef = app.database().ref('posts');
-      this.postsRef.on('child_added', (newPostSnapShot) => {
-        const newPost = {
-          key: newPostSnapShot.key,
-          ...newPostSnapShot.val()
-        }
-        this.setState({
-          posts: [
-            newPost,
-            ...this.state.posts
-          ]
-        });
+  setupFirebase = () => {
+    this.postsRef = app.database().ref('posts');
+    this.postsRef.on('child_added', (newPostSnapShot) => {
+      const newPost = {
+        key: newPostSnapShot.key,
+        ...newPostSnapShot.val()
+      }
+      this.setState({
+        posts: [
+          newPost,
+          ...this.state.posts
+        ]
       });
     });
   }
