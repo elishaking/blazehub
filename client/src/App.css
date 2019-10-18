@@ -615,11 +615,45 @@ small {
   .alt-search {
     display: block;
   }
+
+  .alt-search {
+    margin-right: 0;
+  }
+
+  .auth-nav-right span {
+    margin-right: 0;
+  }
 }
 
 @media (max-width: 760px) {
   .form-container {
     width: 70vw;
+  }
+
+  .main-feed {
+    margin: 0;
+  }
+
+  .main-nav {
+    width: 100%;
+    margin-left: -10vw;
+    padding: 1em 1em;
+    position: fixed;
+    bottom: 0;
+    box-shadow: 0 0 4px;
+  }
+
+  .main-nav ul {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    padding: 0 5vw;
+  }
+
+  .main-nav li {
+    margin-right: 0;
+    padding: 0;
   }
 }
 
