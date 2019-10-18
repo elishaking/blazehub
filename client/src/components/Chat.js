@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle, faHome, faUserAlt, faComments, faBookmark, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import app from 'firebase/app';
 import 'firebase/database';
+import axios from 'axios';
 
 import { signoutUser } from '../redux_actions/authActions';
 
@@ -21,17 +22,28 @@ class Chat extends Component {
     };
 
     this.userKey = this.getUserKey(props.auth.user.email);
-    this.userRef = app.database().ref('users').child(this.userKey);
     this.currentChatKey = '';
   }
 
   componentDidMount() {
+    if (app.apps) {
+      this.setupFirebase();
+    } else {
+      axios.get('/api/users/firebase').then((res) => {
+        app.initializeApp(res.data);
+        this.setupFirebase();
+      });
+    }
+  }
+
+  setupFirebase = () => {
+    this.userRef = app.database().ref('users').child(this.userKey);
     this.userRef.child('friends').once('value', (friendsSnapShot) => {
       this.setState({
         friends: friendsSnapShot.val()
       });
     });
-  }
+  };
 
   onChange = (event) => {
     this.setState({
