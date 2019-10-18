@@ -45,9 +45,9 @@ class Home extends Component {
       text: this.state.postText,
       date: Date.now(),
       imageUrl: '',
-      likes: { name: "likes" },
-      comments: { name: "comments" },
-      shares: { name: "shares" }
+      // likes: { name: "likes" },
+      // comments: { name: "comments" },
+      // shares: { name: "shares" }
     };
     this.postsRef.push(newPost, (err) => {
       if (err) console.error(err);

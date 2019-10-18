@@ -11,36 +11,80 @@ export default class Post extends Component {
       post: {
         ...this.props.post
       },
-      showComments: false
+      showComments: false,
+      commentText: '',
     };
   }
 
   componentDidMount() {
-    this.props.postRef.on('value', (updatedPostSnapShot) => {
+    // this.props.postRef.on('value', (updatedPostSnapShot) => {
+    //   this.setState({
+    //     post: updatedPostSnapShot.val()
+    //   });
+    // });
+
+    this.props.postRef.child('likes').on('value', (updatedLikesSnapShot) => {
+      const { post } = this.state;
+      post.likes = updatedLikesSnapShot.val();
       this.setState({
-        post: updatedPostSnapShot.val()
-      })
+        post
+      });
+    });
+
+    this.props.postRef.child('comments').on('value', (updatedCommentsSnapShot) => {
+      const { post } = this.state;
+      post.comments = updatedCommentsSnapShot.val();
+      this.setState({
+        post
+      });
     });
   }
 
   likePost = () => {
-    if (this.state.post.likes[this.props.user.firstName]) {
-      this.props.postRef.child('likes').child(this.props.user.firstName).remove();
+    const { postRef, user } = this.props;
+    if (this.state.post.likes && this.state.post.likes[user.firstName]) {
+      postRef.child('likes').child(user.firstName).remove();
     } else {
-      this.props.postRef.child('likes').update({
-        [this.props.user.firstName]: 1
+      postRef.child('likes').update({
+        [user.firstName]: 1  //todo: change to user_id
       });
     }
   };
 
   toggleComments = () => {
+    window.post = this.state.post;
     this.setState({
       showComments: !this.state.showComments
     });
   };
 
+  /** @param {React.KeyboardEvent<HTMLInputElement>} event */
+  addComment = (event) => {
+    if (event.which == 13 && this.state.commentText !== '') {
+      let { post, commentText } = this.state;
+      const newComment = {
+        text: commentText,
+        date: Date.now(),
+        user: post.user
+      };
+      commentText = '';
+      event.target.value = '';
+      this.props.postRef.child('comments').push(newComment, (err) => {
+        if (err) return console.error(err);
+        else console.log("comment added");
+      })
+    }
+  }
+
+  /** @param {React.ChangeEvent<HTMLInputElement>} event */
+  onChange = (event) => {
+    this.setState({
+      [event.target.name]: event.target.value
+    });
+  }
+
   render() {
-    const { post, showComments } = this.state;
+    const { post, showComments, comments } = this.state;
     return (
       <div className="post">
         <header>
@@ -61,15 +105,15 @@ export default class Post extends Component {
         <div className="post-actions">
           <button className="post-action" onClick={this.likePost}>
             <FontAwesomeIcon icon={faThumbsUp} />
-            <span>{Object.keys(post.likes).length - 1}</span>
+            <span>{post.likes ? Object.keys(post.likes).length : 0}</span>
           </button>
           <button className="post-action" onClick={this.toggleComments}>
             <FontAwesomeIcon icon={faComments} />
-            <span>{Object.keys(post.comments).length - 1}</span>
+            <span>{post.comments ? Object.keys(post.comments).length : 0}</span>
           </button>
           <button className="post-action">
             <FontAwesomeIcon icon={faShare} />
-            <span>{Object.keys(post.shares).length - 1}</span>
+            <span>{post.shares ? Object.keys(post.shares).length : 0}</span>
           </button>
         </div>
 
@@ -80,8 +124,22 @@ export default class Post extends Component {
               <hr />
               <div className="comment-input">
                 <FontAwesomeIcon icon={faUserCircle} />
-                <input type="text" placeholder="Write a comment" />
+                <input type="text" name="commentText" placeholder="Write a comment" onKeyPress={this.addComment} onChange={this.onChange} />
               </div>
+
+              {
+                post.comments && Object.keys(post.comments).map((commentKey) => {
+                  const comment = post.comments[commentKey];
+                  return (
+                    <div key={commentKey} className="comment">
+                      <div className="comment-display">
+                        <FontAwesomeIcon icon={faUserCircle} />
+                        <p>{comment.text}</p>
+                      </div>
+                    </div>
+                  );
+                })
+              }
             </div>
           )
         }
