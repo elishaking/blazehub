@@ -51,6 +51,12 @@ router.post("/signup", (req, res) => {
             lastName: req.body.lastName,
             email: req.body.email,
             password: hash,
+            friends: {
+              "blazebot": {
+                name: "BlazeBot",
+
+              }
+            }
           }
           userRef
             .set(newUser, (err) => {
