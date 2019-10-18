@@ -1,7 +1,7 @@
 //@ts-check
 import React, { Component } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserCircle, faComments, faThumbsUp, faShare } from '@fortawesome/free-solid-svg-icons';
+import { faUserCircle, faComments, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
 
 export default class Post extends Component {
   constructor(props) {
@@ -87,7 +87,7 @@ export default class Post extends Component {
   }
 
   render() {
-    const { post, showComments, comments } = this.state;
+    const { post, showComments } = this.state;
     return (
       <div className="post">
         <header>
