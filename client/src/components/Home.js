@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faUserCircle, faHome, faUserAlt, faComments, faBookmark, faSignOutAlt, faImage, faSmile, faUserFriends } from '@fortawesome/free-solid-svg-icons';
 import app from 'firebase/app';
 import 'firebase/database';
+import axios from 'axios';
 
 import Post from './Post';
 
@@ -20,11 +21,21 @@ class Home extends Component {
       postText: '',
       posts: []
     }
-
-    this.postsRef = app.database().ref('posts');
   }
 
   componentDidMount() {
+    if (app.apps) {
+      this.setupFirebase();
+    } else {
+      axios.get('/api/users/firebase').then((res) => {
+        app.initializeApp(res.data);
+        this.setupFirebase();
+      });
+    }
+  }
+
+  setupFirebase = () => {
+    this.postsRef = app.database().ref('posts');
     this.postsRef.on('child_added', (newPostSnapShot) => {
       const newPost = {
         key: newPostSnapShot.key,

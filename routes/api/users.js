@@ -1,13 +1,14 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const firebase = require('firebase');
+const passport = require('passport');
+const app = require('firebase/app');
 require('firebase/database');
 
 const validateSignupData = require('../../validation/signup');
 const validateSigninData = require('../../validation/signin');
 
-const firebaseApp = firebase.initializeApp({
+const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
   authDomain: process.env.FIREBASE_AUTH_DOMAIN,
   databaseURL: process.env.FIREBASE_DATABASE_URL,
@@ -16,7 +17,8 @@ const firebaseApp = firebase.initializeApp({
   messagingSenderId: process.env.FIREBASE_MESSEGING_SENDER_ID,
   appId: process.env.FIREBASE_APP_ID,
   measurementId: process.env.FIREBASE_MEASUREMENT_ID
-});
+};
+const firebaseApp = app.initializeApp(firebaseConfig);
 
 const dbRef = firebaseApp.database().ref();
 
@@ -120,6 +122,13 @@ router.post('/signin', (req, res) => {
       }
     });
   })
+});
+
+//@route GET /api/users/firebase
+//@description Send firebase credentials
+//@access Private
+router.get('/firebase', passport.authenticate('jwt', { session: false }), (req, res) => {
+  res.json(firebaseConfig);
 });
 
 module.exports = router;
