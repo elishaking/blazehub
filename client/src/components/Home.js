@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faUserCircle, faHome, faUserAlt, faComments, faBookmark, faSignOutAlt, faImage, faSmile, faThumbsUp, faShare } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faUserCircle, faHome, faUserAlt, faComments, faBookmark, faSignOutAlt, faImage, faSmile, faUserFriends } from '@fortawesome/free-solid-svg-icons';
 import app from 'firebase/app';
 import 'firebase/database';
 
@@ -92,41 +92,38 @@ class Home extends Component {
         <div className="main">
           <div className="main-nav">
             <header>
-              <h2>
-                {hasProfilePic ? <img src="" alt={firstName} srcSet="" /> : <FontAwesomeIcon icon={faUserCircle} className="icon" />} &nbsp;&nbsp;&nbsp;
-                <span>{`${firstName} ${lastName}`}</span>
-              </h2>
+              <h3>{`${firstName} ${lastName}`}</h3>
             </header>
             <nav>
               <ul>
                 <li>
                   <Link to="/home">
-                    <FontAwesomeIcon icon={faHome} /> &nbsp;&nbsp;&nbsp; Home
+                    <FontAwesomeIcon icon={faHome} /> <span>Home</span>
                   </Link>
                 </li>
                 <li>
                   <Link to="/chat">
-                    <FontAwesomeIcon icon={faComments} /> &nbsp;&nbsp;&nbsp; Chat
+                    <FontAwesomeIcon icon={faComments} /> <span>Chat</span>
                   </Link>
                 </li>
                 <li>
                   <Link to="/profile">
-                    <FontAwesomeIcon icon={faUserAlt} /> &nbsp;&nbsp;&nbsp; Profile
+                    <FontAwesomeIcon icon={faUserAlt} /> <span>Profile</span>
                   </Link>
                 </li>
                 <li>
                   <Link to="/bookmarks">
-                    <FontAwesomeIcon icon={faBookmark} /> &nbsp;&nbsp;&nbsp; Bookmarks
+                    <FontAwesomeIcon icon={faBookmark} /> <span>Bookmarks</span>
                   </Link>
                 </li>
                 <li>
                   <Link to="#">
-                    <FontAwesomeIcon icon={faSignOutAlt} /> &nbsp;&nbsp;&nbsp; Sign Out
+                    <FontAwesomeIcon icon={faSignOutAlt} /> <span>Sign Out</span>
                   </Link>
                 </li>
                 <li>
                   <Link to="#">
-                    <FontAwesomeIcon icon={faSignOutAlt} /> &nbsp;&nbsp;&nbsp; Invite Friends
+                    <FontAwesomeIcon icon={faUserFriends} /> <span>Invite Friends</span>
                   </Link>
                 </li>
               </ul>
