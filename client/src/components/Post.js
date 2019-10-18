@@ -93,7 +93,7 @@ export default class Post extends Component {
           <FontAwesomeIcon icon={faUserCircle} />
           <div>
             <h4>{`${post.user.firstName}  ${post.user.lastName}`}</h4>
-            <small>{new Date(post.date).toTimeString()}</small>
+            <small>{new Date(post.date).toLocaleTimeString()}</small>
           </div>
         </header>
 
@@ -136,7 +136,10 @@ export default class Post extends Component {
                     <div key={commentKey} className="comment">
                       <div className="comment-display">
                         <FontAwesomeIcon icon={faUserCircle} />
-                        <p>{comment.text}</p>
+                        <div>
+                          <p><span>{`${comment.user.firstName} ${comment.user.lastName}`}</span> {comment.text}</p>
+                          <small>{new Date(comment.date).toLocaleTimeString()}</small>
+                        </div>
                       </div>
                     </div>
                   );

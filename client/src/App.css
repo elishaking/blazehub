@@ -350,8 +350,9 @@ button:focus {
   margin-right: 0.5em;
 }
 
-.post header small {
-  color: #7c62a9bf;
+small {
+  /* color: #7c62a9bf; */
+  font-size: 70%;
 }
 
 .post hr {
@@ -402,7 +403,8 @@ button:focus {
   align-items: center;
 }
 
-.comment-input svg {
+.comment-input svg,
+.comment-display svg {
   font-size: 2.3rem;
   margin-right: 0.5em;
 }
@@ -411,6 +413,31 @@ button:focus {
   width: 100%;
   border-radius: 100px;
   /* background-color: #7c62a940; */
+}
+
+.comment-display {
+  display: flex;
+  margin: 1em 0;
+  align-items: center;
+}
+
+.comment-display p {
+  background: white;
+  padding: 0.3em 1em;
+  border-radius: 100px;
+}
+
+.comment-display p span {
+  font-weight: 700;
+  margin-right: 0.5em;
+}
+
+.comment-display small {
+  /* text-align: end;
+  display: block;
+  margin-top: 0.3em;
+  margin-right: 1em; */
+  margin-left: 1em;
 }
 
 .extras {
