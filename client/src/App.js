@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import jwt_decode from 'jwt-decode';
@@ -35,18 +35,49 @@ const updateAuthToken = () => {
 updateAuthToken();
 
 //todo: implement server auth token storage -> convert to class component (return loading UI until token fetched)
-function App() {
-  return (
-    <Spinner />
-    // <Provider store={store}>
-    //   <Router>
-    //     <Route exact path="/" component={Landing} />
-    //     <Route exact path="/signin" component={Signin} />
-    //     <Route exact path="/home" component={Home} />
-    //     <Route exact path="/chat" component={Chat} />
-    //   </Router>
-    // </Provider>
-  );
+
+class App extends Component {
+  componentWillMount() {
+    this.state = {
+      loading: true
+    };
+  }
+
+  render() {
+    return this.state.loading ? (
+      <div style={{
+        height: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
+      }}>
+        <Spinner />
+      </div>
+    ) : (
+        <Provider store={store}>
+          <Router>
+            <Route exact path="/" component={Landing} />
+            <Route exact path="/signin" component={Signin} />
+            <Route exact path="/home" component={Home} />
+            <Route exact path="/chat" component={Chat} />
+          </Router>
+        </Provider>
+      );
+  }
 }
+
+// function App() {
+//   return (
+//     <Spinner />
+//     // <Provider store={store}>
+//     //   <Router>
+//     //     <Route exact path="/" component={Landing} />
+//     //     <Route exact path="/signin" component={Signin} />
+//     //     <Route exact path="/home" component={Home} />
+//     //     <Route exact path="/chat" component={Chat} />
+//     //   </Router>
+//     // </Provider>
+//   );
+// }
 
 export default App;
