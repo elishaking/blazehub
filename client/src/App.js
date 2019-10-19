@@ -10,6 +10,7 @@ import Landing from './components/Landing';
 import Signin from './components/Signin';
 import Home from './components/Home';
 import Chat from './components/Chat';
+import Spinner from './components/Spinner';
 
 const updateAuthToken = () => {
   if (localStorage.jwtToken) {
@@ -36,14 +37,15 @@ updateAuthToken();
 //todo: implement server auth token storage -> convert to class component (return loading UI until token fetched)
 function App() {
   return (
-    <Provider store={store}>
-      <Router>
-        <Route exact path="/" component={Landing} />
-        <Route exact path="/signin" component={Signin} />
-        <Route exact path="/home" component={Home} />
-        <Route exact path="/chat" component={Chat} />
-      </Router>
-    </Provider>
+    <Spinner />
+    // <Provider store={store}>
+    //   <Router>
+    //     <Route exact path="/" component={Landing} />
+    //     <Route exact path="/signin" component={Signin} />
+    //     <Route exact path="/home" component={Home} />
+    //     <Route exact path="/chat" component={Chat} />
+    //   </Router>
+    // </Provider>
   );
 }
 
