@@ -5,6 +5,7 @@ import jwt_decode from 'jwt-decode';
 import './App.css';
 import store from './store';
 import { setAuthToken, setCurrentUser, signoutUser, } from './redux_actions/authActions';
+import axios from 'axios';
 
 import Landing from './components/Landing';
 import Signin from './components/Signin';
@@ -12,35 +13,67 @@ import Home from './components/Home';
 import Chat from './components/Chat';
 import Spinner from './components/Spinner';
 
-const updateAuthToken = () => {
-  if (localStorage.jwtToken) {
-    setAuthToken(localStorage.jwtToken);
+// const updateAuthToken = () => {
+//   if (localStorage.jwtToken) {
+//     setAuthToken(localStorage.jwtToken);
 
-    const decodedUserData = jwt_decode(localStorage.jwtToken);
+//     const decodedUserData = jwt_decode(localStorage.jwtToken);
 
-    store.dispatch(setCurrentUser(decodedUserData));
+//     store.dispatch(setCurrentUser(decodedUserData));
 
-    // Check for expired token
-    const currentTime = Date.now() / 1000;
-    if (decodedUserData.exp < currentTime) {
-      store.dispatch(signoutUser());
+//     // Check for expired token
+//     const currentTime = Date.now() / 1000;
+//     if (decodedUserData.exp < currentTime) {
+//       store.dispatch(signoutUser());
 
-      // Redirect to signin
-      window.location.href = '/signin';
-    }
-  }
-};
+//       // Redirect to signin
+//       window.location.href = '/signin';
+//     }
+//   }
+// };
 
 // upon page reload/refresh, update user authentication token
-updateAuthToken();
-
-//todo: implement server auth token storage -> convert to class component (return loading UI until token fetched)
+// updateAuthToken();
 
 class App extends Component {
-  componentWillMount() {
+  constructor(props) {
+    super(props);
+
     this.state = {
       loading: true
     };
+  }
+
+  componentDidMount() {
+    this.getUserToken();
+  }
+
+  getUserToken = () => {
+    axios.get('/api/users/token').then((res) => {
+      this.setState({
+        loading: false
+      });
+
+      const { token } = res.data;
+      if (token) {
+        setAuthToken(token);
+
+        const decodedUserData = jwt_decode(token);
+
+        store.dispatch(setCurrentUser(decodedUserData));
+
+        // Check for expired token
+        const currentTime = Date.now() / 1000;
+        if (decodedUserData.exp < currentTime) {
+          store.dispatch(signoutUser());
+
+          // Redirect to signin
+          window.location.href = '/signin';
+        }
+      }
+    }).catch((err) => this.setState({
+      loading: false
+    }));
   }
 
   render() {

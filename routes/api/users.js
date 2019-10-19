@@ -111,10 +111,16 @@ router.post('/signin', (req, res) => {
           {
             expiresIn: 3600 * 24
           },
-          (err, token) => res.json({
-            success: true,
-            token: `Bearer ${token}`
-          })
+          (err, token) => {
+            dbRef.child('tokens').child(userKey).set(token, (err) => {
+              if (err) return console.error(err);
+
+              return res.json({
+                success: true,
+                token: `Bearer ${token}`
+              });
+            });
+          }
         )
       } else {
         errors.password = 'Password incorrect';
@@ -122,6 +128,18 @@ router.post('/signin', (req, res) => {
       }
     });
   })
+});
+
+//@route GET /api/users/token
+//@description Send Auth token
+//@access Private
+router.get('/token', passport.authenticate('jwt', { session: false }), (req, res) => {
+  console.log(req.user.id);
+  dbRef.child('tokens').child(req.user.id).once("value", (userToken) => {
+    if (userToken.exists()) return res.json({ token: userToken.val() });
+
+    res.json({ token: null });
+  });
 });
 
 //@route GET /api/users/firebase
