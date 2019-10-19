@@ -24,7 +24,7 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    if (app.apps) {
+    if (app.apps.length > 0) {
       this.setupFirebase();
     } else {
       axios.get('/api/users/firebase').then((res) => {
