@@ -33,6 +33,7 @@ const updateAuthToken = () => {
 // upon page reload/refresh, update user authentication token
 updateAuthToken();
 
+//todo: implement server auth token storage -> convert to class component (return loading UI until token fetched)
 function App() {
   return (
     <Provider store={store}>
