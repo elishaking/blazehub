@@ -31,7 +31,7 @@ export const signinUser = (userData) => (dispatch) => {
     .then((res) => {
       // save token to localStorage to enable global access
       const token = res.data.token;
-      // localStorage.setItem('jwtToken', token);
+      localStorage.setItem('jwtToken', token);
 
       // add token to axios Authorization Header
       setAuthToken(token);
@@ -47,7 +47,7 @@ export const signinUser = (userData) => (dispatch) => {
 // @action-type SET_CURRENT_USER
 // @description sign-in/authenticate user
 export const signoutUser = () => (dispatch) => {
-  // localStorage.removeItem('jwtToken');
+  localStorage.removeItem('jwtToken');
   setAuthToken(false);
   dispatch(setCurrentUser({}));
 }
