@@ -8,6 +8,8 @@ import app from 'firebase/app';
 import 'firebase/database';
 import axios from 'axios';
 
+import { signoutUser } from '../redux_actions/authActions';
+
 import Post from './Post';
 
 class Home extends Component {
@@ -73,6 +75,11 @@ class Home extends Component {
     });
   };
 
+  signOut = () => {
+    this.props.signoutUser();
+    this.props.history.push('/');
+  };
+
   render() {
     const hasProfilePic = false;
     const { user } = this.props.auth;
@@ -95,7 +102,7 @@ class Home extends Component {
             <div className="auth-nav-right">
               {hasProfilePic ? <img src="" alt={firstName} srcSet="" /> : <FontAwesomeIcon icon={faUserCircle} className="icon" />} &nbsp;&nbsp;&nbsp;
               <span>{`${firstName} ${lastName}`}</span>
-              <input type="button" value="Sign Out" className="btn-input" />
+              <input type="button" value="Sign Out" className="btn-input" onClick={this.signOut} />
             </div>
           </nav>
 
@@ -202,4 +209,4 @@ const mapStateToProps = (state) => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps)(Home);
+export default connect(mapStateToProps, { signoutUser })(Home);
