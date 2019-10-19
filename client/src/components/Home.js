@@ -11,6 +11,7 @@ import axios from 'axios';
 import { signoutUser } from '../redux_actions/authActions';
 
 import Post from './Post';
+import Spinner from './Spinner';
 
 class Home extends Component {
   /**
@@ -21,7 +22,8 @@ class Home extends Component {
 
     this.state = {
       postText: '',
-      posts: []
+      posts: [],
+      loading: true
     }
   }
 
@@ -39,10 +41,12 @@ class Home extends Component {
   setupFirebase = () => {
     this.postsRef = app.database().ref('posts');
     this.postsRef.on('child_added', (newPostSnapShot) => {
+      // console.log('child_added');
       const newPost = {
         key: newPostSnapShot.key,
         ...newPostSnapShot.val()
-      }
+      };
+      if (this.state.loading) this.setState({ loading: false });
       this.setState({
         posts: [
           newPost,
@@ -182,7 +186,7 @@ class Home extends Component {
 
             <div className="posts">
               {
-                this.state.posts.map((post) => (
+                this.state.loading ? (<Spinner />) : this.state.posts.map((post) => (
                   <Post
                     key={post.key}
                     postRef={this.postsRef.child(post.key)}
