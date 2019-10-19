@@ -112,13 +112,14 @@ router.post('/signin', (req, res) => {
             expiresIn: 3600 * 24
           },
           (err, token) => {
-            dbRef.child('tokens').child(userKey).set(token, (err) => {
-              if (err) return console.error(err);
+            // dbRef.child('tokens').child(userKey).set(token, (err) => {
+            //   if (err) return console.error(err);
 
-              return res.json({
-                success: true,
-                token: `Bearer ${token}`
-              });
+
+            // });
+            return res.json({
+              success: true,
+              token: `Bearer ${token}`
             });
           }
         )
@@ -133,14 +134,14 @@ router.post('/signin', (req, res) => {
 //@route GET /api/users/token
 //@description Send Auth token
 //@access Private
-router.get('/token', passport.authenticate('jwt', { session: false }), (req, res) => {
-  console.log(req.user.id);
-  dbRef.child('tokens').child(req.user.id).once("value", (userToken) => {
-    if (userToken.exists()) return res.json({ token: userToken.val() });
+// router.get('/token', passport.authenticate('jwt', { session: false }), (req, res) => {
+//   console.log(req.user.id);
+//   dbRef.child('tokens').child(req.user.id).once("value", (userToken) => {
+//     if (userToken.exists()) return res.json({ token: userToken.val() });
 
-    res.json({ token: null });
-  });
-});
+//     res.json({ token: null });
+//   });
+// });
 
 //@route GET /api/users/firebase
 //@description Send firebase credentials
