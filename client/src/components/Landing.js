@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { signinUser, signupUser } from '../redux_actions/authActions';
+import Spinner from './Spinner';
 
 class Landing extends Component {
   constructor() {
@@ -18,6 +19,9 @@ class Landing extends Component {
       firstName: '',
       lastName: '',
       gender: '',
+
+      loadingSignin: false,
+      loadingSignup: false
     };
   }
 
@@ -30,8 +34,30 @@ class Landing extends Component {
       this.props.history.push('/home');
     }
   }
+
   componentWillUnmount() {
     window.removeEventListener('resize', this.resize);
+  }
+
+  // after redux store is updated, this life cycle method will be called
+  componentWillReceiveProps(nextProps) {
+    this.redirectIfAuthenticated(this.props.auth.isAuthenticated);
+
+    if (nextProps.auth.errors) {
+      this.setState({
+        errors: nextProps.auth.errors,
+        loadingSignin: false,
+        loadingSignup: false
+      });
+    }
+  }
+
+  /** @param {boolean} isAuthenticated */
+  redirectIfAuthenticated = (isAuthenticated) => {
+    // redirect authenticated user to home-page
+    if (isAuthenticated) {
+      this.props.history.push('/home');
+    }
   }
 
   resize = () => {
@@ -58,6 +84,9 @@ class Landing extends Component {
 
   onSubmitSignin = (event) => {
     event.preventDefault();
+
+    this.setState({ loadingSignin: true });
+
     if (this.state.method === "POST") {
       const userData = {
         email: this.state.signinEmail,
@@ -71,6 +100,9 @@ class Landing extends Component {
 
   onSubmitSignup = (event) => {
     event.preventDefault();
+
+    this.setState({ loadingSignup: true });
+
     const userData = {
       firstName: this.state.firstName,
       lastName: this.state.lastName,
@@ -96,7 +128,9 @@ class Landing extends Component {
                   <input type="email" name="signinEmail" placeholder="email" className="text-input" onChange={this.onChange} />
                   <input type="password" name="signinPassword" placeholder="password" className="text-input" onChange={this.onChange} />
                 </div>
-                <input type="submit" value="Sign In" className="btn-input" />
+                {
+                  this.state.loadingSignin ? (<Spinner full={false} />) : (<input type="submit" value="Sign In" className="btn-input" />)
+                }
               </form>
             </div>
           </nav>
@@ -146,7 +180,9 @@ class Landing extends Component {
                     <option value="other">Other</option>
                   </select>
                 </div>
-                <input type="submit" value="Sign Up" className="btn-input btn-pri" />
+                {
+                  this.state.loadingSignup ? (<Spinner full={false} />) : (<input type="submit" value="Sign Up" className="btn-input btn-pri" />)
+                }
               </form>
             </div>
           </div>
