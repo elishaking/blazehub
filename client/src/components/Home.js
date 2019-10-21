@@ -1,9 +1,8 @@
 //@ts-check
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faUserCircle, faHome, faUserAlt, faComments, faBookmark, faSignOutAlt, faImage, faSmile, faUserFriends } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faUserCircle, faUserAlt, faImage, faSmile } from '@fortawesome/free-solid-svg-icons';
 import app from 'firebase/app';
 import 'firebase/database';
 import axios from 'axios';
@@ -12,6 +11,7 @@ import { signoutUser } from '../redux_actions/authActions';
 
 import Post from './Post';
 import Spinner from './Spinner';
+import MainNav from './MainNav';
 
 class Home extends Component {
   /**
@@ -118,45 +118,7 @@ class Home extends Component {
         </header>
 
         <div className="main">
-          <div className="main-nav">
-            <header>
-              <h3>{`${firstName} ${lastName}`}</h3>
-            </header>
-            <nav>
-              <ul>
-                <li>
-                  <Link to="/home">
-                    <FontAwesomeIcon icon={faHome} /> <span>Home</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/chat">
-                    <FontAwesomeIcon icon={faComments} /> <span>Chat</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/profile">
-                    <FontAwesomeIcon icon={faUserAlt} /> <span>Profile</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/bookmarks">
-                    <FontAwesomeIcon icon={faBookmark} /> <span>Bookmarks</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link to="#">
-                    <FontAwesomeIcon icon={faSignOutAlt} /> <span>Sign Out</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link to="#">
-                    <FontAwesomeIcon icon={faUserFriends} /> <span>Invite Friends</span>
-                  </Link>
-                </li>
-              </ul>
-            </nav>
-          </div>
+          <MainNav user={user} />
 
           <div className="main-feed">
             <header>
