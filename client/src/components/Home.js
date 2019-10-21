@@ -47,11 +47,10 @@ class Home extends Component {
         ...newPostSnapShot.val()
       };
       if (this.state.loading) this.setState({ loading: false });
+      const { posts } = this.state;
+      posts.unshift(newPost);
       this.setState({
-        posts: [
-          newPost,
-          ...this.state.posts
-        ]
+        posts
       });
     });
   }
