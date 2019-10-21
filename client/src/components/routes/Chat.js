@@ -38,8 +38,9 @@ class Chat extends Component {
   }
 
   setupFirebase = () => {
-    this.userRef = app.database().ref('users').child(this.userKey);
-    this.userRef.child('friends').once('value', (friendsSnapShot) => {
+    const db = app.database();
+    this.chatRef = db.ref('chats').child(this.userKey);
+    db.ref('friends').once('value', (friendsSnapShot) => {
       this.setState({
         friends: friendsSnapShot.val()
       });
@@ -66,9 +67,9 @@ class Chat extends Component {
       chatTitle: this.state.friends[key].name
     });
     //todo: listen for all chats from all friends
-    // this.userRef.child('chats').child(this.currentFriendKey).off('child_added');
+    // this.chatRef.child('chats').child(this.currentFriendKey).off('child_added');
 
-    this.userRef.child('chats').child(this.currentChatKey).on('child_added', (chatSnapShot) => {
+    this.chatRef.child('chats').child(this.currentChatKey).on('child_added', (chatSnapShot) => {
       this.setState({
         chats: [
           ...this.state.chats,
@@ -98,7 +99,7 @@ class Chat extends Component {
       this.setState({ chatText: '' });
       event.target.value = '';
 
-      this.userRef.child('chats').child(this.currentChatKey).push(newChat, (err) => {
+      this.chatRef.child('chats').child(this.currentChatKey).push(newChat, (err) => {
         if (err) console.error(err);
         else console.log("chat added");
       });

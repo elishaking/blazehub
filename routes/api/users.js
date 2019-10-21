@@ -53,18 +53,21 @@ router.post("/signup", (req, res) => {
             lastName: req.body.lastName,
             email: req.body.email,
             password: hash,
-            friends: {
-              "blazebot": {
-                name: "BlazeBot",
-
-              }
-            }
           }
           userRef
             .set(newUser, (err) => {
               if (err) return console.error(err);
 
-              res.json({ success: true });
+              // create default blazebot friend
+              dbRef.child('friends').child(userKey).set({
+                "blazebot": {
+                  name: "BlazeBot",
+
+                }
+              }, (err) => {
+                if (err) return console.error(err);
+                res.json({ success: true });
+              });
             });
         });
       });
