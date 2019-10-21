@@ -131,6 +131,15 @@ router.post('/signin', (req, res) => {
   })
 });
 
+//@route GET /api/users/
+//@description Send All users
+//@access Private
+router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
+  dbRef.child('users').limitToLast(30).once("value", (usersSnapshot) => res.json({
+    users: usersSnapshot.val()
+  }));
+});
+
 //@route GET /api/users/token
 //@description Send Auth token
 //@access Private

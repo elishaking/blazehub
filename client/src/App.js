@@ -6,10 +6,11 @@ import './App.css';
 import store from './store';
 import { setAuthToken, setCurrentUser, signoutUser, } from './redux_actions/authActions';
 
-import Landing from './components/Landing';
-import Signin from './components/Signin';
-import Home from './components/Home';
-import Chat from './components/Chat';
+import Landing from './components/routes/Landing';
+import Signin from './components/routes/Signin';
+import Home from './components/routes/Home';
+import Chat from './components/routes/Chat';
+import FindFriends from './components/routes/FindFriends';
 
 const updateAuthToken = () => {
   if (localStorage.jwtToken) {
@@ -41,6 +42,7 @@ function App() {
         <Route exact path="/signin" component={Signin} />
         <Route exact path="/home" component={Home} />
         <Route exact path="/chat" component={Chat} />
+        <Route exact path="/find" component={FindFriends} />
       </Router>
     </Provider>
   );

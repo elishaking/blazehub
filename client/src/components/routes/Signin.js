@@ -1,8 +1,8 @@
 //@ts-check
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { signinUser } from '../redux_actions/authActions';
-import Spinner from './Spinner';
+import { signinUser } from '../../redux_actions/authActions';
+import Spinner from '../Spinner';
 
 class Signin extends Component {
   constructor(props) {
