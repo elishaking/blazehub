@@ -1,9 +1,21 @@
 //@ts-check
 import React, { Component } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserCircle, faComments, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
+import { faUserCircle, faComments, faThumbsUp, faBalanceScale } from '@fortawesome/free-solid-svg-icons';
 
 export default class Post extends Component {
+  beforeMountStyle = {
+    opacity: 0,
+    transform: "scale(0.7)",
+    transition: "0.3s ease-in-out"
+  };
+
+  mountStyle = {
+    opacity: 1,
+    transform: "scale(1)",
+    transition: "0.3s ease-in-out"
+  };
+
   constructor(props) {
     super(props);
 
@@ -13,6 +25,7 @@ export default class Post extends Component {
       },
       showComments: false,
       commentText: '',
+      transitionStyle: this.beforeMountStyle
     };
   }
 
@@ -29,6 +42,11 @@ export default class Post extends Component {
       this.setState({
         post
       });
+      setTimeout(() => {
+        this.setState({
+          transitionStyle: this.mountStyle
+        });
+      })
     });
 
     this.props.postRef.child('comments').on('child_added', (newCommentSnapShot) => {
@@ -87,9 +105,9 @@ export default class Post extends Component {
   }
 
   render() {
-    const { post, showComments } = this.state;
+    const { post, showComments, transitionStyle } = this.state;
     return (
-      <div className="post">
+      <div className="post" style={transitionStyle}>
         <header>
           <FontAwesomeIcon icon={faUserCircle} />
           <div>
@@ -150,6 +168,7 @@ export default class Post extends Component {
           )
         }
       </div>
+
     );
   }
 }
