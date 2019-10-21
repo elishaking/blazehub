@@ -7,11 +7,11 @@ import app from 'firebase/app';
 import 'firebase/database';
 import axios from 'axios';
 
-import { signoutUser } from '../redux_actions/authActions';
+import { signoutUser } from '../../redux_actions/authActions';
 
-import Post from './Post';
-import Spinner from './Spinner';
-import MainNav from './MainNav';
+import Post from '../Post';
+import Spinner from '../Spinner';
+import MainNav from '../MainNav';
 
 class Home extends Component {
   /**

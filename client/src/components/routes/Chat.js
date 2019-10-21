@@ -3,13 +3,13 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserCircle, faHome, faUserAlt, faComments, faBookmark, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import app from 'firebase/app';
 import 'firebase/database';
 import axios from 'axios';
 
-import { signoutUser } from '../redux_actions/authActions';
-import MainNav from './MainNav';
+import { signoutUser } from '../../redux_actions/authActions';
+import MainNav from '../MainNav';
 
 class Chat extends Component {
   constructor(props) {

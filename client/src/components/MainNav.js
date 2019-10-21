@@ -1,10 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faUserAlt, faComments, faBookmark, faSignOutAlt, faUserFriends } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faUserAlt, faComments, faBookmark, faSignOutAlt, faUsers, faUserFriends } from '@fortawesome/free-solid-svg-icons';
 
 export default function MainNav({ user }) {
   const { firstName, lastName } = user;
+
   return (
     <div className="main-nav">
       <header>
@@ -38,7 +39,12 @@ export default function MainNav({ user }) {
             </Link>
           </li>
           <li>
-            <Link to="#">
+            <Link to="/find">
+              <FontAwesomeIcon icon={faUsers} /> <span>Find Friends</span>
+            </Link>
+          </li>
+          <li>
+            <Link to="/invite">
               <FontAwesomeIcon icon={faUserFriends} /> <span>Invite Friends</span>
             </Link>
           </li>

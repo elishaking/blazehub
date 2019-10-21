@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { signinUser, signupUser } from '../redux_actions/authActions';
-import Spinner from './Spinner';
+import { signinUser, signupUser } from '../../redux_actions/authActions';
+import Spinner from '../Spinner';
 
 class Landing extends Component {
   constructor() {
