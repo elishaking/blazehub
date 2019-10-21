@@ -301,6 +301,10 @@ select {
   margin: 0 1em;
 }
 
+.main-feed {
+  width: 100%;
+}
+
 .create-post {
   border: 1px solid #F2EFF6;
   border-radius: 5px;
@@ -376,6 +380,10 @@ button:focus {
 .post header svg {
   font-size: 2.7rem;
   margin-right: 0.5em;
+}
+
+.post p {
+  word-break: break-word;
 }
 
 small {
@@ -634,11 +642,17 @@ small {
     margin: 0;
   }
 
+  .post-action {
+    margin-right: 1em;
+  }
+
   .main-nav {
     width: 100%;
     margin-left: -10vw;
     padding: 1em 1em;
     position: fixed;
+    z-index: 10;
+    border-radius: unset;
     bottom: 0;
     box-shadow: 0 0 4px;
   }
