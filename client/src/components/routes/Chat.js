@@ -11,6 +11,7 @@ import { signoutUser } from '../../redux_actions/authActions';
 import { getFriends } from '../../redux_actions/friendActions';
 import MainNav from '../MainNav';
 import AuthNav from '../AuthNav';
+import Spinner from '../Spinner';
 
 class Chat extends Component {
   constructor(props) {
@@ -20,7 +21,8 @@ class Chat extends Component {
       chatText: '',
       chats: [],
       friends: {},
-      chatTitle: 'BlazeChat'
+      chatTitle: 'BlazeChat',
+      loading: true
     };
 
     this.userKey = this.getUserKey(props.auth.user.email);
@@ -45,7 +47,8 @@ class Chat extends Component {
     if (Object.keys(friends).length > 0) {
       // console.log(friends)
       this.setState({
-        friends: friends
+        friends: friends,
+        loading: false
       })
     }
   }
@@ -73,21 +76,21 @@ class Chat extends Component {
     this.setState({
       chats: [],
       chatTitle: this.state.friends[key].name
+    }, () => {
+      this.chatRef.child('chats').child(this.currentChatKey).on('child_added', (chatSnapShot) => {
+        this.setState({
+          chats: [
+            ...this.state.chats,
+            {
+              key: chatSnapShot.key,
+              ...chatSnapShot.val()
+            }
+          ]
+        });
+      });
     });
     //todo: listen for all chats from all friends
     // this.chatRef.child('chats').child(this.currentFriendKey).off('child_added');
-
-    this.chatRef.child('chats').child(this.currentChatKey).on('child_added', (chatSnapShot) => {
-      this.setState({
-        chats: [
-          ...this.state.chats,
-          {
-            key: chatSnapShot.key,
-            ...chatSnapShot.val()
-          }
-        ]
-      });
-    });
   };
 
   sendChat = (event) => {
@@ -122,7 +125,7 @@ class Chat extends Component {
   render() {
     const hasProfilePic = false;
     const { user } = this.props.auth;
-    const { friends, chatTitle } = this.state;
+    const { loading, friends, chatTitle } = this.state;
 
     return (
       <div className="container">
@@ -168,7 +171,7 @@ class Chat extends Component {
           </div>
 
           <div className="friends">
-            {
+            {loading ? (<Spinner />) :
               Object.keys(friends).map((friendKey) => {
                 const friend = friends[friendKey];
 
