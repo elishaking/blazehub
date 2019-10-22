@@ -5,10 +5,7 @@ import { faSearch, faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import { signoutUser } from '../../redux_actions/authActions';
 
 class AuthNav extends Component {
-  signOut = () => {
-    this.props.signoutUser();
-    this.props.history.push('/');
-  };
+  signOut = () => this.props.signoutUser(this.props.history);
 
   render() {
     const { user, showSearch, hasProfilePic = false } = this.props;

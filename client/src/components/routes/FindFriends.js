@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import MainNav from '../MainNav';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { getFriends, addFriend } from '../../redux_actions/friendActions';
 import MainNav from '../nav/MainNav';
 import AuthNav from '../nav/AuthNav';
+import Spinner from '../Spinner';
 
 class FindFriends extends Component {
   constructor(props) {
@@ -80,7 +80,7 @@ class FindFriends extends Component {
 
     return (
       <div className="container">
-        <AuthNav />
+        <AuthNav history={this.props.history} />
 
         <div className="main">
           <MainNav user={user} />

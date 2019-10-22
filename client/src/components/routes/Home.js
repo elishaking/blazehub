@@ -84,7 +84,7 @@ class Home extends Component {
     const { user } = this.props.auth;
     return (
       <div className="container">
-        <AuthNav showSearch={true} />
+        <AuthNav showSearch={true} history={this.props.history} />
 
         <div className="main">
           <MainNav user={user} />

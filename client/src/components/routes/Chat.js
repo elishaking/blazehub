@@ -129,7 +129,7 @@ class Chat extends Component {
 
     return (
       <div className="container">
-        <AuthNav />
+        <AuthNav history={this.props.history} />
 
         <div className="main">
           <MainNav user={user} />
