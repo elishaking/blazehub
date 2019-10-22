@@ -8,7 +8,7 @@ export const setFriends = (friendsData) => ({
   payload: friendsData
 });
 
-export const setFriends = (friendData) => ({
+export const setFriend = (friendData) => ({
   type: ADD_FRIEND,
   payload: friendData
 });
@@ -26,9 +26,12 @@ export const getFriends = (userKey) => (dispatch) => {
 
 // @action-type ADD_FRIEND
 // @description add new friend
-export const addFriend = (friendData) => (dispatch) => {
-  axios.post('/api/users/friends', { userKey })
-    .then((res) => dispatch(setFriends(res.data.friends)))
+export const addFriend = (userKey, friendKey, friendData) => (dispatch) => {
+  axios.post('/api/users/friends/add', {
+    userKey,
+    friendKey,
+    friend: friendData
+  }).then((res) => dispatch(setFriend(res.data.friend)))
     .catch((err) => console.error(err));
 };
 

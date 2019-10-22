@@ -12,7 +12,10 @@ export default function (state = initialState, action) {
       };
 
     case ADD_FRIEND:
-      return action.payload
+      return {
+        ...state,
+        ...action.payload
+      }
 
     default:
       return state;

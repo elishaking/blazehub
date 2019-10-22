@@ -29,6 +29,11 @@ class FindFriends extends Component {
       let { users } = res.data;
       delete users["blazebot"];
       delete users[this.userKey];
+
+      const friendKeys = Object.keys(this.props.friends);
+      Object.keys(users).forEach((userKey) => {
+        if (friendKeys.indexOf(userKey) != -1) delete users[userKey];
+      });
       // if (Object.keys(users).length == 2) users = {}
       this.setState({
         users,
@@ -38,16 +43,33 @@ class FindFriends extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    const friendKeys = Object.keys(nextProps.friends);
+    let { users } = this.state
+    Object.keys(users).forEach((userKey) => {
+      if (friendKeys.indexOf(userKey) != -1) delete users[userKey];
+    });
+    // if (Object.keys(users).length == 2) users = {}
+    this.setState({
+      users
+    });
   }
 
   /** @param {string} userEmail */
   getUserKey = (userEmail) =>
     userEmail.replace(/\./g, "~").replace(/@/g, "~~");
 
-  addFriend = (userKey) => {
-    this.props.addFriend({
-      name: this.state.users[userKey]
+  addFriend = (friendKey) => {
+    let { users } = this.state;
+    users[friendKey].adding = true;
+    this.setState({
+      users
     });
+
+    const newFriend = users[friendKey];
+    const friendData = {
+      name: `${newFriend.firstName} ${newFriend.lastName}`
+    };
+    this.props.addFriend(this.userKey, friendKey, friendData);
   };
 
   render() {
@@ -69,7 +91,7 @@ class FindFriends extends Component {
                 (
                   userKeys.length == 0 ? (
                     <div style={{ textAlign: "center", padding: "1em 0" }}>
-                      <h3 style={{ fontWeight: "500" }}>No Friends</h3>
+                      <h3 style={{ fontWeight: "500" }}>No friends to add</h3>
                     </div>
                   ) :
                     userKeys.map((userKey) => {
@@ -81,7 +103,11 @@ class FindFriends extends Component {
                               <FontAwesomeIcon icon={faUserCircle} />
                               <p>{user.firstName} {user.lastName}</p>
                             </div>
-                            <button className="btn"><FontAwesomeIcon icon={faUserPlus} onClick={(e) => { this.addFriend(userKey) }} /> Add Friend</button>
+                            {
+                              user.adding ? <Spinner full={false} /> : (
+                                <button className="btn" onClick={(e) => { this.addFriend(userKey) }}><FontAwesomeIcon icon={faUserPlus} /> Add Friend</button>
+                              )
+                            }
                           </div>
                           <hr />
                         </div>

@@ -171,4 +171,19 @@ router.post('/friends', passport.authenticate('jwt', { session: false }), (req, 
   });
 });
 
+//@route POST /api/users/friends/add
+//@description Add a new friend
+//@access Private
+router.post('/friends/add', passport.authenticate('jwt', { session: false }), (req, res) => {
+  const { userKey, friendKey, friend } = req.body;
+  dbRef.child('friends').child(userKey).child(friendKey).set(friend, (err) => {
+    if (err) console.error(err);
+    res.json({
+      friend: {
+        [friendKey]: friend
+      }
+    });
+  })
+});
+
 module.exports = router;
