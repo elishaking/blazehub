@@ -1,4 +1,4 @@
-import { SET_FRIENDS } from "../redux_actions/types";
+import { SET_FRIENDS, ADD_FRIEND } from "../redux_actions/types";
 
 const initialState = {};
 
@@ -10,6 +10,9 @@ export default function (state = initialState, action) {
         ...state,
         ...action.payload
       };
+
+    case ADD_FRIEND:
+      return action.payload
 
     default:
       return state;

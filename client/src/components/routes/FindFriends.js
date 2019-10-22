@@ -4,7 +4,7 @@ import axios from 'axios';
 import MainNav from '../MainNav';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle, faUserPlus } from '@fortawesome/free-solid-svg-icons';
-import { getFriends } from '../../redux_actions/friendActions';
+import { getFriends, addFriend } from '../../redux_actions/friendActions';
 import AuthNav from '../AuthNav';
 import Spinner from '../Spinner';
 
@@ -45,7 +45,9 @@ class FindFriends extends Component {
     userEmail.replace(/\./g, "~").replace(/@/g, "~~");
 
   addFriend = (userKey) => {
-
+    this.props.addFriend({
+      name: this.state.users[userKey]
+    });
   };
 
   render() {
@@ -99,4 +101,4 @@ const mapStateToProps = (state) => ({
   friends: state.friends
 });
 
-export default connect(mapStateToProps, { getFriends })(FindFriends);
+export default connect(mapStateToProps, { getFriends, addFriend })(FindFriends);
