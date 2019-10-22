@@ -11,7 +11,7 @@ class AuthNav extends Component {
   };
 
   render() {
-    const { user, showSearch, hasProfilePic } = this.props;
+    const { user, showSearch, hasProfilePic = false } = this.props;
     const { firstName, lastName } = user;
 
     return (

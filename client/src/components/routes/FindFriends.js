@@ -46,16 +46,12 @@ class FindFriends extends Component {
   render() {
     const { users } = this.state;
     const { user } = this.props.auth;
-    const { firstName, lastName } = user;
     const userKeys = Object.keys(users);
     const hasProfilePic = false;
+
     return (
       <div className="container">
-        <AuthNav
-          user={user}
-          signoutUser={this.props.signoutUser}
-          history={this.props.history}
-          hasProfilePic={false} />
+        <AuthNav />
 
         <div className="main">
           <MainNav user={user} />

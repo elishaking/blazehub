@@ -122,16 +122,11 @@ class Chat extends Component {
   render() {
     const hasProfilePic = false;
     const { user } = this.props.auth;
-    const { firstName, lastName } = user;
     const { friends, chatTitle } = this.state;
 
     return (
       <div className="container">
-        <AuthNav
-          user={user}
-          signoutUser={this.props.signoutUser}
-          history={this.props.history}
-          hasProfilePic={false} />
+        <AuthNav />
 
         <div className="main">
           <MainNav user={user} />
