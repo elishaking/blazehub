@@ -1,8 +1,6 @@
 import { SET_FRIENDS } from "../redux_actions/types";
 
-const initialState = {
-  friends: {}
-};
+const initialState = {};
 
 // ===REDUCERS===
 export default function (state = initialState, action) {
@@ -10,7 +8,7 @@ export default function (state = initialState, action) {
     case SET_FRIENDS:
       return {
         ...state,
-        friends: action.payload
+        ...action.payload
       };
 
     default:

@@ -1,6 +1,5 @@
 //@ts-check
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
@@ -9,6 +8,7 @@ import 'firebase/database';
 import axios from 'axios';
 
 import { signoutUser } from '../../redux_actions/authActions';
+import { getFriends } from '../../redux_actions/friendActions';
 import MainNav from '../MainNav';
 
 class Chat extends Component {
@@ -23,6 +23,8 @@ class Chat extends Component {
     };
 
     this.userKey = this.getUserKey(props.auth.user.email);
+    this.props.getFriends(this.userKey);
+
     this.currentChatKey = '';
   }
 
@@ -37,14 +39,19 @@ class Chat extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { friends } = nextProps;
+    if (Object.keys(friends).length > 0) {
+      console.log(friends)
+      this.setState({
+        friends: friends
+      })
+    }
+  }
+
   setupFirebase = () => {
     const db = app.database();
     this.chatRef = db.ref('chats').child(this.userKey);
-    db.ref('friends').once('value', (friendsSnapShot) => {
-      this.setState({
-        friends: friendsSnapShot.val()
-      });
-    });
   };
 
   onChange = (event) => {
@@ -193,7 +200,8 @@ class Chat extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  auth: state.auth
+  auth: state.auth,
+  friends: state.friends
 });
 
-export default connect(mapStateToProps, { signoutUser })(Chat);
+export default connect(mapStateToProps, { signoutUser, getFriends })(Chat);

@@ -165,7 +165,7 @@ router.get('/firebase', passport.authenticate('jwt', { session: false }), (req, 
 //@route POST /api/users/friends
 //@description Send all user friends
 //@access Private
-router.post("/friends", passport.authenticate('jwt', { session: false }), (req, res) => {
+router.post('/friends', passport.authenticate('jwt', { session: false }), (req, res) => {
   dbRef.child('friends').child(req.body.userKey).once('value', (friendsSnapShot) => {
     res.json({ friends: friendsSnapShot.val() });
   });
