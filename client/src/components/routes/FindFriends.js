@@ -5,6 +5,7 @@ import MainNav from '../MainNav';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { getFriends } from '../../redux_actions/friendActions';
+import AuthNav from '../AuthNav';
 
 class FindFriends extends Component {
   constructor(props) {
@@ -50,19 +51,11 @@ class FindFriends extends Component {
     const hasProfilePic = false;
     return (
       <div className="container">
-        <header>
-          <nav className="auth-nav">
-            <h1 className="logo">
-              <img src={`./assets/img/logo-pri.svg`} alt="Logo" srcSet="" /> <span>BlazeChat</span>
-            </h1>
-
-            <div className="auth-nav-right">
-              {hasProfilePic ? <img src="" alt={firstName} srcSet="" /> : <FontAwesomeIcon icon={faUserCircle} className="icon" />} &nbsp;&nbsp;&nbsp;
-              <span>{`${firstName} ${lastName}`}</span>
-              <input type="button" value="Sign Out" className="btn-input" onClick={this.signOut} />
-            </div>
-          </nav>
-        </header>
+        <AuthNav
+          user={user}
+          signoutUser={this.props.signoutUser}
+          history={this.props.history}
+          hasProfilePic={false} />
 
         <div className="main">
           <MainNav user={user} />

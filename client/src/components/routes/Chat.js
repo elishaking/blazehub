@@ -10,6 +10,7 @@ import axios from 'axios';
 import { signoutUser } from '../../redux_actions/authActions';
 import { getFriends } from '../../redux_actions/friendActions';
 import MainNav from '../MainNav';
+import AuthNav from '../AuthNav';
 
 class Chat extends Component {
   constructor(props) {
@@ -126,19 +127,11 @@ class Chat extends Component {
 
     return (
       <div className="container">
-        <header>
-          <nav className="auth-nav">
-            <h1 className="logo">
-              <img src={`./assets/img/logo-pri.svg`} alt="Logo" srcSet="" /> <span>BlazeChat</span>
-            </h1>
-
-            <div className="auth-nav-right">
-              {hasProfilePic ? <img src="" alt={firstName} srcSet="" /> : <FontAwesomeIcon icon={faUserCircle} className="icon" />} &nbsp;&nbsp;&nbsp;
-              <span>{`${firstName} ${lastName}`}</span>
-              <input type="button" value="Sign Out" className="btn-input" onClick={this.signOut} />
-            </div>
-          </nav>
-        </header>
+        <AuthNav
+          user={user}
+          signoutUser={this.props.signoutUser}
+          history={this.props.history}
+          hasProfilePic={false} />
 
         <div className="main">
           <MainNav user={user} />

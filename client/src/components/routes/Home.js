@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faUserCircle, faUserAlt, faImage, faSmile } from '@fortawesome/free-solid-svg-icons';
+import { faUserAlt, faImage, faSmile } from '@fortawesome/free-solid-svg-icons';
 import app from 'firebase/app';
 import 'firebase/database';
 import axios from 'axios';
@@ -12,6 +12,7 @@ import { signoutUser } from '../../redux_actions/authActions';
 import Post from '../Post';
 import Spinner from '../Spinner';
 import MainNav from '../MainNav';
+import AuthNav from '../AuthNav';
 
 class Home extends Component {
   /**
@@ -78,44 +79,17 @@ class Home extends Component {
     });
   };
 
-  signOut = () => {
-    this.props.signoutUser();
-    this.props.history.push('/');
-  };
-
   render() {
     const hasProfilePic = false;
     const { user } = this.props.auth;
-    const { firstName, lastName } = user;
     return (
       <div className="container">
-        <header>
-          <nav className="auth-nav">
-            <h1 className="logo">
-              <img src={`./assets/img/logo-pri.svg`} alt="Logo" srcSet="" /> <span>BlazeChat</span>
-            </h1>
-
-            <div className="search">
-              <div className="icon-input">
-                <input type="text" placeholder="Search" />
-                <FontAwesomeIcon icon={faSearch} className="icon" />
-              </div>
-            </div>
-
-            <div className="auth-nav-right">
-              {hasProfilePic ? <img src="" alt={firstName} srcSet="" /> : <FontAwesomeIcon icon={faUserCircle} className="icon" />} &nbsp;&nbsp;&nbsp;
-              <span>{`${firstName} ${lastName}`}</span>
-              <input type="button" value="Sign Out" className="btn-input" onClick={this.signOut} />
-            </div>
-          </nav>
-
-          <div className="alt-search">
-            <div className="icon-input">
-              <input type="text" placeholder="Search" />
-              <FontAwesomeIcon icon={faSearch} className="icon" />
-            </div>
-          </div>
-        </header>
+        <AuthNav
+          user={user}
+          signoutUser={this.props.signoutUser}
+          history={this.props.history}
+          hasProfilePic={false}
+          showSearch={true} />
 
         <div className="main">
           <MainNav user={user} />
