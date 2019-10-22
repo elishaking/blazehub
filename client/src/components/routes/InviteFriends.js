@@ -1,16 +1,21 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import axios from 'axios';
+
 import AuthNav from '../nav/AuthNav';
 import MainNav from '../nav/MainNav';
+import Spinner from '../Spinner';
 
 class InviteFriends extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      inviteSent: false,
       friendEmails: [
         { name: "" }
-      ]
+      ],
+      loading: false
     };
   }
 
@@ -20,11 +25,28 @@ class InviteFriends extends Component {
     this.setState({
       friendEmails
     });
-  }
+  };
+
+  inviteFriends = (e) => {
+    e.preventDefault();
+
+    this.setState({ loading: true });
+
+    axios.post("/api/users/invite", this.state.friendEmails)
+      .then((res) => {
+        this.setState({ loading: false, inviteSent: true });
+
+      })
+      .catch((err) => {
+        this.setState({ loading: false });
+        console.error(err);
+      });
+  };
 
   render() {
     const hasProfilePic = false;
     const { user } = this.props.auth;
+    const { inviteSent, friendEmails, loading } = this.state;
 
     return (
       <div className="container">
@@ -33,19 +55,31 @@ class InviteFriends extends Component {
         <div className="main">
           <MainNav user={user} />
 
-          <div className="invite-friends">
-            <form className="add-friend">
-              <h3>Invite your friends</h3>
+          {
+            inviteSent ? (
+              <div>
+                <h3>Invite Sent</h3>
+              </div>
+            ) : (
+                <div className="invite-friends" onSubmit={this.inviteFriends}>
+                  <form className="add-friend">
+                    <h3>Invite your friends</h3>
 
-              {this.state.friendEmails.map((_, index) => (
-                <input type="text" name={`friend${index}`} placeholder="email" />
-              ))}
+                    {friendEmails.map((_, index) => (
+                      <input type="text" name={`friend${index}`} placeholder="email" />
+                    ))}
 
-              <button type="button" className="btn" onClick={this.addField}>Add Input</button>
+                    <button type="button" className="btn" onClick={this.addField}>Add Input</button>
 
-              <button type="submit" className="btn" onClick={this.addField} style={{ marginLeft: "auto" }}>Invite</button>
-            </form>
-          </div>
+                    {
+                      loading ? <Spinner full={false} /> : (
+                        <button type="submit" className="btn" style={{ marginLeft: "auto" }}>Invite</button>
+                      )
+                    }
+                  </form>
+                </div>
+              )
+          }
         </div>
       </div>
     );

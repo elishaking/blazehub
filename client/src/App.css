@@ -631,6 +631,12 @@ small {
   margin-bottom: 1em;
 }
 
+.h3 {
+  text-align: center;
+  font-weight: 500;
+  margin: 1em 0;
+}
+
 @media (max-width: 1550px) {
   .signin-input {
     display: none;
