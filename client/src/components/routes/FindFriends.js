@@ -22,8 +22,8 @@ class FindFriends extends Component {
     });
   }
 
-  addFriend = () => {
-
+  addFriend = (userKey) => {
+    // todo: adds friends to redux
   };
 
   render() {
@@ -61,7 +61,7 @@ class FindFriends extends Component {
                         <FontAwesomeIcon icon={faUserCircle} />
                         <p>{user.firstName} </p>
                       </div>
-                      <button className="btn"><FontAwesomeIcon icon={faUserPlus} onClick={this.addFriend} /> Add Friend</button>
+                      <button className="btn"><FontAwesomeIcon icon={faUserPlus} onClick={(e) => { this.addFriend(userKey) }} /> Add Friend</button>
                     </div>
                     <hr />
                   </div>
