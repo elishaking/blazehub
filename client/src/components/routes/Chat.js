@@ -42,7 +42,7 @@ class Chat extends Component {
   componentWillReceiveProps(nextProps) {
     const { friends } = nextProps;
     if (Object.keys(friends).length > 0) {
-      console.log(friends)
+      // console.log(friends)
       this.setState({
         friends: friends
       })
