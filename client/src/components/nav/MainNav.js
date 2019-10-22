@@ -1,10 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faUserAlt, faComments, faBookmark, faSignOutAlt, faUsers, faUserFriends } from '@fortawesome/free-solid-svg-icons';
+import { signoutUser } from '../../redux_actions/authActions';
 
-export default function MainNav({ user }) {
+function MainNav({ user, signoutUser }) {
   const { firstName, lastName } = user;
+  const signOut = () => signoutUser();
 
   return (
     <div className="main-nav">
@@ -34,7 +37,7 @@ export default function MainNav({ user }) {
             </Link>
           </li>
           <li>
-            <Link to="#">
+            <Link to="#" onClick={signOut}>
               <FontAwesomeIcon icon={faSignOutAlt} /> <span>Sign Out</span>
             </Link>
           </li>
@@ -53,3 +56,5 @@ export default function MainNav({ user }) {
     </div>
   )
 }
+
+export default connect(null, { signoutUser })(MainNav);
