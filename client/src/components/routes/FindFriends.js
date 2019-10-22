@@ -6,13 +6,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { getFriends } from '../../redux_actions/friendActions';
 import AuthNav from '../AuthNav';
+import Spinner from '../Spinner';
 
 class FindFriends extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      users: {}
+      users: {},
+      loading: true
     };
 
     this.userKey = this.getUserKey(this.props.auth.user.email);
@@ -25,9 +27,12 @@ class FindFriends extends Component {
 
     axios.get("/api/users").then((res) => {
       let { users } = res.data;
-      if (Object.keys(users).length == 2) users = {}
+      delete users["blazebot"];
+      delete users[this.userKey];
+      // if (Object.keys(users).length == 2) users = {}
       this.setState({
-        users
+        users,
+        loading: false
       });
     });
   }
@@ -44,7 +49,7 @@ class FindFriends extends Component {
   };
 
   render() {
-    const { users } = this.state;
+    const { users, loading } = this.state;
     const { user } = this.props.auth;
     const userKeys = Object.keys(users);
     const hasProfilePic = false;
@@ -58,26 +63,29 @@ class FindFriends extends Component {
 
           <div className="friends-main">
             {
-              userKeys.length == 0 ? (
-                <div style={{ textAlign: "center", padding: "1em 0" }}>
-                  <h3 style={{ fontWeight: "500" }}>No Friends</h3>
-                </div>
-              ) :
-                userKeys.map((userKey) => {
-                  const user = users[userKey];
-                  return (
-                    <div className="friend-container" key={userKey}>
-                      <div className="friend-main">
-                        <div className="friend-inner">
-                          <FontAwesomeIcon icon={faUserCircle} />
-                          <p>{user.firstName} {user.lastName}</p>
-                        </div>
-                        <button className="btn"><FontAwesomeIcon icon={faUserPlus} onClick={(e) => { this.addFriend(userKey) }} /> Add Friend</button>
-                      </div>
-                      <hr />
+              loading ? <Spinner /> :
+                (
+                  userKeys.length == 0 ? (
+                    <div style={{ textAlign: "center", padding: "1em 0" }}>
+                      <h3 style={{ fontWeight: "500" }}>No Friends</h3>
                     </div>
-                  );
-                })
+                  ) :
+                    userKeys.map((userKey) => {
+                      const user = users[userKey];
+                      return (
+                        <div className="friend-container" key={userKey}>
+                          <div className="friend-main">
+                            <div className="friend-inner">
+                              <FontAwesomeIcon icon={faUserCircle} />
+                              <p>{user.firstName} {user.lastName}</p>
+                            </div>
+                            <button className="btn"><FontAwesomeIcon icon={faUserPlus} onClick={(e) => { this.addFriend(userKey) }} /> Add Friend</button>
+                          </div>
+                          <hr />
+                        </div>
+                      );
+                    })
+                )
             }
           </div>
         </div>
