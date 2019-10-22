@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import AuthNav from '../nav/AuthNav';
 import MainNav from '../nav/MainNav';
 
-class Bookmarks extends Component {
+class InviteFriends extends Component {
   render() {
     const hasProfilePic = false;
     const { user } = this.props.auth;
@@ -15,12 +15,12 @@ class Bookmarks extends Component {
         <div className="main">
           <MainNav user={user} />
 
-          <div className="bookmarks">
-            <h3 style={{ textAlign: "center", fontWeight: "500", padding: "1em 0" }}>Bookmarks Coming Soon</h3>
+          <div className="invite-friends">
+
           </div>
         </div>
       </div>
-    )
+    );
   }
 }
 
@@ -28,4 +28,4 @@ const mapStateToProps = (state) => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps)(Bookmarks);
+export default connect(mapStateToProps)(InviteFriends);

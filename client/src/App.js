@@ -14,6 +14,7 @@ import Chat from './components/routes/Chat';
 import FindFriends from './components/routes/FindFriends';
 import Profile from './components/routes/Profile';
 import Bookmarks from './components/routes/Bookmarks';
+import InviteFriends from './components/routes/InviteFriends';
 
 const updateAuthToken = () => {
   if (localStorage.jwtToken) {
@@ -57,6 +58,9 @@ function App() {
         </Switch>
         <Switch>
           <PrivateRoute exact path="/bookmarks" component={Bookmarks} />
+        </Switch>
+        <Switch>
+          <PrivateRoute exact path="/invite" component={InviteFriends} />
         </Switch>
       </Router>
     </Provider>
