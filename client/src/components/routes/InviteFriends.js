@@ -13,7 +13,7 @@ class InviteFriends extends Component {
     this.state = {
       inviteSent: false,
       friendEmails: [
-        { name: "" }
+        { email: "" }
       ],
       loading: false
     };
@@ -21,7 +21,7 @@ class InviteFriends extends Component {
 
   addField = () => {
     const { friendEmails } = this.state;
-    friendEmails.push({ name: "" });
+    friendEmails.push({ email: "" });
     this.setState({
       friendEmails
     });
@@ -32,15 +32,28 @@ class InviteFriends extends Component {
 
     this.setState({ loading: true });
 
-    axios.post("/api/users/invite", this.state.friendEmails)
+    axios.post("/api/users/friends/invite", this.state.friendEmails)
       .then((res) => {
-        this.setState({ loading: false, inviteSent: true });
+        this.setState({ loading: false, inviteSent: res.data.success });
 
       })
       .catch((err) => {
         this.setState({ loading: false });
         console.error(err);
       });
+  };
+
+  inviteMore = () => {
+    this.setState({ inviteSent: false, friendEmails: [{ name: "" }] });
+  };
+
+  onChange = (e, index) => {
+    let { friendEmails } = this.state;
+    friendEmails[index].email = e.target.value;
+
+    this.setState({
+      friendEmails
+    });
   };
 
   render() {
@@ -57,25 +70,29 @@ class InviteFriends extends Component {
 
           {
             inviteSent ? (
-              <div>
-                <h3 className="h3">Invite has been sent</h3>
-                <button className="btn">Invite More</button>
+              <div className="invite-friends">
+                <h3 style={{ margin: "0.7em 0 1em 0" }}>Invite has been sent</h3>
+                <button className="btn" onClick={this.inviteMore}>Invite More</button>
               </div>
             ) : (
-                <div className="invite-friends" onSubmit={this.inviteFriends}>
-                  <form className="add-friend">
+                <div className="invite-friends">
+                  <form className="add-friend" onSubmit={this.inviteFriends}>
                     <h3>Invite your friends</h3>
 
                     {friendEmails.map((_, index) => (
-                      <input type="text" name={`friend${index}`} placeholder="email" />
+                      <input type="email" key={index} name={`email${index}`} placeholder="email" onChange={(e) => this.onChange(e, index)} />
                     ))}
 
                     <button type="button" className="btn" onClick={this.addField}>Add Input</button>
 
                     {
-                      loading ? <Spinner full={false} /> : (
-                        <button type="submit" className="btn" style={{ marginLeft: "auto" }}>Invite</button>
-                      )
+                      loading ? (
+                        <div style={{ textAlign: "end" }}>
+                          <Spinner full={false} />
+                        </div>
+                      ) : (
+                          <button type="submit" className="btn" style={{ marginLeft: "auto" }}>Invite</button>
+                        )
                     }
                   </form>
                 </div>

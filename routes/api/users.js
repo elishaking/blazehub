@@ -197,4 +197,13 @@ router.post('/friends/add', passport.authenticate('jwt', { session: false }), (r
   })
 });
 
+//@route POST /api/users/friends/invite
+//@description Invite friends to Blazehub
+//@access Private
+router.post('/friends/invite', passport.authenticate('jwt', { session: false }), (req, res) => {
+  if (req.body[0].email == '') return res.status(400).json({ success: false });
+
+  res.json({ success: true });
+});
+
 module.exports = router;
