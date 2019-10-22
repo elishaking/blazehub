@@ -182,7 +182,7 @@ router.post('/friends/add', passport.authenticate('jwt', { session: false }), (r
     if (err) console.error(err);
 
     // add current-user to new-friend's db
-    const { user } = req.user;
+    const user = req.user;
     dbRef.child('friends').child(friendKey).child(userKey).set({
       name: `${user.firstName} ${user.lastName}`
     }, (err) => {
