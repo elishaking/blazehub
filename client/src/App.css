@@ -611,6 +611,26 @@ small {
   display: none;
 }
 
+.add-friend {
+  margin-top: 1em;
+  max-width: 500px;
+}
+
+.add-friend h3 {
+  font-weight: 500;
+}
+
+.add-friend input {
+  display: block;
+  margin: 1em 0;
+  width: 100%;
+}
+
+.add-friend .btn {
+  display: block;
+  margin-bottom: 1em;
+}
+
 @media (max-width: 1550px) {
   .signin-input {
     display: none;
