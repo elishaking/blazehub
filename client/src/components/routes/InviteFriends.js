@@ -58,7 +58,8 @@ class InviteFriends extends Component {
           {
             inviteSent ? (
               <div>
-                <h3>Invite Sent</h3>
+                <h3 className="h3">Invite has been sent</h3>
+                <button className="btn">Invite More</button>
               </div>
             ) : (
                 <div className="invite-friends" onSubmit={this.inviteFriends}>
