@@ -11,8 +11,8 @@ import { signoutUser } from '../../redux_actions/authActions';
 
 import Post from '../Post';
 import Spinner from '../Spinner';
-import MainNav from '../MainNav';
-import AuthNav from '../AuthNav';
+import MainNav from '../nav/MainNav';
+import AuthNav from '../nav/AuthNav';
 
 class Home extends Component {
   /**

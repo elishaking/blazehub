@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faUserCircle } from '@fortawesome/free-solid-svg-icons';
-import { signoutUser } from '../redux_actions/authActions';
+import { signoutUser } from '../../redux_actions/authActions';
 
 class AuthNav extends Component {
   signOut = () => {

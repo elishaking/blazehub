@@ -9,8 +9,8 @@ import axios from 'axios';
 
 import { signoutUser } from '../../redux_actions/authActions';
 import { getFriends } from '../../redux_actions/friendActions';
-import MainNav from '../MainNav';
-import AuthNav from '../AuthNav';
+import MainNav from '../nav/MainNav';
+import AuthNav from '../nav/AuthNav';
 import Spinner from '../Spinner';
 
 class Chat extends Component {

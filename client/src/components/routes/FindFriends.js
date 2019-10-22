@@ -5,8 +5,8 @@ import MainNav from '../MainNav';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { getFriends, addFriend } from '../../redux_actions/friendActions';
-import AuthNav from '../AuthNav';
-import Spinner from '../Spinner';
+import MainNav from '../nav/MainNav';
+import AuthNav from '../nav/AuthNav';
 
 class FindFriends extends Component {
   constructor(props) {
