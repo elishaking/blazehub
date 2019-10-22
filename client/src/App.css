@@ -285,6 +285,10 @@ select {
   border-radius: 5px;
 }
 
+.main-nav {
+  max-width: 300px;
+}
+
 .main-nav h3 {
   font-weight: 500;
 }
