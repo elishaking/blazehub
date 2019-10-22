@@ -20,6 +20,28 @@
 .App-link {
   color: #09d3ac;
 } */
+/* width */
+::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 100px;
+  /* transition: 1s ease-in-out; */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
 body {
   color: #7C62A9;
 }
@@ -543,6 +565,8 @@ small {
 .chat-messages {
   flex: 1;
   background-color: #F2EFF6;
+  height: 90%;
+  overflow-y: scroll;
 }
 
 .chat-input {
@@ -573,6 +597,7 @@ small {
   display: flex;
   align-items: center;
   cursor: pointer;
+  margin-bottom: 1em;
 }
 
 @media (max-width: 1550px) {
