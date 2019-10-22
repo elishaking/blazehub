@@ -600,6 +600,10 @@ small {
   margin-bottom: 1em;
 }
 
+.hide-wide {
+  display: none;
+}
+
 @media (max-width: 1550px) {
   .signin-input {
     display: none;
@@ -653,6 +657,10 @@ small {
     margin-bottom: 2em;
     width: 100vw;
     padding: 2em 5vw;
+  }
+
+  .hide-wide {
+    display: list-item;
   }
 }
 
@@ -728,7 +736,7 @@ small {
     flex-direction: row;
     width: 100%;
     justify-content: space-between;
-    padding: 0 5vw;
+    /* padding: 0 5vw; */
   }
 
   .main-nav li {

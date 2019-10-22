@@ -37,11 +37,6 @@ function MainNav({ user, signoutUser }) {
             </Link>
           </li>
           <li>
-            <Link to="#" onClick={signOut}>
-              <FontAwesomeIcon icon={faSignOutAlt} /> <span>Sign Out</span>
-            </Link>
-          </li>
-          <li>
             <Link to="/find">
               <FontAwesomeIcon icon={faUsers} /> <span>Find Friends</span>
             </Link>
@@ -49,6 +44,11 @@ function MainNav({ user, signoutUser }) {
           <li>
             <Link to="/invite">
               <FontAwesomeIcon icon={faUserFriends} /> <span>Invite Friends</span>
+            </Link>
+          </li>
+          <li className="hide-wide">
+            <Link to="#" onClick={signOut}>
+              <FontAwesomeIcon icon={faSignOutAlt} /> <span>Sign Out</span>
             </Link>
           </li>
         </ul>
