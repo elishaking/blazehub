@@ -1,11 +1,12 @@
 import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import jwt_decode from 'jwt-decode';
 import './App.css';
 import store from './store';
 import { setAuthToken, setCurrentUser, signoutUser, } from './redux_actions/authActions';
 
+import PrivateRoute from './components/PrivateRoute';
 import Landing from './components/routes/Landing';
 import Signin from './components/routes/Signin';
 import Home from './components/routes/Home';
@@ -40,9 +41,15 @@ function App() {
       <Router>
         <Route exact path="/" component={Landing} />
         <Route exact path="/signin" component={Signin} />
-        <Route exact path="/home" component={Home} />
-        <Route exact path="/chat" component={Chat} />
-        <Route exact path="/find" component={FindFriends} />
+        <Switch>
+          <PrivateRoute exact path="/home" component={Home} />
+        </Switch>
+        <Switch>
+          <PrivateRoute exact path="/chat" component={Chat} />
+        </Switch>
+        <Switch>
+          <PrivateRoute exact path="/find" component={FindFriends} />
+        </Switch>
       </Router>
     </Provider>
   );
