@@ -12,6 +12,7 @@ import Signin from './components/routes/Signin';
 import Home from './components/routes/Home';
 import Chat from './components/routes/Chat';
 import FindFriends from './components/routes/FindFriends';
+import Profile from './components/routes/Profile';
 
 const updateAuthToken = () => {
   if (localStorage.jwtToken) {
@@ -49,6 +50,9 @@ function App() {
         </Switch>
         <Switch>
           <PrivateRoute exact path="/find" component={FindFriends} />
+        </Switch>
+        <Switch>
+          <PrivateRoute exact path="/profile" component={Profile} />
         </Switch>
       </Router>
     </Provider>

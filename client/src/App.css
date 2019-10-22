@@ -319,7 +319,8 @@ select {
 
 .main-feed,
 .chat-space,
-.friends-main {
+.friends-main,
+.profile {
   flex: 2;
   margin: 0 1em;
 }
