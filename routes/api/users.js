@@ -5,6 +5,8 @@ const passport = require('passport');
 const app = require('firebase/app');
 require('firebase/database');
 
+const sendInviteMail = require('./email');
+
 const validateSignupData = require('../../validation/signup');
 const validateSigninData = require('../../validation/signin');
 
@@ -200,10 +202,16 @@ router.post('/friends/add', passport.authenticate('jwt', { session: false }), (r
 //@route POST /api/users/friends/invite
 //@description Invite friends to Blazehub
 //@access Private
-router.post('/friends/invite', passport.authenticate('jwt', { session: false }), (req, res) => {
-  if (req.body[0].email == '') return res.status(400).json({ success: false });
+router.post('/friends/invite', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  const invitees = req.body;
+  if (invitees[0].email == '') return res.status(400).json({ success: false });
 
-  res.json({ success: true });
+  let success = true;
+  for (let i = 0; i < invitees.length; i++) {
+    success = await sendInviteMail(req.user, invitees[i].email) && success;
+  }
+
+  res.json({ success });
 });
 
 module.exports = router;
