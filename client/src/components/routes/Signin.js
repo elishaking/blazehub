@@ -1,7 +1,8 @@
 //@ts-check
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { signinUser } from '../redux_actions/authActions';
+import { signinUser } from '../../redux_actions/authActions';
+import Spinner from '../Spinner';
 
 class Signin extends Component {
   constructor(props) {
@@ -10,7 +11,8 @@ class Signin extends Component {
     this.state = {
       email: '',
       password: '',
-      errors: {}
+      errors: {},
+      loading: false
     };
   }
 
@@ -18,13 +20,14 @@ class Signin extends Component {
     this.redirectIfAuthenticated(this.props.auth.isAuthenticated);
   }
 
-  // after redux store is update, this life cycle method will be called
+  // after redux store is updated, this life cycle method will be called
   componentWillReceiveProps(nextProps) {
     this.redirectIfAuthenticated(this.props.auth.isAuthenticated);
 
     if (nextProps.auth.errors) {
       this.setState({
-        errors: nextProps.auth.errors
+        errors: nextProps.auth.errors,
+        loading: false
       });
     }
   }
@@ -47,6 +50,8 @@ class Signin extends Component {
   /**  @param {React.FormEvent<HTMLFormElement>} event */
   onSubmit = (event) => {
     event.preventDefault();
+
+    this.setState({ loading: true });
 
     const userData = {
       email: this.state.email,
@@ -72,7 +77,9 @@ class Signin extends Component {
             <form onSubmit={this.onSubmit}>
               <input type="email" name="email" placeholder="email" className="text-input" onChange={this.onChange} />
               <input type="password" name="password" placeholder="password" className="text-input" onChange={this.onChange} />
-              <input type="submit" value="Sign In" className="btn-input btn-pri" />
+              {
+                this.state.loading ? <Spinner full={false} /> : <input type="submit" value="Sign In" className="btn-input btn-pri" />
+              }
             </form>
           </div>
         </div>

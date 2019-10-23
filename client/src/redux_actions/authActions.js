@@ -46,7 +46,7 @@ export const signinUser = (userData) => (dispatch) => {
 
 // @action-type SET_CURRENT_USER
 // @description sign-in/authenticate user
-export const signoutUser = () => (dispatch) => {
+export const signoutUser = (history) => (dispatch) => {
   localStorage.removeItem('jwtToken');
   setAuthToken(false);
   dispatch(setCurrentUser({}));

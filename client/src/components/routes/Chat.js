@@ -1,13 +1,17 @@
 //@ts-check
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserCircle, faHome, faUserAlt, faComments, faBookmark, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import app from 'firebase/app';
 import 'firebase/database';
+import axios from 'axios';
 
-import { signoutUser } from '../redux_actions/authActions';
+import { signoutUser } from '../../redux_actions/authActions';
+import { getFriends } from '../../redux_actions/friendActions';
+import MainNav from '../nav/MainNav';
+import AuthNav from '../nav/AuthNav';
+import Spinner from '../Spinner';
 
 class Chat extends Component {
   constructor(props) {
@@ -17,21 +21,42 @@ class Chat extends Component {
       chatText: '',
       chats: [],
       friends: {},
-      chatTitle: 'BlazeChat'
+      chatTitle: 'BlazeChat',
+      loading: true
     };
 
     this.userKey = this.getUserKey(props.auth.user.email);
-    this.userRef = app.database().ref('users').child(this.userKey);
+    this.props.getFriends(this.userKey);
+
     this.currentChatKey = '';
   }
 
   componentDidMount() {
-    this.userRef.child('friends').once('value', (friendsSnapShot) => {
-      this.setState({
-        friends: friendsSnapShot.val()
+    if (app.apps.length > 0) {
+      this.setupFirebase();
+    } else {
+      axios.get('/api/users/firebase').then((res) => {
+        app.initializeApp(res.data);
+        this.setupFirebase();
       });
-    });
+    }
   }
+
+  componentWillReceiveProps(nextProps) {
+    const { friends } = nextProps;
+    if (Object.keys(friends).length > 0) {
+      // console.log(friends)
+      this.setState({
+        friends: friends,
+        loading: false
+      })
+    }
+  }
+
+  setupFirebase = () => {
+    const db = app.database();
+    this.chatRef = db.ref('chats');
+  };
 
   onChange = (event) => {
     this.setState({
@@ -51,21 +76,21 @@ class Chat extends Component {
     this.setState({
       chats: [],
       chatTitle: this.state.friends[key].name
-    });
-    //todo: listen for all chats from all friends
-    // this.userRef.child('chats').child(this.currentFriendKey).off('child_added');
-
-    this.userRef.child('chats').child(this.currentChatKey).on('child_added', (chatSnapShot) => {
-      this.setState({
-        chats: [
-          ...this.state.chats,
-          {
-            key: chatSnapShot.key,
-            ...chatSnapShot.val()
-          }
-        ]
+    }, () => {
+      this.chatRef.child(this.currentChatKey).on('child_added', (chatSnapShot) => {
+        this.setState({
+          chats: [
+            ...this.state.chats,
+            {
+              key: chatSnapShot.key,
+              ...chatSnapShot.val()
+            }
+          ]
+        });
       });
     });
+    //todo: listen for all chats from all friends
+    // this.chatRef.child('chats').child(this.currentFriendKey).off('child_added');
   };
 
   sendChat = (event) => {
@@ -85,9 +110,9 @@ class Chat extends Component {
       this.setState({ chatText: '' });
       event.target.value = '';
 
-      this.userRef.child('chats').child(this.currentChatKey).push(newChat, (err) => {
+      this.chatRef.child(this.currentChatKey).push(newChat, (err) => {
         if (err) console.error(err);
-        else console.log("chat added");
+        // else console.log("chat added");
       });
     }
   };
@@ -100,68 +125,14 @@ class Chat extends Component {
   render() {
     const hasProfilePic = false;
     const { user } = this.props.auth;
-    const { firstName, lastName } = user;
-    const { friends, chatTitle } = this.state;
+    const { loading, friends, chatTitle } = this.state;
 
     return (
       <div className="container">
-        <header>
-          <nav className="auth-nav">
-            <h1 className="logo">
-              <img src={`./assets/img/logo-pri.svg`} alt="Logo" srcSet="" /> <span>BlazeChat</span>
-            </h1>
-
-            <div className="auth-nav-right">
-              {hasProfilePic ? <img src="" alt={firstName} srcSet="" /> : <FontAwesomeIcon icon={faUserCircle} className="icon" />} &nbsp;&nbsp;&nbsp;
-              <span>{`${firstName} ${lastName}`}</span>
-              <input type="button" value="Sign Out" className="btn-input" onClick={this.signOut} />
-            </div>
-          </nav>
-        </header>
+        <AuthNav history={this.props.history} />
 
         <div className="main">
-          <div className="main-nav">
-            <header>
-              <h2>
-                {hasProfilePic ? <img src="" alt={firstName} srcSet="" /> : <FontAwesomeIcon icon={faUserCircle} className="icon" />} &nbsp;&nbsp;&nbsp;
-                <span>{`${firstName} ${lastName}`}</span>
-              </h2>
-            </header>
-            <nav>
-              <ul>
-                <li>
-                  <Link to="/home">
-                    <FontAwesomeIcon icon={faHome} /> &nbsp;&nbsp;&nbsp; Home
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/chat">
-                    <FontAwesomeIcon icon={faComments} /> &nbsp;&nbsp;&nbsp; Chat
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/profile">
-                    <FontAwesomeIcon icon={faUserAlt} /> &nbsp;&nbsp;&nbsp; Profile
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/bookmarks">
-                    <FontAwesomeIcon icon={faBookmark} /> &nbsp;&nbsp;&nbsp; Bookmarks
-                  </Link>
-                </li>
-                <li>
-                  <Link to="#">
-                    <FontAwesomeIcon icon={faSignOutAlt} /> &nbsp;&nbsp;&nbsp; Sign Out
-                  </Link>
-                </li>
-                <li>
-                  <Link to="#">
-                    <FontAwesomeIcon icon={faSignOutAlt} /> &nbsp;&nbsp;&nbsp; Invite Friends
-                  </Link>
-                </li>
-              </ul>
-            </nav>
-          </div>
+          <MainNav user={user} />
 
           <div className="chat-space">
             <header>
@@ -200,7 +171,7 @@ class Chat extends Component {
           </div>
 
           <div className="friends">
-            {
+            {loading ? (<Spinner />) :
               Object.keys(friends).map((friendKey) => {
                 const friend = friends[friendKey];
 
@@ -220,7 +191,8 @@ class Chat extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  auth: state.auth
+  auth: state.auth,
+  friends: state.friends
 });
 
-export default connect(mapStateToProps, { signoutUser })(Chat);
+export default connect(mapStateToProps, { signoutUser, getFriends })(Chat);

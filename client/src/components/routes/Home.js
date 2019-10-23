@@ -1,14 +1,18 @@
 //@ts-check
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faUserCircle, faHome, faUserAlt, faComments, faBookmark, faSignOutAlt, faImage, faSmile, faUserFriends } from '@fortawesome/free-solid-svg-icons';
+import { faUserAlt, faImage, faSmile } from '@fortawesome/free-solid-svg-icons';
 import app from 'firebase/app';
 import 'firebase/database';
 import axios from 'axios';
 
-import Post from './Post';
+import { signoutUser } from '../../redux_actions/authActions';
+
+import Post from '../Post';
+import Spinner from '../Spinner';
+import MainNav from '../nav/MainNav';
+import AuthNav from '../nav/AuthNav';
 
 class Home extends Component {
   /**
@@ -19,12 +23,13 @@ class Home extends Component {
 
     this.state = {
       postText: '',
-      posts: []
+      posts: [],
+      loading: true
     }
   }
 
   componentDidMount() {
-    if (app.apps) {
+    if (app.apps.length > 0) {
       this.setupFirebase();
     } else {
       axios.get('/api/users/firebase').then((res) => {
@@ -37,15 +42,16 @@ class Home extends Component {
   setupFirebase = () => {
     this.postsRef = app.database().ref('posts');
     this.postsRef.on('child_added', (newPostSnapShot) => {
+      // console.log('child_added');
       const newPost = {
         key: newPostSnapShot.key,
         ...newPostSnapShot.val()
-      }
+      };
+      if (this.state.loading) this.setState({ loading: false });
+      const { posts } = this.state;
+      posts.unshift(newPost);
       this.setState({
-        posts: [
-          newPost,
-          ...this.state.posts
-        ]
+        posts
       });
     });
   }
@@ -76,77 +82,12 @@ class Home extends Component {
   render() {
     const hasProfilePic = false;
     const { user } = this.props.auth;
-    const { firstName, lastName } = user;
     return (
       <div className="container">
-        <header>
-          <nav className="auth-nav">
-            <h1 className="logo">
-              <img src={`./assets/img/logo-pri.svg`} alt="Logo" srcSet="" /> <span>BlazeChat</span>
-            </h1>
-
-            <div className="search">
-              <div className="icon-input">
-                <input type="text" placeholder="Search" />
-                <FontAwesomeIcon icon={faSearch} className="icon" />
-              </div>
-            </div>
-
-            <div className="auth-nav-right">
-              {hasProfilePic ? <img src="" alt={firstName} srcSet="" /> : <FontAwesomeIcon icon={faUserCircle} className="icon" />} &nbsp;&nbsp;&nbsp;
-              <span>{`${firstName} ${lastName}`}</span>
-              <input type="button" value="Sign Out" className="btn-input" />
-            </div>
-          </nav>
-
-          <div className="alt-search">
-            <div className="icon-input">
-              <input type="text" placeholder="Search" />
-              <FontAwesomeIcon icon={faSearch} className="icon" />
-            </div>
-          </div>
-        </header>
+        <AuthNav showSearch={true} history={this.props.history} />
 
         <div className="main">
-          <div className="main-nav">
-            <header>
-              <h3>{`${firstName} ${lastName}`}</h3>
-            </header>
-            <nav>
-              <ul>
-                <li>
-                  <Link to="/home">
-                    <FontAwesomeIcon icon={faHome} /> <span>Home</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/chat">
-                    <FontAwesomeIcon icon={faComments} /> <span>Chat</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/profile">
-                    <FontAwesomeIcon icon={faUserAlt} /> <span>Profile</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/bookmarks">
-                    <FontAwesomeIcon icon={faBookmark} /> <span>Bookmarks</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link to="#">
-                    <FontAwesomeIcon icon={faSignOutAlt} /> <span>Sign Out</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link to="#">
-                    <FontAwesomeIcon icon={faUserFriends} /> <span>Invite Friends</span>
-                  </Link>
-                </li>
-              </ul>
-            </nav>
-          </div>
+          <MainNav user={user} />
 
           <div className="main-feed">
             <header>
@@ -175,7 +116,7 @@ class Home extends Component {
 
             <div className="posts">
               {
-                this.state.posts.map((post) => (
+                this.state.loading ? (<Spinner />) : this.state.posts.map((post) => (
                   <Post
                     key={post.key}
                     postRef={this.postsRef.child(post.key)}
@@ -202,4 +143,4 @@ const mapStateToProps = (state) => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps)(Home);
+export default connect(mapStateToProps, { signoutUser })(Home);

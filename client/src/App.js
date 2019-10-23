@@ -1,15 +1,20 @@
 import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import jwt_decode from 'jwt-decode';
 import './App.css';
 import store from './store';
 import { setAuthToken, setCurrentUser, signoutUser, } from './redux_actions/authActions';
 
-import Landing from './components/Landing';
-import Signin from './components/Signin';
-import Home from './components/Home';
-import Chat from './components/Chat';
+import PrivateRoute from './components/PrivateRoute';
+import Landing from './components/routes/Landing';
+import Signin from './components/routes/Signin';
+import Home from './components/routes/Home';
+import Chat from './components/routes/Chat';
+import FindFriends from './components/routes/FindFriends';
+import Profile from './components/routes/Profile';
+import Bookmarks from './components/routes/Bookmarks';
+import InviteFriends from './components/routes/InviteFriends';
 
 const updateAuthToken = () => {
   if (localStorage.jwtToken) {
@@ -39,8 +44,24 @@ function App() {
       <Router>
         <Route exact path="/" component={Landing} />
         <Route exact path="/signin" component={Signin} />
-        <Route exact path="/home" component={Home} />
-        <Route exact path="/chat" component={Chat} />
+        <Switch>
+          <PrivateRoute exact path="/home" component={Home} />
+        </Switch>
+        <Switch>
+          <PrivateRoute exact path="/chat" component={Chat} />
+        </Switch>
+        <Switch>
+          <PrivateRoute exact path="/find" component={FindFriends} />
+        </Switch>
+        <Switch>
+          <PrivateRoute exact path="/profile" component={Profile} />
+        </Switch>
+        <Switch>
+          <PrivateRoute exact path="/bookmarks" component={Bookmarks} />
+        </Switch>
+        <Switch>
+          <PrivateRoute exact path="/invite" component={InviteFriends} />
+        </Switch>
       </Router>
     </Provider>
   );

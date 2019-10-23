@@ -20,6 +20,28 @@
 .App-link {
   color: #09d3ac;
 } */
+/* width */
+::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 100px;
+  /* transition: 1s ease-in-out; */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
 body {
   color: #7C62A9;
 }
@@ -263,6 +285,10 @@ select {
   border-radius: 5px;
 }
 
+.main-nav {
+  max-width: 300px;
+}
+
 .main-nav h3 {
   font-weight: 500;
 }
@@ -296,9 +322,17 @@ select {
 }
 
 .main-feed,
-.chat-space {
+.chat-space,
+.friends-main,
+.profile,
+.bookmarks,
+.invite-friends {
   flex: 2;
   margin: 0 1em;
+}
+
+.main-feed {
+  width: 100%;
 }
 
 .create-post {
@@ -324,6 +358,38 @@ select {
   display: flex;
   justify-content: space-between;
   padding: 0.3em 2em 1em 2.5em;
+}
+
+.friend-container hr {
+  border: 1px solid #F2EFF6;
+  margin: 1em 0;
+}
+
+.friend-main,
+.friend-inner {
+  display: flex;
+  align-items: center;
+}
+
+.friend-main {
+  justify-content: space-between;
+  margin-bottom: 2em;
+}
+
+.friend-inner {
+  margin-right: 1em;
+}
+
+.friend-inner svg {
+  font-size: 2.7rem;
+}
+
+.friends-main svg {
+  margin-right: 0.5em;
+}
+
+.friends-main .btn svg {
+  color: white;
 }
 
 button {
@@ -376,6 +442,10 @@ button:focus {
 .post header svg {
   font-size: 2.7rem;
   margin-right: 0.5em;
+}
+
+.post p {
+  word-break: break-word;
 }
 
 small {
@@ -502,6 +572,8 @@ small {
 .chat-messages {
   flex: 1;
   background-color: #F2EFF6;
+  height: 90%;
+  overflow-y: scroll;
 }
 
 .chat-input {
@@ -532,6 +604,41 @@ small {
   display: flex;
   align-items: center;
   cursor: pointer;
+  margin-bottom: 1em;
+}
+
+.hide-wide {
+  display: none;
+}
+
+.add-friend {
+  margin-top: 1em;
+  max-width: 500px;
+}
+
+.add-friend h3 {
+  font-weight: 500;
+}
+
+.add-friend input {
+  display: block;
+  margin: 1em 0;
+  width: 100%;
+}
+
+.add-friend .btn {
+  display: block;
+  margin-bottom: 1em;
+}
+
+.h3 {
+  text-align: center;
+  font-weight: 500;
+  margin: 1em 0;
+}
+
+h3 {
+  font-weight: 500;
 }
 
 @media (max-width: 1550px) {
@@ -549,6 +656,10 @@ small {
 }
 
 @media (max-width: 1000px) {
+  .container {
+    padding: 2em 5vw;
+  }
+
   nav h1 {
     color: #7C62A9;
   }
@@ -579,10 +690,14 @@ small {
   }
 
   .content .left {
-    margin-left: -10vw;
+    margin-left: -5vw;
     margin-bottom: 2em;
     width: 100vw;
-    padding: 2em 10vw;
+    padding: 2em 5vw;
+  }
+
+  .hide-wide {
+    display: list-item;
   }
 }
 
@@ -630,17 +745,27 @@ small {
     width: 70vw;
   }
 
+  /* .btn {
+    padding: 0.3em 1em;
+  } */
+
   .main-feed {
     margin: 0;
   }
 
+  .post-action {
+    margin-right: 1em;
+  }
+
   .main-nav {
     width: 100%;
-    margin-left: -10vw;
+    margin-left: -5vw;
     padding: 1em 1em;
     position: fixed;
+    z-index: 10;
+    border-radius: unset;
     bottom: 0;
-    box-shadow: 0 0 4px;
+    box-shadow: 0 0 4px #B1A3E1;
   }
 
   .main-nav ul {
@@ -648,7 +773,7 @@ small {
     flex-direction: row;
     width: 100%;
     justify-content: space-between;
-    padding: 0 5vw;
+    /* padding: 0 5vw; */
   }
 
   .main-nav li {
