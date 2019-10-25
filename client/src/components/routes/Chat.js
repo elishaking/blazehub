@@ -13,6 +13,11 @@ import MainNav from '../nav/MainNav';
 import AuthNav from '../nav/AuthNav';
 import Spinner from '../Spinner';
 
+const SLIDE_IN = {
+  display: "block",
+  transform: "translateX(0)"
+};
+
 class Chat extends Component {
   constructor(props) {
     super(props);
@@ -22,7 +27,9 @@ class Chat extends Component {
       chats: [],
       friends: {},
       chatTitle: 'BlazeChat',
-      loading: true
+      loading: true,
+      slideInStyle: {},
+      chatsHeight: 300
     };
 
     this.userKey = this.getUserKey(props.auth.user.email);
@@ -40,6 +47,12 @@ class Chat extends Component {
         this.setupFirebase();
       });
     }
+
+    this.setChatsHeight();
+
+    window.addEventListener('resize', () => {
+      this.setChatsHeight();
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -51,7 +64,17 @@ class Chat extends Component {
         loading: false
       })
     }
+
+    this.setChatsHeight();
   }
+
+  setChatsHeight = () => {
+    // console
+    const K = window.innerWidth > window.innerHeight ? 0.03 : 0.1;
+    this.setState({
+      chatsHeight: window.innerHeight - (170 + K * window.innerWidth)
+    });
+  };
 
   setupFirebase = () => {
     const db = app.database();
@@ -72,6 +95,8 @@ class Chat extends Component {
   getChatKey = (friendKey) => [this.userKey, friendKey].sort().join("_");
 
   openChat = (key) => {
+    this.toggleFriends();
+
     this.currentChatKey = this.getChatKey(key);
     this.setState({
       chats: [],
@@ -122,10 +147,16 @@ class Chat extends Component {
     this.props.history.push('/');
   };
 
+  toggleFriends = () => {
+    this.setState({
+      slideInStyle: this.state.slideInStyle === SLIDE_IN ? {} : SLIDE_IN
+    });
+  };
+
   render() {
     const hasProfilePic = false;
     const { user } = this.props.auth;
-    const { loading, friends, chatTitle } = this.state;
+    const { loading, friends, chatTitle, slideInStyle, chatsHeight } = this.state;
 
     return (
       <div className="container">
@@ -136,13 +167,19 @@ class Chat extends Component {
 
           <div className="chat-space">
             <header>
-              <div>
+              <div className="icon-text">
                 <FontAwesomeIcon icon={faUserCircle} />
                 <h3>{chatTitle}</h3>
               </div>
+
+              <div id={this.state.slideInStyle === SLIDE_IN ? "burger-slided" : ""} className="burger" onClick={this.toggleFriends}>
+                <div className="line1"></div>
+                <div className="line2"></div>
+                <div className="line3"></div>
+              </div>
             </header>
 
-            <div className="chats">
+            <div style={{ height: `${chatsHeight}px` }} className="chats">
               <div className="chat-messages">
                 {
                   this.state.chats.map((chat) => (
@@ -170,7 +207,7 @@ class Chat extends Component {
             </div>
           </div>
 
-          <div className="friends">
+          <div className="friends" style={slideInStyle}>
             {loading ? (<Spinner />) :
               Object.keys(friends).map((friendKey) => {
                 const friend = friends[friendKey];

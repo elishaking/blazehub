@@ -59,6 +59,7 @@ nav {
 nav h1 {
   display: flex;
   align-items: center;
+  font-weight: 600;
 }
 
 .landing-bg nav h1 {
@@ -71,6 +72,11 @@ nav h1 img {
 
 nav .text-input {
   margin-right: 1em;
+}
+
+#logo {
+  // font-size: 1.5em;
+  margin-right: 0.5em;
 }
 
 .welcome {
@@ -333,6 +339,7 @@ select {
 
 .main-feed {
   width: 100%;
+  max-width: 600px;
 }
 
 .create-post {
@@ -381,7 +388,7 @@ select {
 }
 
 .friend-inner svg {
-  font-size: 2.7rem;
+  font-size: 2.7em;
 }
 
 .friends-main svg {
@@ -440,7 +447,7 @@ button:focus {
 }
 
 .post header svg {
-  font-size: 2.7rem;
+  font-size: 2.7em;
   margin-right: 0.5em;
 }
 
@@ -505,7 +512,7 @@ small {
 .comment-display svg,
 .friend svg,
 .chat svg {
-  font-size: 2.3rem;
+  font-size: 2.3em;
   margin-right: 0.5em;
 }
 
@@ -545,22 +552,9 @@ small {
   flex: 1;
 }
 
-.chat-space header div {
-  display: flex;
-  align-items: center;
-  color: white;
-  border-radius: 5px 5px 0 0;
-}
-
-.chat-space header div,
 .chat-input {
   padding: 1em 2em;
   background-color: #B1A3E1;
-}
-
-.chat-space header svg {
-  font-size: 2.7em;
-  margin-right: 0.5em;
 }
 
 .chats {
@@ -641,6 +635,65 @@ h3 {
   font-weight: 500;
 }
 
+.chat-space {
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 5px 5px 0 0;
+    padding: 1em 2em;
+    background-color: #B1A3E1;
+
+    svg {
+      font-size: 2.7em;
+      margin-right: 0.5em;
+    }
+
+    .icon-text {
+      display: flex;
+      align-items: center;
+      color: white;
+    }
+  }
+
+  .burger {
+    display: none;
+    cursor: pointer;
+    z-index: 10;
+
+    div {
+      height: 2px;
+      width: 23px;
+      background: white;
+      border-radius: 100px;
+      margin-bottom: 4px;
+      transition: 0.3s ease-in-out;
+    }
+
+    div:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  #burger-slided {
+    div {
+      background: #7C62A9;
+    }
+
+    .line1 {
+      transform: rotate(-45deg) translate(-3px, 6px);
+    }
+
+    .line2 {
+      opacity: 0;
+    }
+
+    .line3 {
+      transform: rotate(45deg) translate(-3px, -6px);
+    }
+  }
+}
+
 @media (max-width: 1550px) {
   .signin-input {
     display: none;
@@ -652,6 +705,30 @@ h3 {
 
   .extras {
     display: none;
+  }
+}
+
+@media(max-width: 1100px) {
+  .main-nav {
+    flex: 0;
+
+    header {
+      display: none;
+    }
+
+    nav {
+      margin-bottom: 0;
+    }
+
+    a {
+      svg {
+        margin-right: 0;
+      }
+
+      span {
+        display: none;
+      }
+    }
   }
 }
 
@@ -702,23 +779,6 @@ h3 {
 }
 
 @media (max-width: 900px) {
-  .main-nav {
-    flex: 0;
-  }
-
-  .main-nav a span,
-  .main-nav header {
-    display: none;
-  }
-
-  .main-nav nav {
-    margin-bottom: 0;
-  }
-
-  .main-nav a svg {
-    margin-right: 0;
-  }
-
   .auth-nav {
     margin-bottom: 1.5em;
   }
@@ -748,9 +808,27 @@ h3 {
   /* .btn {
     padding: 0.3em 1em;
   } */
+  .chat-space {
+    .burger {
+      display: block;
+    }
+  }
 
   .main-feed {
     margin: 0;
+  }
+
+  .chats {
+    height: 63vh;
+  }
+
+  .friends {
+    display: none;
+    position: absolute;
+    width: 90%;
+    height: 100%;
+    transform: translateX(130%);
+    transition: 0.3s ease-in-out;
   }
 
   .post-action {
@@ -760,29 +838,34 @@ h3 {
   .main-nav {
     width: 100%;
     margin-left: -5vw;
-    padding: 1em 1em;
+    padding: 1em 2em;
+    max-width: unset;
     position: fixed;
     z-index: 10;
     border-radius: unset;
     bottom: 0;
     box-shadow: 0 0 4px #B1A3E1;
-  }
 
-  .main-nav ul {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    justify-content: space-between;
-    /* padding: 0 5vw; */
-  }
+    ul {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      justify-content: space-between;
+      /* padding: 0 5vw; */
+    }
 
-  .main-nav li {
-    margin-right: 0;
-    padding: 0;
+    li {
+      margin-right: 0;
+      padding: 0;
+    }
   }
 }
 
 @media (max-width: 470px) {
+  body {
+    font-size: 70%;
+  }
+
   nav h1 span {
     display: none;
   }
