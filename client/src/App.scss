@@ -650,7 +650,9 @@ h3 {
   }
 
   .burger {
+    display: none;
     cursor: pointer;
+    z-index: 10;
 
     div {
       height: 2px;
@@ -663,6 +665,24 @@ h3 {
 
     div:last-child {
       margin-bottom: 0;
+    }
+  }
+
+  #burger-slided {
+    div {
+      background: #7C62A9;
+    }
+
+    .line1 {
+      transform: rotate(-45deg) translate(-3px, 6px);
+    }
+
+    .line2 {
+      opacity: 0;
+    }
+
+    .line3 {
+      transform: rotate(45deg) translate(-3px, -6px);
     }
   }
 }
@@ -774,9 +794,13 @@ h3 {
   /* .btn {
     padding: 0.3em 1em;
   } */
-
-  .main-feed,
   .chat-space {
+    .burger {
+      display: block;
+    }
+  }
+
+  .main-feed {
     margin: 0;
   }
 

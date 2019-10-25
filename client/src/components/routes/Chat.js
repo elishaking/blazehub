@@ -153,10 +153,10 @@ class Chat extends Component {
                 <h3>{chatTitle}</h3>
               </div>
 
-              <div className="burger" onClick={this.toggleFriends}>
+              <div id={this.state.slideInStyle === SLIDE_IN ? "burger-slided" : ""} className="burger" onClick={this.toggleFriends}>
                 <div className="line1"></div>
-                <div className="line1"></div>
-                <div className="line1"></div>
+                <div className="line2"></div>
+                <div className="line3"></div>
               </div>
             </header>
 
