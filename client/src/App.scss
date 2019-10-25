@@ -59,6 +59,7 @@ nav {
 nav h1 {
   display: flex;
   align-items: center;
+  font-weight: 600;
 }
 
 .landing-bg nav h1 {
@@ -71,6 +72,11 @@ nav h1 img {
 
 nav .text-input {
   margin-right: 1em;
+}
+
+#logo {
+  // font-size: 1.5em;
+  margin-right: 0.5em;
 }
 
 .welcome {
@@ -824,7 +830,7 @@ h3 {
   .main-nav {
     width: 100%;
     margin-left: -5vw;
-    padding: 1em 1em;
+    padding: 1em 2em;
     max-width: unset;
     position: fixed;
     z-index: 10;
