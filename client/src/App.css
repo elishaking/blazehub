@@ -749,8 +749,17 @@ h3 {
     padding: 0.3em 1em;
   } */
 
-  .main-feed {
+  .main-feed,
+  .chat-space {
     margin: 0;
+  }
+
+  .chats {
+    height: 63vh;
+  }
+
+  .friends {
+    display: none;
   }
 
   .post-action {
@@ -761,6 +770,7 @@ h3 {
     width: 100%;
     margin-left: -5vw;
     padding: 1em 1em;
+    max-width: unset;
     position: fixed;
     z-index: 10;
     border-radius: unset;
