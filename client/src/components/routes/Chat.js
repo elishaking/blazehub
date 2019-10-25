@@ -136,9 +136,15 @@ class Chat extends Component {
 
           <div className="chat-space">
             <header>
-              <div>
+              <div className="icon-text">
                 <FontAwesomeIcon icon={faUserCircle} />
                 <h3>{chatTitle}</h3>
+              </div>
+
+              <div className="burger">
+                <div className="line1"></div>
+                <div className="line1"></div>
+                <div className="line1"></div>
               </div>
             </header>
 

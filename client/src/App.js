@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import jwt_decode from 'jwt-decode';
-import './App.css';
+import './App.scss';
 import store from './store';
 import { setAuthToken, setCurrentUser, signoutUser, } from './redux_actions/authActions';
 
