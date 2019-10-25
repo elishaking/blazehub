@@ -78,6 +78,8 @@ class Chat extends Component {
   getChatKey = (friendKey) => [this.userKey, friendKey].sort().join("_");
 
   openChat = (key) => {
+    this.toggleFriends();
+
     this.currentChatKey = this.getChatKey(key);
     this.setState({
       chats: [],
