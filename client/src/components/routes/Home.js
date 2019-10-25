@@ -127,9 +127,9 @@ class Home extends Component {
             </div>
           </div>
 
-          <div className="extras">
+          {/* <div className="extras">
 
-          </div>
+          </div> */}
         </div>
       </div>
     )
