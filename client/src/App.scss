@@ -658,6 +658,7 @@ h3 {
       background: white;
       border-radius: 100px;
       margin-bottom: 4px;
+      transition: 0.3s ease-in-out;
     }
 
     div:last-child {
@@ -785,6 +786,11 @@ h3 {
 
   .friends {
     display: none;
+    position: absolute;
+    width: 90%;
+    height: 75%;
+    transform: translateX(130%);
+    transition: 0.3s ease-in-out;
   }
 
   .post-action {
