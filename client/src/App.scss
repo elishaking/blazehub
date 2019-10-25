@@ -381,7 +381,7 @@ select {
 }
 
 .friend-inner svg {
-  font-size: 2.7rem;
+  font-size: 2.7em;
 }
 
 .friends-main svg {
@@ -440,7 +440,7 @@ button:focus {
 }
 
 .post header svg {
-  font-size: 2.7rem;
+  font-size: 2.7em;
   margin-right: 0.5em;
 }
 
@@ -505,7 +505,7 @@ small {
 .comment-display svg,
 .friend svg,
 .chat svg {
-  font-size: 2.3rem;
+  font-size: 2.3em;
   margin-right: 0.5em;
 }
 
@@ -848,6 +848,10 @@ h3 {
 }
 
 @media (max-width: 470px) {
+  body {
+    font-size: 70%;
+  }
+
   nav h1 span {
     display: none;
   }
