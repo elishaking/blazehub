@@ -28,7 +28,8 @@ class Chat extends Component {
       friends: {},
       chatTitle: 'BlazeChat',
       loading: true,
-      slideInStyle: {}
+      slideInStyle: {},
+      chatsHeight: 300
     };
 
     this.userKey = this.getUserKey(props.auth.user.email);
@@ -46,6 +47,12 @@ class Chat extends Component {
         this.setupFirebase();
       });
     }
+
+    this.setChatsHeight();
+
+    window.addEventListener('resize', () => {
+      this.setChatsHeight();
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -57,7 +64,17 @@ class Chat extends Component {
         loading: false
       })
     }
+
+    this.setChatsHeight();
   }
+
+  setChatsHeight = () => {
+    // console
+    const K = window.innerWidth > window.innerHeight ? 0.03 : 0.1;
+    this.setState({
+      chatsHeight: window.innerHeight - (170 + K * window.innerWidth)
+    });
+  };
 
   setupFirebase = () => {
     const db = app.database();
@@ -139,7 +156,7 @@ class Chat extends Component {
   render() {
     const hasProfilePic = false;
     const { user } = this.props.auth;
-    const { loading, friends, chatTitle, slideInStyle } = this.state;
+    const { loading, friends, chatTitle, slideInStyle, chatsHeight } = this.state;
 
     return (
       <div className="container">
@@ -162,7 +179,7 @@ class Chat extends Component {
               </div>
             </header>
 
-            <div className="chats">
+            <div style={{ height: `${chatsHeight}px` }} className="chats">
               <div className="chat-messages">
                 {
                   this.state.chats.map((chat) => (
