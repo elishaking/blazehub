@@ -182,15 +182,27 @@ class Chat extends Component {
             <div style={{ height: `${chatsHeight}px` }} className="chats">
               <div className="chat-messages">
                 {
-                  this.state.chats.map((chat) => (
-                    <div className="chat">
-                      <FontAwesomeIcon icon={faUserCircle} />
-                      <div>
-                        <p>{chat.text}</p>
-                        <small>{new Date(chat.date).toLocaleTimeString()} </small>
+                  this.state.chats.map((chat) => {
+                    if (chat.user.key === this.userKey) return (
+                      <div className="chat chat-me">
+                        <FontAwesomeIcon icon={faUserCircle} />
+                        <div>
+                          <p>{chat.text}</p>
+                          <small>{new Date(chat.date).toLocaleTimeString()} </small>
+                        </div>
                       </div>
-                    </div>
-                  ))
+                    );
+                    else return (
+                      <div className="chat chat-other">
+                        <FontAwesomeIcon icon={faUserCircle} />
+                        <div>
+                          <p>{chat.text}</p>
+                          <small>{new Date(chat.date).toLocaleTimeString()} </small>
+                        </div>
+
+                      </div>
+                    );
+                  })
                 }
               </div>
 

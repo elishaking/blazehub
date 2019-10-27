@@ -593,15 +593,40 @@ small {
 
 .chat {
   display: flex;
-  align-items: center;
+  // align-items: center;
   margin: 2em 1em;
+
+  div {
+    position: relative;
+  }
 }
 
-.chat div {
-  background-color: white;
-  border-radius: 100px;
-  padding: 0.5em 1.7em;
-  text-align: end;
+.chat-me {
+  div {
+    padding: 0.5em 5em 0.5em 1.7em;
+    background-color: white;
+    border-radius: 0 20px 20px 20px;
+  }
+
+  small {
+    position: absolute;
+    right: 1em;
+    bottom: 0.2em;
+  }
+}
+
+.chat-other {
+  flex-direction: row-reverse;
+
+  svg {
+    margin: 0 0 0 0.5em;
+  }
+
+  div {
+    background-color: #B1A3E1;
+    color: white;
+    border-radius: 20px 0 20px 20px;
+  }
 }
 
 .friend {
