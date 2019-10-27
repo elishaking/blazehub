@@ -1,7 +1,7 @@
 //@ts-check
 import React, { Component } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserCircle, faComments, faThumbsUp, faBalanceScale } from '@fortawesome/free-solid-svg-icons';
+import { faUserCircle, faComments, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
 
 export default class Post extends Component {
   beforeMountStyle = {
@@ -81,11 +81,13 @@ export default class Post extends Component {
   /** @param {React.KeyboardEvent<HTMLInputElement>} event */
   addComment = (event) => {
     if (event.which == 13 && this.state.commentText !== '') {
-      let { post, commentText } = this.state;
+      let { commentText } = this.state;
+      const { user } = this.props;
+      console.log(user);
       const newComment = {
         text: commentText,
         date: Date.now(),
-        user: post.user
+        user: user
       };
       commentText = '';
       // @ts-ignore
@@ -93,7 +95,7 @@ export default class Post extends Component {
       this.props.postRef.child('comments').push(newComment, (err) => {
         if (err) return console.error(err);
         else console.log("comment added");
-      })
+      });
     }
   }
 
