@@ -1,7 +1,7 @@
 //@ts-check
 import React, { Component } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserCircle, faComments, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
+import { faUserCircle, faComments, faThumbsUp, faBookmark } from '@fortawesome/free-solid-svg-icons';
 
 export default class Post extends Component {
   beforeMountStyle = {
@@ -25,7 +25,8 @@ export default class Post extends Component {
       },
       showComments: false,
       commentText: '',
-      transitionStyle: this.beforeMountStyle
+      transitionStyle: this.beforeMountStyle,
+      isBookmarked: false
     };
   }
 
@@ -83,7 +84,6 @@ export default class Post extends Component {
     if (event.which == 13 && this.state.commentText !== '') {
       let { commentText } = this.state;
       const { user } = this.props;
-      console.log(user);
       const newComment = {
         text: commentText,
         date: Date.now(),
@@ -99,6 +99,28 @@ export default class Post extends Component {
     }
   }
 
+  toggleBookmarkPost = () => {
+    const { postRef, user, post } = this.props;
+    const postBookmarkRef = postRef.child("bookmarks").child(user.id);
+    postBookmarkRef.once("value", (dataSnapshot) => {
+      if (dataSnapshot.exists()) {
+        postBookmarkRef.set({
+          [post.key]: !dataSnapshot.val()[post.key]
+        }, (err) => {
+          if (err) console.log(err);
+          else this.setState({ isBookmarked: !this.state.isBookmarked });
+        });
+      } else {
+        postBookmarkRef.set({
+          [post.key]: true
+        }, (err) => {
+          if (err) console.log(err);
+          else this.setState({ isBookmarked: !this.state.isBookmarked });
+        });
+      }
+    });
+  };
+
   /** @param {React.ChangeEvent<HTMLInputElement>} event */
   onChange = (event) => {
     this.setState({
@@ -107,7 +129,7 @@ export default class Post extends Component {
   }
 
   render() {
-    const { post, showComments, transitionStyle } = this.state;
+    const { post, showComments, transitionStyle, isBookmarked } = this.state;
     return (
       <div className="post" style={transitionStyle}>
         <header>
@@ -126,18 +148,23 @@ export default class Post extends Component {
         <hr />
 
         <div className="post-actions">
-          <button className="post-action" onClick={this.likePost}>
-            <FontAwesomeIcon icon={faThumbsUp} />
-            <span>{post.likes ? Object.keys(post.likes).length : 0}</span>
-          </button>
-          <button className="post-action" onClick={this.toggleComments}>
-            <FontAwesomeIcon icon={faComments} />
-            <span>{post.comments ? Object.keys(post.comments).length : 0}</span>
-          </button>
+          <div>
+            <button className="post-action" onClick={this.likePost}>
+              <FontAwesomeIcon icon={faThumbsUp} />
+              <span>{post.likes ? Object.keys(post.likes).length : 0}</span>
+            </button>
+            <button className="post-action" onClick={this.toggleComments}>
+              <FontAwesomeIcon icon={faComments} />
+              <span>{post.comments ? Object.keys(post.comments).length : 0}</span>
+            </button>
+          </div>
           {/* <button className="post-action">
             <FontAwesomeIcon icon={faShare} />
             <span>{post.shares ? Object.keys(post.shares).length : 0}</span>
           </button> */}
+          <button style={{ marginRight: 0, color: isBookmarked ? "#7C62A9" : "#b1a3e1" }} className="post-action" onClick={this.toggleBookmarkPost}>
+            <FontAwesomeIcon icon={faBookmark} />
+          </button>
         </div>
 
         {

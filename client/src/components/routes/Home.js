@@ -60,6 +60,7 @@ class Home extends Component {
     const newPost = {
       user: this.props.auth.user,
       text: this.state.postText,
+      isBookmarked: false,
       date: Date.now(),
       imageUrl: '',
       // likes: { name: "likes" },

@@ -465,6 +465,11 @@ small {
   border: 0.5px solid #7c62a91c;
 }
 
+.post-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
 .post-action {
   background: none;
   color: #7C62A9;
