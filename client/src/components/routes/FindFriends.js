@@ -1,3 +1,4 @@
+//@ts-check
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
@@ -91,7 +92,7 @@ class FindFriends extends Component {
                 (
                   userKeys.length == 0 ? (
                     <div style={{ textAlign: "center", padding: "1em 0" }}>
-                      <h3 style={{ fontWeight: "500" }}>No friends to add</h3>
+                      <h3 style={{ fontWeight: 500 }}>No friends to add</h3>
                     </div>
                   ) :
                     userKeys.map((userKey) => {

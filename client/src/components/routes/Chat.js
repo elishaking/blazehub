@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import app from 'firebase/app';
 import 'firebase/database';
-import axios from 'axios';
+// import axios from 'axios';
 
 import { signoutUser } from '../../redux_actions/authActions';
 import { getFriends } from '../../redux_actions/friendActions';
@@ -39,14 +39,7 @@ class Chat extends Component {
   }
 
   componentDidMount() {
-    if (app.apps.length > 0) {
-      this.setupFirebase();
-    } else {
-      axios.get('/api/users/firebase').then((res) => {
-        app.initializeApp(res.data);
-        this.setupFirebase();
-      });
-    }
+    this.setupFirebase();
 
     this.setChatsHeight();
 
