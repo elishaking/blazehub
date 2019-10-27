@@ -38,11 +38,13 @@ export default class Post extends Component {
     // });
     const { bookmarkRef, postRef } = this.props;
 
-    bookmarkRef.once("value", (bookmarkSnapShot) => {
-      if (bookmarkSnapShot.exists()) {
-        this.setState({ isBookmarked: bookmarkSnapShot.val() });
-      }
-    });
+    if (this.props.canBookmark) {
+      bookmarkRef.once("value", (bookmarkSnapShot) => {
+        if (bookmarkSnapShot.exists()) {
+          this.setState({ isBookmarked: bookmarkSnapShot.val() });
+        }
+      });
+    }
 
     postRef.child('likes').on('value', (updatedLikesSnapShot) => {
       const { post } = this.state;
@@ -164,9 +166,11 @@ export default class Post extends Component {
             <FontAwesomeIcon icon={faShare} />
             <span>{post.shares ? Object.keys(post.shares).length : 0}</span>
           </button> */}
-          <button style={{ marginRight: 0, color: isBookmarked ? "#7C62A9" : "#b1a3e1" }} className="post-action" onClick={this.toggleBookmarkPost}>
-            <FontAwesomeIcon icon={faBookmark} />
-          </button>
+          {
+            this.props.canBookmark && <button style={{ marginRight: 0, color: isBookmarked ? "#7C62A9" : "#b1a3e1" }} className="post-action" onClick={this.toggleBookmarkPost}>
+              <FontAwesomeIcon icon={faBookmark} />
+            </button>
+          }
         </div>
 
         {

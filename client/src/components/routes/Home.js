@@ -125,7 +125,8 @@ class Home extends Component {
                     postRef={this.postsRef.child(post.key)}
                     bookmarkRef={this.bookmarksRef.child(post.key)}
                     post={post}
-                    user={user} />
+                    user={user}
+                    canBookmark={true} />
                 ))
               }
             </div>

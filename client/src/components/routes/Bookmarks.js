@@ -38,7 +38,7 @@ class Bookmarks extends Component {
         Promise.all(bookmarkKeys.map((bookmarkKey) => this.db.ref('posts').child(bookmarkKey).once('value'))).then((bookmarkedPostSnapshots) => {
           let { bookmarkedPosts } = this.state;
           bookmarkedPostSnapshots.forEach((bookmarkedPostSnapshot) => {
-            bookmarkedPosts.push({
+            bookmarkedPosts.unshift({
               key: bookmarkedPostSnapshot.key,
               ...bookmarkedPostSnapshot.val()
             });
