@@ -598,7 +598,11 @@ small {
 
   div {
     position: relative;
-    padding: 0.5em 1.7em 1.3em 1.7em;
+    padding: 0.5em 1.7em 1.1em 1.7em;
+  }
+
+  small {
+    letter-spacing: 0.3px;
   }
 }
 

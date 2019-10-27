@@ -198,6 +198,7 @@ class Chat extends Component {
                       <div className="chat chat-other">
                         <FontAwesomeIcon icon={faUserCircle} />
                         <div>
+                          <h5>{chat.user.name}</h5>
                           <p>{chat.text}</p>
                           <small>{time} </small>
                         </div>
