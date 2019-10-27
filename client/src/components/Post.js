@@ -36,8 +36,15 @@ export default class Post extends Component {
     //     post: updatedPostSnapShot.val()
     //   });
     // });
+    const { bookmarkRef, postRef } = this.props;
 
-    this.props.postRef.child('likes').on('value', (updatedLikesSnapShot) => {
+    bookmarkRef.once("value", (bookmarkSnapShot) => {
+      if (bookmarkSnapShot.exists()) {
+        this.setState({ isBookmarked: bookmarkSnapShot.val() });
+      }
+    });
+
+    postRef.child('likes').on('value', (updatedLikesSnapShot) => {
       const { post } = this.state;
       post.likes = updatedLikesSnapShot.val();
       this.setState({
@@ -50,7 +57,7 @@ export default class Post extends Component {
       })
     });
 
-    this.props.postRef.child('comments').on('child_added', (newCommentSnapShot) => {
+    postRef.child('comments').on('child_added', (newCommentSnapShot) => {
       const { post } = this.state;
       post.comments = {
         [newCommentSnapShot.key]: newCommentSnapShot.val(),
@@ -100,20 +107,15 @@ export default class Post extends Component {
   }
 
   toggleBookmarkPost = () => {
-    const { postRef, user, post } = this.props;
-    const postBookmarkRef = postRef.child("bookmarks").child(user.id);
-    postBookmarkRef.once("value", (dataSnapshot) => {
-      if (dataSnapshot.exists()) {
-        postBookmarkRef.set({
-          [post.key]: !dataSnapshot.val()[post.key]
-        }, (err) => {
+    const { bookmarkRef } = this.props;
+    bookmarkRef.once("value", (bookmarkSnapShot) => {
+      if (bookmarkSnapShot.exists()) {
+        bookmarkRef.set(!bookmarkSnapShot.val(), (err) => {
           if (err) console.log(err);
           else this.setState({ isBookmarked: !this.state.isBookmarked });
         });
       } else {
-        postBookmarkRef.set({
-          [post.key]: true
-        }, (err) => {
+        bookmarkRef.set(true, (err) => {
           if (err) console.log(err);
           else this.setState({ isBookmarked: !this.state.isBookmarked });
         });

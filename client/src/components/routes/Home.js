@@ -41,6 +41,8 @@ class Home extends Component {
 
   setupFirebase = () => {
     this.postsRef = app.database().ref('posts');
+    this.bookmarksRef = app.database().ref("bookmarks").child(this.props.auth.user.id);
+
     this.postsRef.on('child_added', (newPostSnapShot) => {
       // console.log('child_added');
       const newPost = {
@@ -121,6 +123,7 @@ class Home extends Component {
                   <Post
                     key={post.key}
                     postRef={this.postsRef.child(post.key)}
+                    bookmarkRef={this.bookmarksRef.child(post.key)}
                     post={post}
                     user={user} />
                 ))
