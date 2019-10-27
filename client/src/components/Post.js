@@ -1,7 +1,7 @@
 //@ts-check
 import React, { Component } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserCircle, faComments, faThumbsUp, faBalanceScale } from '@fortawesome/free-solid-svg-icons';
+import { faUserCircle, faComments, faThumbsUp, faBookmark } from '@fortawesome/free-solid-svg-icons';
 
 export default class Post extends Component {
   beforeMountStyle = {
@@ -25,7 +25,8 @@ export default class Post extends Component {
       },
       showComments: false,
       commentText: '',
-      transitionStyle: this.beforeMountStyle
+      transitionStyle: this.beforeMountStyle,
+      isBookmarked: false
     };
   }
 
@@ -35,8 +36,17 @@ export default class Post extends Component {
     //     post: updatedPostSnapShot.val()
     //   });
     // });
+    const { bookmarkRef, postRef } = this.props;
 
-    this.props.postRef.child('likes').on('value', (updatedLikesSnapShot) => {
+    if (this.props.canBookmark) {
+      bookmarkRef.once("value", (bookmarkSnapShot) => {
+        if (bookmarkSnapShot.exists()) {
+          this.setState({ isBookmarked: bookmarkSnapShot.val() });
+        }
+      });
+    }
+
+    postRef.child('likes').on('value', (updatedLikesSnapShot) => {
       const { post } = this.state;
       post.likes = updatedLikesSnapShot.val();
       this.setState({
@@ -49,7 +59,7 @@ export default class Post extends Component {
       })
     });
 
-    this.props.postRef.child('comments').on('child_added', (newCommentSnapShot) => {
+    postRef.child('comments').on('child_added', (newCommentSnapShot) => {
       const { post } = this.state;
       post.comments = {
         [newCommentSnapShot.key]: newCommentSnapShot.val(),
@@ -81,11 +91,12 @@ export default class Post extends Component {
   /** @param {React.KeyboardEvent<HTMLInputElement>} event */
   addComment = (event) => {
     if (event.which == 13 && this.state.commentText !== '') {
-      let { post, commentText } = this.state;
+      let { commentText } = this.state;
+      const { user } = this.props;
       const newComment = {
         text: commentText,
         date: Date.now(),
-        user: post.user
+        user: user
       };
       commentText = '';
       // @ts-ignore
@@ -93,9 +104,26 @@ export default class Post extends Component {
       this.props.postRef.child('comments').push(newComment, (err) => {
         if (err) return console.error(err);
         else console.log("comment added");
-      })
+      });
     }
   }
+
+  toggleBookmarkPost = () => {
+    const { bookmarkRef } = this.props;
+    bookmarkRef.once("value", (bookmarkSnapShot) => {
+      if (bookmarkSnapShot.exists()) {
+        bookmarkRef.set(!bookmarkSnapShot.val(), (err) => {
+          if (err) console.log(err);
+          else this.setState({ isBookmarked: !this.state.isBookmarked });
+        });
+      } else {
+        bookmarkRef.set(true, (err) => {
+          if (err) console.log(err);
+          else this.setState({ isBookmarked: !this.state.isBookmarked });
+        });
+      }
+    });
+  };
 
   /** @param {React.ChangeEvent<HTMLInputElement>} event */
   onChange = (event) => {
@@ -105,7 +133,7 @@ export default class Post extends Component {
   }
 
   render() {
-    const { post, showComments, transitionStyle } = this.state;
+    const { post, showComments, transitionStyle, isBookmarked } = this.state;
     return (
       <div className="post" style={transitionStyle}>
         <header>
@@ -124,18 +152,25 @@ export default class Post extends Component {
         <hr />
 
         <div className="post-actions">
-          <button className="post-action" onClick={this.likePost}>
-            <FontAwesomeIcon icon={faThumbsUp} />
-            <span>{post.likes ? Object.keys(post.likes).length : 0}</span>
-          </button>
-          <button className="post-action" onClick={this.toggleComments}>
-            <FontAwesomeIcon icon={faComments} />
-            <span>{post.comments ? Object.keys(post.comments).length : 0}</span>
-          </button>
+          <div>
+            <button className="post-action" onClick={this.likePost}>
+              <FontAwesomeIcon icon={faThumbsUp} />
+              <span>{post.likes ? Object.keys(post.likes).length : 0}</span>
+            </button>
+            <button className="post-action" onClick={this.toggleComments}>
+              <FontAwesomeIcon icon={faComments} />
+              <span>{post.comments ? Object.keys(post.comments).length : 0}</span>
+            </button>
+          </div>
           {/* <button className="post-action">
             <FontAwesomeIcon icon={faShare} />
             <span>{post.shares ? Object.keys(post.shares).length : 0}</span>
           </button> */}
+          {
+            this.props.canBookmark && <button style={{ marginRight: 0, color: isBookmarked ? "#7C62A9" : "#b1a3e1" }} className="post-action" onClick={this.toggleBookmarkPost}>
+              <FontAwesomeIcon icon={faBookmark} />
+            </button>
+          }
         </div>
 
         {
