@@ -183,12 +183,14 @@ class Chat extends Component {
               <div className="chat-messages">
                 {
                   this.state.chats.map((chat) => {
+                    const timeString = new Date(chat.date).toLocaleTimeString().split(":");
+                    const time = `${timeString[0]}:${timeString[1]} ${timeString[2].split(" ")[1]}`
                     if (chat.user.key === this.userKey) return (
                       <div className="chat chat-me">
                         <FontAwesomeIcon icon={faUserCircle} />
                         <div>
                           <p>{chat.text}</p>
-                          <small>{new Date(chat.date).toLocaleTimeString()} </small>
+                          <small>{time} </small>
                         </div>
                       </div>
                     );
@@ -197,7 +199,7 @@ class Chat extends Component {
                         <FontAwesomeIcon icon={faUserCircle} />
                         <div>
                           <p>{chat.text}</p>
-                          <small>{new Date(chat.date).toLocaleTimeString()} </small>
+                          <small>{time} </small>
                         </div>
 
                       </div>

@@ -598,14 +598,14 @@ small {
 
   div {
     position: relative;
+    padding: 0.5em 1.7em 1.3em 1.7em;
   }
 }
 
 .chat-me {
   div {
-    padding: 0.5em 5em 0.5em 1.7em;
     background-color: white;
-    border-radius: 0 20px 20px 20px;
+    border-radius: 0 10px 10px 10px;
   }
 
   small {
@@ -625,7 +625,13 @@ small {
   div {
     background-color: #B1A3E1;
     color: white;
-    border-radius: 20px 0 20px 20px;
+    border-radius: 10px 0 10px 10px;
+  }
+
+  small {
+    position: absolute;
+    right: 1em;
+    bottom: 0.2em;
   }
 }
 
