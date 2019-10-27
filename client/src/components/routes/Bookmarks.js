@@ -1,12 +1,62 @@
+//@ts-check
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import app from 'firebase/app';
+import 'firebase/database';
+import axios from 'axios';
+
 import AuthNav from '../nav/AuthNav';
 import MainNav from '../nav/MainNav';
+import Spinner from '../Spinner';
+import Post from '../Post';
 
 class Bookmarks extends Component {
+  state = {
+    bookmarkedPosts: [],
+    loading: true
+  };
+
+  componentDidMount() {
+    if (app.apps.length > 0) {
+      this.setupFirebase();
+    } else {
+      axios.get('/api/users/firebase').then((res) => {
+        app.initializeApp(res.data);
+        this.setupFirebase();
+      });
+    }
+  }
+
+  setupFirebase = () => {
+    this.db = app.database();
+
+    this.db.ref('bookmarks').child(this.props.auth.user.id).orderByValue().equalTo(true).once("value", (bookmarksSnapShot) => {
+      console.log(bookmarksSnapShot.val());
+      if (bookmarksSnapShot.exists()) {
+        const bookmarks = bookmarksSnapShot.val();
+        const bookmarkKeys = Object.keys(bookmarks);
+        Promise.all(bookmarkKeys.map((bookmarkKey) => this.db.ref('posts').child(bookmarkKey).once('value'))).then((bookmarkedPostSnapshots) => {
+          let { bookmarkedPosts } = this.state;
+          bookmarkedPostSnapshots.forEach((bookmarkedPostSnapshot) => {
+            bookmarkedPosts.push({
+              key: bookmarkedPostSnapshot.key,
+              ...bookmarkedPostSnapshot.val()
+            });
+          });
+          this.setState({ bookmarkedPosts, loading: false });
+        });
+      } else {
+        this.setState({
+          loading: false
+        });
+      }
+    });
+  }
+
   render() {
     const hasProfilePic = false;
     const { user } = this.props.auth;
+    const { bookmarkedPosts, loading } = this.state;
 
     return (
       <div className="container">
@@ -16,7 +66,23 @@ class Bookmarks extends Component {
           <MainNav user={user} />
 
           <div className="bookmarks">
-            <h3 style={{ textAlign: "center", fontWeight: "500", padding: "1em 0" }}>Bookmarks Coming Soon</h3>
+            {/* <h3 style={{ textAlign: "center", fontWeight: "500", padding: "1em 0" }}>Bookmarks Coming Soon</h3> */}
+            {
+              loading ? (<Spinner />) : bookmarkedPosts.length == 0 ? (
+                <h3 style={{
+                  textAlign: "center",
+                  padding: "1em 0",
+                  fontWeight: 500
+                }}>You have not bookmarked any posts yet</h3>
+              ) : bookmarkedPosts.map((bookmarkedPost) => (
+                <Post
+                  key={bookmarkedPost.key}
+                  postRef={this.db.ref('posts').child(bookmarkedPost.key)}
+                  bookmarkRef={this.db.ref('bookmarks').child(bookmarkedPost.key)}
+                  post={bookmarkedPost}
+                  user={user} />
+              ))
+            }
           </div>
         </div>
       </div>
