@@ -1,7 +1,7 @@
 //@ts-check
 import { ADD_CHAT } from '../redux_actions/types';
 
-export default (state = {}, action) => {
+export default function (state = {}, action) {
   switch (action.type) {
     case ADD_CHAT:
       let chats = state;
@@ -11,7 +11,7 @@ export default (state = {}, action) => {
       } else {
         chats[chatKey] = { [message.key]: message };
       }
-      return chats;
+      return { ...chats };
 
     default:
       return state;

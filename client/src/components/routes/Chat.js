@@ -7,7 +7,6 @@ import app from 'firebase/app';
 import 'firebase/database';
 // import axios from 'axios';
 
-import { signoutUser } from '../../redux_actions/authActions';
 import { getFriends } from '../../redux_actions/friendActions';
 import { listenForNewChats } from '../../redux_actions/chatActions';
 import MainNav from '../nav/MainNav';
@@ -79,22 +78,13 @@ class Chat extends Component {
     const { currentChatKey } = this.state;
     let stateChats = this.state.chats;
     if (chats[currentChatKey]) {
-      const stateMessageKeys = Object.keys(stateChats[currentChatKey]);
       const messageKeys = Object.keys(chats[currentChatKey]);
-      const newMessageKeys = messageKeys.length > stateMessageKeys.length ? this.arrayDiff(messageKeys, stateMessageKeys) : this.arrayDiff(stateMessageKeys, messageKeys);
-
-      newMessageKeys.forEach((newMessageKey) => {
-        stateChats[currentChatKey][newMessageKey] = chats[currentChatKey][newMessageKey];
-      });
-
+      const newMessageKey = messageKeys[messageKeys.length - 1];
+      stateChats[currentChatKey][newMessageKey] = chats[currentChatKey][newMessageKey]
       this.setState({ chats: stateChats });
     } else {
       // update UI with notification indicating message from another user
     }
-    // const chatKeys = Object.keys(chats);
-    // const stateChatKeys = Object.keys(this.state.chats);
-
-    // const newChatKeys = chatKeys.length > stateChatKeys.length ? this.arrayDiff(chatKeys, stateChatKeys) : this.arrayDiff(stateChatKeys, chatKeys);
   };
 
   /**
@@ -277,4 +267,4 @@ const mapStateToProps = (state) => ({
   chats: state.chats
 });
 
-export default connect(mapStateToProps, { signoutUser, getFriends, listenForNewChats })(Chat);
+export default connect(mapStateToProps, { getFriends, listenForNewChats })(Chat);
