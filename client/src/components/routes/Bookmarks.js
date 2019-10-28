@@ -17,14 +17,7 @@ class Bookmarks extends Component {
   };
 
   componentDidMount() {
-    if (app.apps.length > 0) {
-      this.setupFirebase();
-    } else {
-      axios.get('/api/users/firebase').then((res) => {
-        app.initializeApp(res.data);
-        this.setupFirebase();
-      });
-    }
+    this.setupFirebase();
   }
 
   setupFirebase = () => {

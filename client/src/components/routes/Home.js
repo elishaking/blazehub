@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserAlt, faImage, faSmile } from '@fortawesome/free-solid-svg-icons';
 import app from 'firebase/app';
 import 'firebase/database';
-import axios from 'axios';
+// import axios from 'axios';
 
 import { signoutUser } from '../../redux_actions/authActions';
 
@@ -29,14 +29,15 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    if (app.apps.length > 0) {
-      this.setupFirebase();
-    } else {
-      axios.get('/api/users/firebase').then((res) => {
-        app.initializeApp(res.data);
-        this.setupFirebase();
-      });
-    }
+    // if (app.apps.length > 0) {
+    //   this.setupFirebase();
+    // } else {
+    //   axios.get('/api/users/firebase').then((res) => {
+    //     app.initializeApp(res.data);
+    //     this.setupFirebase();
+    //   });
+    // }
+    this.setupFirebase();
   }
 
   setupFirebase = () => {
