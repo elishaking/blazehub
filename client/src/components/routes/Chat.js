@@ -29,6 +29,7 @@ class Chat extends Component {
       friends: {},
       chatTitle: 'BlazeChat',
       loading: true,
+      loadingChat: false,
       slideInStyle: {},
       chatsHeight: 300
     };
@@ -142,12 +143,16 @@ class Chat extends Component {
     this.setState({ currentChatKey: this.getChatKey(key) });
     this.setState({
       // chats: [],
+      loadingChat: true,
       chatTitle: this.state.friends[key].name
     }, () => {
       this.chatRef.child(this.state.currentChatKey).once('value', (chatSnapShot) => {
         let { chats } = this.state;
         chats[this.state.currentChatKey] = chatSnapShot.val() || {};
-        this.setState({ chats }, () => {
+        this.setState({
+          loadingChat: false,
+          chats
+        }, () => {
           const chatMessagesDiv = document.getElementById('chat-messages');
           chatMessagesDiv.scrollTo({
             behavior: "auto",
@@ -196,7 +201,7 @@ class Chat extends Component {
   render() {
     const hasProfilePic = false;
     const { user } = this.props.auth;
-    const { loading, friends, chatTitle, slideInStyle, chatsHeight, currentChatKey, chats } = this.state;
+    const { loading, friends, chatTitle, slideInStyle, chatsHeight, currentChatKey, chats, loadingChat } = this.state;
 
     return (
       <div className="container">
@@ -222,32 +227,33 @@ class Chat extends Component {
             <div style={{ height: `${chatsHeight}px` }} className="chats">
               <div id="chat-messages" className="chat-messages">
                 {
-                  chats[currentChatKey] &&
-                  Object.keys(chats[currentChatKey]).map((messageKey) => {
-                    const message = chats[currentChatKey][messageKey];
-                    const timeString = new Date(message.date).toLocaleTimeString().split(":");
-                    const time = `${timeString[0]}:${timeString[1]} ${timeString[2].split(" ")[1]}`
-                    if (message.user.key === this.userKey) return (
-                      <div key={messageKey} className="chat chat-me">
-                        <FontAwesomeIcon icon={faUserCircle} />
-                        <div>
-                          <p>{message.text}</p>
-                          <small>{time} </small>
+                  loadingChat ? (<Spinner />) :
+                    chats[currentChatKey] &&
+                    Object.keys(chats[currentChatKey]).map((messageKey) => {
+                      const message = chats[currentChatKey][messageKey];
+                      const timeString = new Date(message.date).toLocaleTimeString().split(":");
+                      const time = `${timeString[0]}:${timeString[1]} ${timeString[2].split(" ")[1]}`
+                      if (message.user.key === this.userKey) return (
+                        <div key={messageKey} className="chat chat-me">
+                          <FontAwesomeIcon icon={faUserCircle} />
+                          <div>
+                            <p>{message.text}</p>
+                            <small>{time} </small>
+                          </div>
                         </div>
-                      </div>
-                    );
-                    else return (
-                      <div key={messageKey} className="chat chat-other">
-                        <FontAwesomeIcon icon={faUserCircle} />
-                        <div>
-                          <h5>{message.user.name}</h5>
-                          <p>{message.text}</p>
-                          <small>{time} </small>
-                        </div>
+                      );
+                      else return (
+                        <div key={messageKey} className="chat chat-other">
+                          <FontAwesomeIcon icon={faUserCircle} />
+                          <div>
+                            <h5>{message.user.name}</h5>
+                            <p>{message.text}</p>
+                            <small>{time} </small>
+                          </div>
 
-                      </div>
-                    );
-                  })
+                        </div>
+                      );
+                    })
                 }
               </div>
 
