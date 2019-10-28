@@ -93,7 +93,7 @@ class Chat extends Component {
           behavior: "smooth",
           top: chatMessagesDiv.scrollHeight - chatMessagesDiv.clientHeight
         });
-        this.notificationSound.play();
+        if (chats[currentChatKey][newMessageKey].user.key != this.userKey) this.notificationSound.play();
       });
     } else {
       // update UI with notification indicating message from another user
