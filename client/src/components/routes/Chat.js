@@ -12,6 +12,8 @@ import { listenForNewChats } from '../../redux_actions/chatActions';
 import MainNav from '../nav/MainNav';
 import AuthNav from '../nav/AuthNav';
 import Spinner from '../Spinner';
+// @ts-ignore
+import notificationSound from './notification.ogg';
 
 const SLIDE_IN = {
   display: "block",
@@ -36,6 +38,7 @@ class Chat extends Component {
 
     this.userKey = this.getUserKey(props.auth.user.email);
     this.props.getFriends(this.userKey);
+    this.notificationSound = new Audio(notificationSound);
   }
 
   componentDidMount() {
@@ -90,6 +93,7 @@ class Chat extends Component {
           behavior: "smooth",
           top: chatMessagesDiv.scrollHeight - chatMessagesDiv.clientHeight
         });
+        this.notificationSound.play();
       });
     } else {
       // update UI with notification indicating message from another user
@@ -183,6 +187,7 @@ class Chat extends Component {
 
       this.chatRef.child(currentChatKey).push(newMessage, (err) => {
         if (err) console.error(err);
+        // this.notificationSound.play();
         // else console.log("chat added");
       });
     }
