@@ -1,9 +1,10 @@
+//@ts-check
 import axios from 'axios';
 import app from 'firebase/app';
 import 'firebase/database';
 import { ADD_CHAT } from './types';
 
-const chatsRef = app.database().ref('chats');
+const now = Date.now();
 
 // ===ACTIONS===
 
@@ -16,13 +17,16 @@ const addChat = (chat, chatKey) => ({
 
 // @action-type ADD_CHAT
 // @description listen for new chats
-export const listenForNewChats = (userKey, chatKeys) => (dispatch) => {
+export const listenForNewChats = (chatKeys) => (dispatch) => {
   chatKeys.forEach((chatKey) => {
-    chatsRef.child(userKey).child(chatKey)
-      .orderByChild("date").startAt(Date.now())
-      .on("child_added", (chatSnapshot) => dispatch(addChat({
-        key: chatSnapshot.key,
-        ...chatSnapshot.val()
-      })));
+    app.database().ref('chats').child(chatKey)
+      .orderByChild("date").startAt(now)
+      .on("child_added", (chatSnapshot) => {
+        console.log("chat_added");
+        dispatch(addChat({
+          key: chatSnapshot.key,
+          ...chatSnapshot.val()
+        }, chatKey))
+      });
   });
 };

@@ -9,6 +9,7 @@ import 'firebase/database';
 
 import { signoutUser } from '../../redux_actions/authActions';
 import { getFriends } from '../../redux_actions/friendActions';
+import { listenForNewChats } from '../../redux_actions/chatActions';
 import MainNav from '../nav/MainNav';
 import AuthNav from '../nav/AuthNav';
 import Spinner from '../Spinner';
@@ -50,6 +51,7 @@ class Chat extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { friends } = nextProps;
+    nextProps.listenForNewChats(Object.keys(friends).map((friendKey) => this.getChatKey(friendKey)));
     if (Object.keys(friends).length > 0) {
       // console.log(friends)
       this.setState({
@@ -240,4 +242,4 @@ const mapStateToProps = (state) => ({
   friends: state.friends
 });
 
-export default connect(mapStateToProps, { signoutUser, getFriends })(Chat);
+export default connect(mapStateToProps, { signoutUser, getFriends, listenForNewChats })(Chat);
