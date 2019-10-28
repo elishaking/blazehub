@@ -50,18 +50,36 @@ class Chat extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { friends } = nextProps;
-    nextProps.listenForNewChats(Object.keys(friends).map((friendKey) => this.getChatKey(friendKey)));
-    if (Object.keys(friends).length > 0) {
-      // console.log(friends)
-      this.setState({
-        friends: friends,
-        loading: false
-      })
-    }
+    this.updateFriends(nextProps);
 
     this.setChatsHeight();
   }
+
+  updateFriends = ({ friends }) => {
+    // const { friends } = nextProps;
+    const friendKeys = Object.keys(friends);
+
+    if (friendKeys.length > 0) {
+      const newFriendKeys = this.arrayDiff(friendKeys, Object.keys(this.state.friends));
+      if (newFriendKeys.length > 0) {
+        this.props.listenForNewChats(newFriendKeys.map((friendKey) => this.getChatKey(friendKey)));
+
+        // update UI with new friends
+        this.setState({
+          friends: friends,
+          loading: false
+        });
+      } else {
+        this.setState({ loading: false });
+      }
+    }
+  };
+
+  /**
+   * @param {any[]} a
+   * @param {any[]} b
+   */
+  arrayDiff = (a, b) => a.filter((val) => b.indexOf(val) < 0);
 
   setChatsHeight = () => {
     // console
@@ -94,7 +112,7 @@ class Chat extends Component {
 
     this.currentChatKey = this.getChatKey(key);
     this.setState({
-      chats: [],
+      // chats: [],
       chatTitle: this.state.friends[key].name
     }, () => {
       this.chatRef.child(this.currentChatKey).on('child_added', (chatSnapShot) => {
