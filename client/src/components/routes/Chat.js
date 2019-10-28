@@ -25,7 +25,8 @@ class Chat extends Component {
 
     this.state = {
       chatText: '',
-      chats: [],
+      chats: {},
+      currentChatKey: '',
       friends: {},
       chatTitle: 'BlazeChat',
       loading: true,
@@ -35,8 +36,6 @@ class Chat extends Component {
 
     this.userKey = this.getUserKey(props.auth.user.email);
     this.props.getFriends(this.userKey);
-
-    this.currentChatKey = '';
   }
 
   componentDidMount() {
@@ -110,29 +109,21 @@ class Chat extends Component {
   openChat = (key) => {
     this.toggleFriends();
 
-    this.currentChatKey = this.getChatKey(key);
+    this.setState({ currentChatKey: this.getChatKey(key) });
     this.setState({
       // chats: [],
       chatTitle: this.state.friends[key].name
     }, () => {
-      this.chatRef.child(this.currentChatKey).on('child_added', (chatSnapShot) => {
-        this.setState({
-          chats: [
-            ...this.state.chats,
-            {
-              key: chatSnapShot.key,
-              ...chatSnapShot.val()
-            }
-          ]
-        });
+      this.chatRef.child(this.state.currentChatKey).once('value', (chatSnapShot) => {
+        let { chats } = this.state;
+        chats[this.state.currentChatKey] = chatSnapShot.val() || {};
+        this.setState({ chats });
       });
     });
-    //todo: listen for all chats from all friends
-    // this.chatRef.child('chats').child(this.currentFriendKey).off('child_added');
   };
 
   sendChat = (event) => {
-    const { chatText } = this.state;
+    const { chatText, currentChatKey } = this.state;
     if (event.which == 13 && chatText !== '') {
       const { user } = this.props.auth;
       const newChat = {
@@ -148,7 +139,7 @@ class Chat extends Component {
       this.setState({ chatText: '' });
       event.target.value = '';
 
-      this.chatRef.child(this.currentChatKey).push(newChat, (err) => {
+      this.chatRef.child(currentChatKey).push(newChat, (err) => {
         if (err) console.error(err);
         // else console.log("chat added");
       });
@@ -169,7 +160,7 @@ class Chat extends Component {
   render() {
     const hasProfilePic = false;
     const { user } = this.props.auth;
-    const { loading, friends, chatTitle, slideInStyle, chatsHeight } = this.state;
+    const { loading, friends, chatTitle, slideInStyle, chatsHeight, currentChatKey, chats } = this.state;
 
     return (
       <div className="container">
@@ -195,7 +186,9 @@ class Chat extends Component {
             <div style={{ height: `${chatsHeight}px` }} className="chats">
               <div className="chat-messages">
                 {
-                  this.state.chats.map((chat) => {
+                  chats[currentChatKey] &&
+                  Object.keys(chats[currentChatKey]).map((chatKey) => {
+                    const chat = chats[currentChatKey][chatKey];
                     const timeString = new Date(chat.date).toLocaleTimeString().split(":");
                     const time = `${timeString[0]}:${timeString[1]} ${timeString[2].split(" ")[1]}`
                     if (chat.user.key === this.userKey) return (
