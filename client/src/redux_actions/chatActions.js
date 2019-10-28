@@ -8,9 +8,9 @@ const now = Date.now();
 
 // ===ACTIONS===
 
-const addChat = (chat, chatKey) => ({
+const addMessage = (chatKey, message) => ({
   type: ADD_CHAT,
-  payload: { chatKey, chat }
+  payload: { chatKey, message }
 });
 
 // ===ACTION CREATORS===
@@ -21,12 +21,12 @@ export const listenForNewChats = (chatKeys) => (dispatch) => {
   chatKeys.forEach((chatKey) => {
     app.database().ref('chats').child(chatKey)
       .orderByChild("date").startAt(now)
-      .on("child_added", (chatSnapshot) => {
+      .on("child_added", (messageSnapshot) => {
         console.log("chat_added");
-        dispatch(addChat({
-          key: chatSnapshot.key,
-          ...chatSnapshot.val()
-        }, chatKey))
+        dispatch(addMessage(chatKey, {
+          key: messageSnapshot.key,
+          ...messageSnapshot.val()
+        }))
       });
   });
 };

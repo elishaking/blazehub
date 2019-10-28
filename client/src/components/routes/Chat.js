@@ -50,6 +50,7 @@ class Chat extends Component {
 
   componentWillReceiveProps(nextProps) {
     this.updateFriends(nextProps);
+    this.updateChats(nextProps);
 
     this.setChatsHeight();
   }
@@ -72,6 +73,28 @@ class Chat extends Component {
         this.setState({ loading: false });
       }
     }
+  };
+
+  updateChats = ({ chats }) => {
+    const { currentChatKey } = this.state;
+    let stateChats = this.state.chats;
+    if (chats[currentChatKey]) {
+      const stateMessageKeys = Object.keys(stateChats[currentChatKey]);
+      const messageKeys = Object.keys(chats[currentChatKey]);
+      const newMessageKeys = messageKeys.length > stateMessageKeys.length ? this.arrayDiff(messageKeys, stateMessageKeys) : this.arrayDiff(stateMessageKeys, messageKeys);
+
+      newMessageKeys.forEach((newMessageKey) => {
+        stateChats[currentChatKey][newMessageKey] = chats[currentChatKey][newMessageKey];
+      });
+
+      this.setState({ chats: stateChats });
+    } else {
+      // update UI with notification indicating message from another user
+    }
+    // const chatKeys = Object.keys(chats);
+    // const stateChatKeys = Object.keys(this.state.chats);
+
+    // const newChatKeys = chatKeys.length > stateChatKeys.length ? this.arrayDiff(chatKeys, stateChatKeys) : this.arrayDiff(stateChatKeys, chatKeys);
   };
 
   /**
@@ -250,7 +273,8 @@ class Chat extends Component {
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  friends: state.friends
+  friends: state.friends,
+  chats: state.chats
 });
 
 export default connect(mapStateToProps, { signoutUser, getFriends, listenForNewChats })(Chat);
