@@ -23,7 +23,7 @@ class Chat extends Component {
     super(props);
 
     this.state = {
-      chatText: '',
+      messageText: '',
       chats: {},
       currentChatKey: '',
       friends: {},
@@ -158,12 +158,12 @@ class Chat extends Component {
     });
   };
 
-  sendChat = (event) => {
-    const { chatText, currentChatKey } = this.state;
-    if (event.which == 13 && chatText !== '') {
+  sendMessage = (event) => {
+    const { messageText, currentChatKey } = this.state;
+    if (event.which == 13 && messageText !== '') {
       const { user } = this.props.auth;
-      const newChat = {
-        text: chatText,
+      const newMessage = {
+        text: messageText,
         date: Date.now(),
         // todo: add user url (from profile: auto-generate if not manually set by user)
         user: {
@@ -175,7 +175,7 @@ class Chat extends Component {
       this.setState({ chatText: '' });
       event.target.value = '';
 
-      this.chatRef.child(currentChatKey).push(newChat, (err) => {
+      this.chatRef.child(currentChatKey).push(newMessage, (err) => {
         if (err) console.error(err);
         // else console.log("chat added");
       });
@@ -223,25 +223,25 @@ class Chat extends Component {
               <div id="chat-messages" className="chat-messages">
                 {
                   chats[currentChatKey] &&
-                  Object.keys(chats[currentChatKey]).map((chatKey) => {
-                    const chat = chats[currentChatKey][chatKey];
-                    const timeString = new Date(chat.date).toLocaleTimeString().split(":");
+                  Object.keys(chats[currentChatKey]).map((messageKey) => {
+                    const message = chats[currentChatKey][messageKey];
+                    const timeString = new Date(message.date).toLocaleTimeString().split(":");
                     const time = `${timeString[0]}:${timeString[1]} ${timeString[2].split(" ")[1]}`
-                    if (chat.user.key === this.userKey) return (
-                      <div key={chatKey} className="chat chat-me">
+                    if (message.user.key === this.userKey) return (
+                      <div key={messageKey} className="chat chat-me">
                         <FontAwesomeIcon icon={faUserCircle} />
                         <div>
-                          <p>{chat.text}</p>
+                          <p>{message.text}</p>
                           <small>{time} </small>
                         </div>
                       </div>
                     );
                     else return (
-                      <div key={chatKey} className="chat chat-other">
+                      <div key={messageKey} className="chat chat-other">
                         <FontAwesomeIcon icon={faUserCircle} />
                         <div>
-                          <h5>{chat.user.name}</h5>
-                          <p>{chat.text}</p>
+                          <h5>{message.user.name}</h5>
+                          <p>{message.text}</p>
                           <small>{time} </small>
                         </div>
 
@@ -254,7 +254,7 @@ class Chat extends Component {
               {
                 chatTitle != "BlazeChat" && (
                   <div className="chat-input">
-                    <input type="text" name="chatText" placeholder="Type a message" onChange={this.onChange} onKeyPress={this.sendChat} />
+                    <input type="text" name="chatText" placeholder="Type a message" onChange={this.onChange} onKeyPress={this.sendMessage} />
                     {/* <button>
                   <FontAwesomeIcon icon={faSmile} className="icon" />
                 </button> */}
