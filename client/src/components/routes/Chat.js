@@ -177,7 +177,7 @@ class Chat extends Component {
         },
       };
 
-      this.setState({ chatText: '' });
+      this.setState({ messageText: '' });
       event.target.value = '';
 
       this.chatRef.child(currentChatKey).push(newMessage, (err) => {
@@ -260,7 +260,7 @@ class Chat extends Component {
               {
                 chatTitle != "BlazeChat" && (
                   <div className="chat-input">
-                    <input type="text" name="chatText" placeholder="Type a message" onChange={this.onChange} onKeyPress={this.sendMessage} />
+                    <input type="text" name="messageText" placeholder="Type a message" onChange={this.onChange} onKeyPress={this.sendMessage} />
                     {/* <button>
                   <FontAwesomeIcon icon={faSmile} className="icon" />
                 </button> */}
