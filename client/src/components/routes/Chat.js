@@ -75,17 +75,30 @@ class Chat extends Component {
   };
 
   updateChats = ({ chats }) => {
+
     const { currentChatKey } = this.state;
     let stateChats = this.state.chats;
     if (chats[currentChatKey]) {
       const messageKeys = Object.keys(chats[currentChatKey]);
       const newMessageKey = messageKeys[messageKeys.length - 1];
       stateChats[currentChatKey][newMessageKey] = chats[currentChatKey][newMessageKey]
-      this.setState({ chats: stateChats });
+      this.setState({ chats: stateChats }, () => {
+        const chatMessagesDiv = document.getElementById('chat-messages');
+        this.pageSmootScroll(chatMessagesDiv, chatMessagesDiv.scrollHeight);
+      });
     } else {
       // update UI with notification indicating message from another user
     }
   };
+
+  pageSmootScroll = (elem, to, current = -1) => {
+    if (current == -1) current = elem.scrollTop + elem.clientHeight;
+    // document.getElementById('').clientHeight
+    elem.scrollBy(0, 10);
+    // console.log("scrolling")
+    if (elem.scrollTop < to + elem.clientHeight && current != elem.scrollHeight)
+      setTimeout(this.pageSmootScroll, 10, elem, to, (elem.scrollTop + elem.clientHeight));
+  }
 
   /**
    * @param {any[]} a
@@ -197,7 +210,7 @@ class Chat extends Component {
             </header>
 
             <div style={{ height: `${chatsHeight}px` }} className="chats">
-              <div className="chat-messages">
+              <div id="chat-messages" className="chat-messages">
                 {
                   chats[currentChatKey] &&
                   Object.keys(chats[currentChatKey]).map((chatKey) => {
