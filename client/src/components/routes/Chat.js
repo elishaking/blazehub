@@ -228,7 +228,7 @@ class Chat extends Component {
                     const timeString = new Date(chat.date).toLocaleTimeString().split(":");
                     const time = `${timeString[0]}:${timeString[1]} ${timeString[2].split(" ")[1]}`
                     if (chat.user.key === this.userKey) return (
-                      <div className="chat chat-me">
+                      <div key={chatKey} className="chat chat-me">
                         <FontAwesomeIcon icon={faUserCircle} />
                         <div>
                           <p>{chat.text}</p>
@@ -237,7 +237,7 @@ class Chat extends Component {
                       </div>
                     );
                     else return (
-                      <div className="chat chat-other">
+                      <div key={chatKey} className="chat chat-other">
                         <FontAwesomeIcon icon={faUserCircle} />
                         <div>
                           <h5>{chat.user.name}</h5>
