@@ -84,7 +84,11 @@ class Chat extends Component {
       stateChats[currentChatKey][newMessageKey] = chats[currentChatKey][newMessageKey]
       this.setState({ chats: stateChats }, () => {
         const chatMessagesDiv = document.getElementById('chat-messages');
-        this.pageSmootScroll(chatMessagesDiv, chatMessagesDiv.scrollHeight);
+        // this.pageSmootScroll(chatMessagesDiv, chatMessagesDiv.scrollHeight);
+        chatMessagesDiv.scrollTo({
+          behavior: "smooth",
+          top: chatMessagesDiv.scrollHeight - chatMessagesDiv.clientHeight
+        });
       });
     } else {
       // update UI with notification indicating message from another user
@@ -143,7 +147,13 @@ class Chat extends Component {
       this.chatRef.child(this.state.currentChatKey).once('value', (chatSnapShot) => {
         let { chats } = this.state;
         chats[this.state.currentChatKey] = chatSnapShot.val() || {};
-        this.setState({ chats });
+        this.setState({ chats }, () => {
+          const chatMessagesDiv = document.getElementById('chat-messages');
+          chatMessagesDiv.scrollTo({
+            behavior: "auto",
+            top: chatMessagesDiv.scrollHeight - chatMessagesDiv.clientHeight
+          });
+        });
       });
     });
   };
