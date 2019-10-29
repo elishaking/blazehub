@@ -20,6 +20,7 @@ class AuthNav extends Component {
               <ellipse id="Ellipse_1" data-name="Ellipse 1" cx="2.889" cy="2.867" rx="2.889" ry="2.867" transform="translate(21.163 19.285)" fill="#7c62a9" />
             </svg>
             <span>BlazeChat</span>
+            <small>Beta</small>
           </h1>
 
           {

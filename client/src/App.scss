@@ -54,24 +54,34 @@ nav {
   display: flex;
   justify-content: space-between;
   margin-bottom: 3em;
-}
 
-nav h1 {
-  display: flex;
-  align-items: center;
-  font-weight: 600;
+  h1 {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+
+    img {
+      margin-right: 1em;
+    }
+
+    small {
+      font-size: 50%;
+      font-weight: 300;
+      padding: 0.1em 0.5em;
+      background-color: #7C62A9;
+      color: white;
+      border-radius: 100px;
+      margin-left: 1em;
+    }
+  }
+
+  .text-input {
+    margin-right: 1em;
+  }
 }
 
 .landing-bg nav h1 {
   color: white;
-}
-
-nav h1 img {
-  margin-right: 1em;
-}
-
-nav .text-input {
-  margin-right: 1em;
 }
 
 #logo {
