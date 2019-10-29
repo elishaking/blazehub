@@ -1,6 +1,7 @@
 //@ts-check
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import app from 'firebase/app';
@@ -208,6 +209,7 @@ class Chat extends Component {
     const hasProfilePic = false;
     const { user } = this.props.auth;
     const { loading, friends, chatTitle, slideInStyle, chatsHeight, currentChatKey, chats, loadingChat } = this.state;
+    const friendKeys = Object.keys(friends);
 
     return (
       <div className="container">
@@ -278,13 +280,22 @@ class Chat extends Component {
 
           <div className="friends" style={slideInStyle}>
             {loading ? (<Spinner />) :
-              Object.keys(friends).map((friendKey) => {
+              friendKeys.map((friendKey) => {
                 const friend = friends[friendKey];
 
                 return (
-                  <div key={friendKey} className="friend" onClick={(e) => this.openChat(friendKey)}>
-                    <FontAwesomeIcon icon={faUserCircle} />
-                    <p>{friend.name}</p>
+                  <div>
+                    <div key={friendKey} className="friend" onClick={(e) => this.openChat(friendKey)}>
+                      <FontAwesomeIcon icon={faUserCircle} />
+                      <p>{friend.name}</p>
+                    </div>
+
+                    {
+                      friendKeys.length == 1 &&
+                      <div style={{ textAlign: "center", marginTop: "2em" }}>
+                        <Link to="/find"><button className="btn">Find Friends</button></Link>
+                      </div>
+                    }
                   </div>
                 );
               })
