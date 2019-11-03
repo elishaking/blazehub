@@ -66,14 +66,14 @@ class Signin extends Component {
         <header>
           <nav>
             <h1>
-              <img src={`./assets/img/logo-pri.svg`} alt="Logo" srcSet="" /> <span>BlazeChat</span>
+              <img src={`./assets/img/logo-pri.svg`} alt="Logo" srcSet="" /> <span>BlazeHub</span>
             </h1>
           </nav>
         </header>
 
         <div className="content block">
           <div className="form-container">
-            <h1 className="mb-1">Sign In to BlazeChat</h1>
+            <h1 className="mb-1">Sign In to BlazeHub</h1>
             <form onSubmit={this.onSubmit}>
               <input type="email" name="email" placeholder="email" className="text-input" onChange={this.onChange} />
               <input type="password" name="password" placeholder="password" className="text-input" onChange={this.onChange} />

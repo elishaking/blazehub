@@ -119,7 +119,7 @@ class Landing extends Component {
         <header>
           <nav>
             <h1>
-              <img src={`./assets/img/${this.state.navLogo}`} alt="Logo" srcSet="" /> <span>BlazeChat</span>
+              <img src={`./assets/img/${this.state.navLogo}`} alt="Logo" srcSet="" /> <span>BlazeHub</span>
             </h1>
 
             <div className="nav-right">
@@ -162,7 +162,7 @@ class Landing extends Component {
             <div className="inner">
               <div className="welcome">
                 <img src="./assets/img/logo-pri.svg" alt="Logo" srcSet="" />
-                <h1>Join BlazeChat Today</h1>
+                <h1>Join BlazeHub Today</h1>
               </div>
 
               <form onSubmit={this.onSubmitSignup}>
