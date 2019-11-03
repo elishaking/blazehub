@@ -22,7 +22,7 @@ class Signin extends Component {
 
   // after redux store is updated, this life cycle method will be called
   componentWillReceiveProps(nextProps) {
-    this.redirectIfAuthenticated(this.props.auth.isAuthenticated);
+    this.redirectIfAuthenticated(nextProps.auth.isAuthenticated);
 
     if (nextProps.auth.errors) {
       this.setState({
