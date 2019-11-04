@@ -209,60 +209,70 @@ input[type="text"]:focus+.icon {
   margin-top: 3em;
 }
 
-.content {
-  height: 85vh;
-  display: flex;
-  justify-content: space-between;
-}
-
 .block {
   flex-direction: column;
   justify-content: initial;
   align-items: center;
 }
 
-.content .left,
-.right {
-  width: 40%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.content input,
 select {
   display: block;
   margin-bottom: 1em;
 }
 
-.content .right .name {
+.content {
+  height: 85vh;
   display: flex;
   justify-content: space-between;
-}
 
-.content .right .name input {
-  width: 49%;
-}
+  .left,
+  .right {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
 
-.content .right .name input:first-child {
-  margin-right: 1em;
-}
+  .right {
+    .name {
+      display: flex;
+      justify-content: space-between;
 
-.content .left .info h2 {
-  color: white;
-}
+      input {
+        width: 49%;
+      }
 
-.content .left .info li {
-  display: flex;
-  margin-bottom: 3em;
-}
+      input:first-child {
+        margin-right: 1em;
+      }
+    }
+  }
 
-.content .left .info li:last-child {
-  margin-bottom: 0;
-}
+  .left {
+    .info {
+      h2 {
+        color: white;
+      }
 
-.content .left .info li img {
-  margin-right: 2em;
+      li {
+        display: flex;
+        margin-bottom: 3em;
+
+        img {
+          margin-right: 2em;
+        }
+      }
+
+      li:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  input {
+    display: block;
+    margin-bottom: 1em;
+  }
 }
 
 .inner {

@@ -21,7 +21,9 @@ class Landing extends Component {
       gender: '',
 
       loadingSignin: false,
-      loadingSignup: false
+      loadingSignup: false,
+
+      errors: {}
     };
   }
 
@@ -114,6 +116,9 @@ class Landing extends Component {
   }
 
   render() {
+    const { errors } = this.state;
+    console.log(errors);
+
     return (
       <div className="container landing-bg">
         <header>
@@ -171,7 +176,14 @@ class Landing extends Component {
                     <input type="text" name="firstName" id="firstName" placeholder="first name" onChange={this.onChange} />
                     <input type="text" name="lastName" placeholder="last name" onChange={this.onChange} />
                   </div>
-                  <input type="email" name="signupEmail" placeholder="email" className="fill-parent" onChange={this.onChange} />
+
+                  <div>
+                    <input type="email" name="signupEmail" placeholder="email" className="fill-parent" onChange={this.onChange} />
+                    {
+                      errors.email && (<small>{errors.email}</small>)
+                    }
+                  </div>
+
                   <input type="password" name="signupPassword" id="password" placeholder="password" className="fill-parent" onChange={this.onChange} />
                   <select name="gender" id="gender" className="fill-parent" onChange={this.onChange}>
                     <option hidden disabled selected value="other">gender</option>
