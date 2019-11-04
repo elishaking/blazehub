@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import { signinUser, signupUser } from '../../redux_actions/authActions';
 import Spinner from '../Spinner';
+import TextFormInput from '../form/TextFormInput';
 
 class Landing extends Component {
   constructor() {
@@ -177,12 +178,12 @@ class Landing extends Component {
                     <input type="text" name="lastName" placeholder="last name" onChange={this.onChange} />
                   </div>
 
-                  <div className="form-input">
-                    <input type="email" name="signupEmail" placeholder="email" className={`fill-parent ${errors.email ? "error" : ""}`} onChange={this.onChange} />
-                    {
-                      errors.email && (<small>{errors.email}</small>)
-                    }
-                  </div>
+                  <TextFormInput
+                    type="email"
+                    name="signupEmail"
+                    placeholder="email"
+                    onChange={this.onChange}
+                    error={errors.email} />
 
                   <input type="password" name="signupPassword" id="password" placeholder="password" className="fill-parent" onChange={this.onChange} />
                   <select name="gender" id="gender" className="fill-parent" onChange={this.onChange}>
