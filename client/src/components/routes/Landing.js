@@ -177,8 +177,8 @@ class Landing extends Component {
                     <input type="text" name="lastName" placeholder="last name" onChange={this.onChange} />
                   </div>
 
-                  <div>
-                    <input type="email" name="signupEmail" placeholder="email" className="fill-parent" onChange={this.onChange} />
+                  <div className="form-input">
+                    <input type="email" name="signupEmail" placeholder="email" className={`fill-parent ${errors.email ? "error" : ""}`} onChange={this.onChange} />
                     {
                       errors.email && (<small>{errors.email}</small>)
                     }

@@ -271,7 +271,27 @@ select {
 
   input {
     display: block;
+    outline: none;
+  }
+
+  input:focus {
+    box-shadow: 0 0 8px 0 #B1A3E1;
+  }
+
+  .form-input {
     margin-bottom: 1em;
+
+    small {
+      color: red;
+    }
+
+    .error {
+      border: 1px solid red;
+    }
+
+    .error:focus {
+      box-shadow: 0 0 8px 0 rgb(255, 149, 149);
+    }
   }
 }
 
