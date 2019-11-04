@@ -59,7 +59,8 @@ class Landing extends Component {
   redirectIfAuthenticated = (isAuthenticated) => {
     // redirect authenticated user to home-page
     if (isAuthenticated) {
-      this.props.history.push('/home');
+      // this.props.history.push('/home');
+      window.location.href = "/signin";
     }
   }
 
@@ -148,7 +149,7 @@ class Landing extends Component {
 
                   <div>
                     {
-                      this.state.loadingSignin ? (<Spinner full={false} />) : (<input type="submit" value="Sign In" className="btn-input" />)
+                      this.state.loadingSignin ? (<Spinner full={false} padding={false} />) : (<input type="submit" value="Sign In" className="btn-input" />)
                     }
                   </div>
                 </div>

@@ -37,7 +37,8 @@ class Signin extends Component {
   redirectIfAuthenticated = (isAuthenticated) => {
     // redirect authenticated user to home-page
     if (isAuthenticated) {
-      this.props.history.push('/home');
+      // this.props.history.push('/home');
+      window.location.href = "/home";
     }
   }
 
