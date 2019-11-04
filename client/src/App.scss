@@ -109,6 +109,10 @@ nav {
   .form-input {
     margin-right: 1em;
   }
+
+  .to-hide {
+    display: inherit;
+  }
 }
 
 .auth-nav .auth-nav-right,
@@ -787,7 +791,9 @@ h3 {
 
 @media (max-width: 1550px) {
   .signin-input {
-    display: none;
+    .to-hide {
+      display: none;
+    }
   }
 
   .main-feed {

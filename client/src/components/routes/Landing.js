@@ -131,18 +131,20 @@ class Landing extends Component {
             <div className="nav-right">
               <form id="signin-form" method={this.state.method} onSubmit={this.onSubmitSignin}>
                 <div className="signin-input">
-                  <TextFormInput
-                    type="email"
-                    name="signinEmail"
-                    placeholder="email"
-                    onChange={this.onChange}
-                    error={errors.signinEmail} />
+                  <div className="to-hide">
+                    <TextFormInput
+                      type="email"
+                      name="signinEmail"
+                      placeholder="email"
+                      onChange={this.onChange}
+                      error={errors.signinEmail} />
 
-                  <TextFormInput
-                    type="password"
-                    name="signinPassword" placeholder="password"
-                    onChange={this.onChange}
-                    error={errors.signinPassword} />
+                    <TextFormInput
+                      type="password"
+                      name="signinPassword" placeholder="password"
+                      onChange={this.onChange}
+                      error={errors.signinPassword} />
+                  </div>
 
                   <div>
                     {
