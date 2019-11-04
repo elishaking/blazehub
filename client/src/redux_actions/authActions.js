@@ -40,6 +40,7 @@ export const signinUser = (userData) => (dispatch) => {
       const decodedUserData = jwt_decode(token);
 
       dispatch(setCurrentUser(decodedUserData));
+      // window.location.href = "/home";
     })
     .catch((err) => dispatch(getErrors(err.response.data)));
 }

@@ -1,6 +1,7 @@
 //@ts-check
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import app from 'firebase/app';
@@ -12,6 +13,8 @@ import { listenForNewChats } from '../../redux_actions/chatActions';
 import MainNav from '../nav/MainNav';
 import AuthNav from '../nav/AuthNav';
 import Spinner from '../Spinner';
+// @ts-ignore
+import notificationSound from './notification.ogg';
 
 const SLIDE_IN = {
   display: "block",
@@ -27,7 +30,7 @@ class Chat extends Component {
       chats: {},
       currentChatKey: '',
       friends: {},
-      chatTitle: 'BlazeChat',
+      chatTitle: 'BlazeHub',
       loading: true,
       loadingChat: false,
       slideInStyle: {},
@@ -36,6 +39,7 @@ class Chat extends Component {
 
     this.userKey = this.getUserKey(props.auth.user.email);
     this.props.getFriends(this.userKey);
+    this.notificationSound = new Audio(notificationSound);
   }
 
   componentDidMount() {
@@ -90,6 +94,7 @@ class Chat extends Component {
           behavior: "smooth",
           top: chatMessagesDiv.scrollHeight - chatMessagesDiv.clientHeight
         });
+        if (chats[currentChatKey][newMessageKey].user.key != this.userKey) this.notificationSound.play();
       });
     } else {
       // update UI with notification indicating message from another user
@@ -183,6 +188,7 @@ class Chat extends Component {
 
       this.chatRef.child(currentChatKey).push(newMessage, (err) => {
         if (err) console.error(err);
+        // this.notificationSound.play();
         // else console.log("chat added");
       });
     }
@@ -203,6 +209,7 @@ class Chat extends Component {
     const hasProfilePic = false;
     const { user } = this.props.auth;
     const { loading, friends, chatTitle, slideInStyle, chatsHeight, currentChatKey, chats, loadingChat } = this.state;
+    const friendKeys = Object.keys(friends);
 
     return (
       <div className="container">
@@ -259,7 +266,7 @@ class Chat extends Component {
               </div>
 
               {
-                chatTitle != "BlazeChat" && (
+                chatTitle != "BlazeHub" && (
                   <div className="chat-input">
                     <input type="text" name="messageText" placeholder="Type a message" onChange={this.onChange} onKeyPress={this.sendMessage} />
                     {/* <button>
@@ -273,13 +280,22 @@ class Chat extends Component {
 
           <div className="friends" style={slideInStyle}>
             {loading ? (<Spinner />) :
-              Object.keys(friends).map((friendKey) => {
+              friendKeys.map((friendKey) => {
                 const friend = friends[friendKey];
 
                 return (
-                  <div key={friendKey} className="friend" onClick={(e) => this.openChat(friendKey)}>
-                    <FontAwesomeIcon icon={faUserCircle} />
-                    <p>{friend.name}</p>
+                  <div>
+                    <div key={friendKey} className="friend" onClick={(e) => this.openChat(friendKey)}>
+                      <FontAwesomeIcon icon={faUserCircle} />
+                      <p>{friend.name}</p>
+                    </div>
+
+                    {
+                      friendKeys.length == 1 &&
+                      <div style={{ textAlign: "center", marginTop: "2em" }}>
+                        <Link to="/find"><button className="btn">Find Friends</button></Link>
+                      </div>
+                    }
                   </div>
                 );
               })

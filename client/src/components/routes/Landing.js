@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import { signinUser, signupUser } from '../../redux_actions/authActions';
 import Spinner from '../Spinner';
+import TextFormInput from '../form/TextFormInput';
 
 class Landing extends Component {
   constructor() {
@@ -21,7 +22,9 @@ class Landing extends Component {
       gender: '',
 
       loadingSignin: false,
-      loadingSignup: false
+      loadingSignup: false,
+
+      errors: {}
     };
   }
 
@@ -41,7 +44,7 @@ class Landing extends Component {
 
   // after redux store is updated, this life cycle method will be called
   componentWillReceiveProps(nextProps) {
-    this.redirectIfAuthenticated(this.props.auth.isAuthenticated);
+    this.redirectIfAuthenticated(nextProps.auth.isAuthenticated);
 
     if (nextProps.auth.errors) {
       this.setState({
@@ -61,14 +64,14 @@ class Landing extends Component {
   }
 
   resize = () => {
-    const newMethod = document.body.clientWidth > 1550 ? "POST" : "GET";
+    const newMethod = window.innerWidth > 1550 ? "POST" : "GET";
     if (this.state.method !== newMethod) {
       this.setState({
         method: newMethod
       });
     }
 
-    const newLogo = document.body.clientWidth > 1000 ? "logo.svg" : "logo-pri.svg";
+    const newLogo = window.innerWidth > 1000 ? "logo.svg" : "logo-pri.svg";
     if (this.state.navLogo !== newLogo) {
       this.setState({
         navLogo: newLogo
@@ -114,23 +117,42 @@ class Landing extends Component {
   }
 
   render() {
+    const { errors } = this.state;
+    console.log(errors);
+
     return (
       <div className="container landing-bg">
         <header>
           <nav>
             <h1>
-              <img src={`./assets/img/${this.state.navLogo}`} alt="Logo" srcSet="" /> <span>BlazeChat</span>
+              <img src={`./assets/img/${this.state.navLogo}`} alt="Logo" srcSet="" /> <span>BlazeHub</span>
             </h1>
 
             <div className="nav-right">
               <form id="signin-form" method={this.state.method} onSubmit={this.onSubmitSignin}>
                 <div className="signin-input">
-                  <input type="email" name="signinEmail" placeholder="email" className="text-input" onChange={this.onChange} />
-                  <input type="password" name="signinPassword" placeholder="password" className="text-input" onChange={this.onChange} />
+                  <div className="to-hide">
+                    <TextFormInput
+                      type="email"
+                      name="signinEmail"
+                      placeholder="email"
+                      onChange={this.onChange}
+                      error={errors.signinEmail} />
+
+                    <TextFormInput
+                      type="password"
+                      name="signinPassword" placeholder="password"
+                      onChange={this.onChange}
+                      error={errors.signinPassword} />
+                  </div>
+
+                  <div>
+                    {
+                      this.state.loadingSignin ? (<Spinner full={false} />) : (<input type="submit" value="Sign In" className="btn-input" />)
+                    }
+                  </div>
                 </div>
-                {
-                  this.state.loadingSignin ? (<Spinner full={false} />) : (<input type="submit" value="Sign In" className="btn-input" />)
-                }
+
               </form>
             </div>
           </nav>
@@ -162,17 +184,43 @@ class Landing extends Component {
             <div className="inner">
               <div className="welcome">
                 <img src="./assets/img/logo-pri.svg" alt="Logo" srcSet="" />
-                <h1>Join BlazeChat Today</h1>
+                <h1>Join BlazeHub Today</h1>
               </div>
 
               <form onSubmit={this.onSubmitSignup}>
                 <div>
                   <div className="name">
-                    <input type="text" name="firstName" id="firstName" placeholder="first name" onChange={this.onChange} />
-                    <input type="text" name="lastName" placeholder="last name" onChange={this.onChange} />
+                    <TextFormInput
+                      type="text"
+                      name="firstName"
+                      // id="firstName" 
+                      placeholder="first name"
+                      onChange={this.onChange}
+                      error={errors.firstName} />
+
+                    <TextFormInput
+                      type="text"
+                      name="lastName"
+                      placeholder="last name"
+                      onChange={this.onChange}
+                      error={errors.lastName} />
                   </div>
-                  <input type="email" name="signupEmail" placeholder="email" className="fill-parent" onChange={this.onChange} />
-                  <input type="password" name="signupPassword" id="password" placeholder="password" className="fill-parent" onChange={this.onChange} />
+
+                  <TextFormInput
+                    type="email"
+                    name="signupEmail"
+                    placeholder="email"
+                    onChange={this.onChange}
+                    error={errors.email} />
+
+                  <TextFormInput
+                    type="password"
+                    name="signupPassword"
+                    // id="password" 
+                    placeholder="password"
+                    onChange={this.onChange}
+                    error={errors.password} />
+
                   <select name="gender" id="gender" className="fill-parent" onChange={this.onChange}>
                     <option hidden disabled selected value="other">gender</option>
                     <option value="male">Male</option>

@@ -94,7 +94,7 @@ router.post('/signin', (req, res) => {
 
   userRef.once('value', (dataSnapshot) => {
     if (!dataSnapshot.exists()) {
-      errors.email = "No user with this email, Please Sign Up";
+      errors.signinEmail = "No user with this email, Please Sign Up";
       return res.status(400).json(errors);
     }
 
@@ -129,7 +129,7 @@ router.post('/signin', (req, res) => {
           }
         )
       } else {
-        errors.password = 'Password incorrect';
+        errors.signinPassword = 'Password incorrect';
         res.status(400).json(errors);
       }
     });

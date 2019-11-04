@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { signinUser } from '../../redux_actions/authActions';
 import Spinner from '../Spinner';
+import TextFormInput from '../form/TextFormInput';
 
 class Signin extends Component {
   constructor(props) {
@@ -22,7 +23,7 @@ class Signin extends Component {
 
   // after redux store is updated, this life cycle method will be called
   componentWillReceiveProps(nextProps) {
-    this.redirectIfAuthenticated(this.props.auth.isAuthenticated);
+    this.redirectIfAuthenticated(nextProps.auth.isAuthenticated);
 
     if (nextProps.auth.errors) {
       this.setState({
@@ -61,22 +62,34 @@ class Signin extends Component {
   }
 
   render() {
+    const { errors } = this.state;
     return (
       <div className="container">
         <header>
           <nav>
             <h1>
-              <img src={`./assets/img/logo-pri.svg`} alt="Logo" srcSet="" /> <span>BlazeChat</span>
+              <img src={`./assets/img/logo-pri.svg`} alt="Logo" srcSet="" /> <span>BlazeHub</span>
             </h1>
           </nav>
         </header>
 
         <div className="content block">
           <div className="form-container">
-            <h1 className="mb-1">Sign In to BlazeChat</h1>
+            <h1 className="mb-1">Sign In to BlazeHub</h1>
             <form onSubmit={this.onSubmit}>
-              <input type="email" name="email" placeholder="email" className="text-input" onChange={this.onChange} />
-              <input type="password" name="password" placeholder="password" className="text-input" onChange={this.onChange} />
+              <TextFormInput
+                type="email"
+                name="email"
+                placeholder="email"
+                error={errors.signinEmail}
+                onChange={this.onChange} />
+
+              <TextFormInput
+                type="password"
+                name="password"
+                placeholder="password"
+                error={errors.signinPassword}
+                onChange={this.onChange} />
               {
                 this.state.loading ? <Spinner full={false} /> : <input type="submit" value="Sign In" className="btn-input btn-pri" />
               }
