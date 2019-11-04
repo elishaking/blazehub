@@ -853,26 +853,26 @@ h3 {
   .content {
     display: block;
     height: fit-content;
-  }
 
-  .content .left,
-  .right {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    .left,
+    .right {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .left {
+      margin-left: -5vw;
+      margin-bottom: 7vh;
+      width: 100vw;
+      padding: 2em 5vw;
+    }
   }
 
   // .content .right{
   //   margin-top
   // }
-
-  .content .left {
-    margin-left: -5vw;
-    margin-bottom: 7vh;
-    width: 100vw;
-    padding: 2em 5vw;
-  }
 
   .hide-wide {
     display: list-item;
