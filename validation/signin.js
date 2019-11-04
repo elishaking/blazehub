@@ -8,15 +8,15 @@ const validateSigninData = (data) => {
   data.password = isEmpty(data.password) ? '' : data.password;
 
   if (Validator.isEmpty(data.email)) {
-    errors.email = "Your email is required"
+    errors.signinEmail = "Your email is required"
   } else if (!Validator.isEmail(data.email)) {
-    errors.email = "Please enter a valid email"
+    errors.signinEmail = "Please enter a valid email"
   }
 
   if (Validator.isEmpty(data.password)) {
-    errors.password = 'Your password is required';
+    errors.signinPassword = 'Your password is required';
   } else if (!Validator.isLength(data.password, { min: 4, max: 30 })) {
-    errors.password = 'Your password must be between 4 and 30 characters';
+    errors.signinPassword = 'Your password must be between 4 and 30 characters';
   }
 
   return {
