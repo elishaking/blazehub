@@ -64,14 +64,14 @@ class Landing extends Component {
   }
 
   resize = () => {
-    const newMethod = document.body.clientWidth > 1550 ? "POST" : "GET";
+    const newMethod = window.innerWidth > 1550 ? "POST" : "GET";
     if (this.state.method !== newMethod) {
       this.setState({
         method: newMethod
       });
     }
 
-    const newLogo = document.body.clientWidth > 1000 ? "logo.svg" : "logo-pri.svg";
+    const newLogo = window.innerWidth > 1000 ? "logo.svg" : "logo-pri.svg";
     if (this.state.navLogo !== newLogo) {
       this.setState({
         navLogo: newLogo
