@@ -238,11 +238,13 @@ select {
       display: flex;
       justify-content: space-between;
 
-      input {
+      .form-input {
         width: 49%;
+
+        input {}
       }
 
-      input:first-child {
+      .form-input:first-child {
         margin-right: 1em;
       }
     }

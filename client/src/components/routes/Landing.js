@@ -174,8 +174,20 @@ class Landing extends Component {
               <form onSubmit={this.onSubmitSignup}>
                 <div>
                   <div className="name">
-                    <input type="text" name="firstName" id="firstName" placeholder="first name" onChange={this.onChange} />
-                    <input type="text" name="lastName" placeholder="last name" onChange={this.onChange} />
+                    <TextFormInput
+                      type="text"
+                      name="firstName"
+                      // id="firstName" 
+                      placeholder="first name"
+                      onChange={this.onChange}
+                      error={errors.firstName} />
+
+                    <TextFormInput
+                      type="text"
+                      name="lastName"
+                      placeholder="last name"
+                      onChange={this.onChange}
+                      error={errors.lastName} />
                   </div>
 
                   <TextFormInput
@@ -185,7 +197,14 @@ class Landing extends Component {
                     onChange={this.onChange}
                     error={errors.email} />
 
-                  <input type="password" name="signupPassword" id="password" placeholder="password" className="fill-parent" onChange={this.onChange} />
+                  <TextFormInput
+                    type="password"
+                    name="signupPassword"
+                    // id="password" 
+                    placeholder="password"
+                    onChange={this.onChange}
+                    error={errors.password} />
+
                   <select name="gender" id="gender" className="fill-parent" onChange={this.onChange}>
                     <option hidden disabled selected value="other">gender</option>
                     <option value="male">Male</option>
