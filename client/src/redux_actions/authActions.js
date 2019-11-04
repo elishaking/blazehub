@@ -21,7 +21,9 @@ export const setCurrentUser = (userData) => ({
 export const signupUser = (userData, history) => (dispatch) => {
   axios.post('/api/users/signup', userData)
     .then((res) => history.push('/signin'))
-    .catch((err) => dispatch(getErrors(err.response.data)));
+    .catch((err) => {
+      if (err.response) dispatch(getErrors(err.response.data));
+    });
 };
 
 // @action-types SET_CURRENT_USER, GET_ERRORS
@@ -42,7 +44,9 @@ export const signinUser = (userData) => (dispatch) => {
       dispatch(setCurrentUser(decodedUserData));
       // window.location.href = "/home";
     })
-    .catch((err) => dispatch(getErrors(err.response.data)));
+    .catch((err) => {
+      if (err.response) dispatch(getErrors(err.response.data));
+    });
 }
 
 // @action-type SET_CURRENT_USER
