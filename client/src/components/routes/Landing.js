@@ -148,7 +148,7 @@ class Landing extends Component {
 
                   <div>
                     {
-                      this.state.loadingSignin ? (<Spinner full={false} />) : (<input type="submit" value="Sign In" className="btn-input" />)
+                      this.state.loadingSignin ? (<Spinner full={false} padding={false} />) : (<input type="submit" value="Sign In" className="btn-input" />)
                     }
                   </div>
                 </div>
