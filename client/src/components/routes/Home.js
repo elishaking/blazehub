@@ -23,6 +23,7 @@ class Home extends Component {
 
     this.state = {
       postText: '',
+      postImgDataUrl: '',
       posts: [],
       loading: true
     }
@@ -59,6 +60,30 @@ class Home extends Component {
     });
   }
 
+  selectImage = (e) => {
+    const postImgInput = document.getElementById("post-img");
+    postImgInput.click();
+  };
+
+  removeImage = () => {
+    this.setState({ postImgDataUrl: '' });
+  };
+
+  /** @param {React.ChangeEvent<HTMLInputElement>} e */
+  showImage = (e) => {
+    const postImgInput = e.target;
+
+    if (postImgInput.files && postImgInput.files[0]) {
+      const imgReader = new FileReader();
+
+      imgReader.onload = (e) => {
+        this.setState({ postImgDataUrl: e.target.result });
+      };
+
+      imgReader.readAsDataURL(postImgInput.files[0]);
+    }
+  };
+
   createPost = () => {
     const newPost = {
       user: this.props.auth.user,
@@ -86,6 +111,8 @@ class Home extends Component {
   render() {
     const hasProfilePic = false;
     const { user } = this.props.auth;
+    const { postImgDataUrl } = this.state;
+
     return (
       <div className="container">
         <AuthNav showSearch={true} history={this.props.history} />
@@ -103,11 +130,32 @@ class Home extends Component {
                   <FontAwesomeIcon icon={faUserAlt} className="icon" />
                 </div>
 
+                <div className="post-img">
+                  {
+                    postImgDataUrl && (
+                      <div className="img-container">
+                        <img src={postImgDataUrl} alt="Post Image" />
+                        <div className="close" onClick={this.removeImage}>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 35.086 35.086">
+                            <g id="Group_11" data-name="Group 11" transform="translate(-2725.457 -148.457)">
+                              <line id="Line_1" data-name="Line 1" x2="28.015" y2="28.015" transform="translate(2728.993 151.993)" fill="none" stroke="#fff" strokeLinecap="round" strokeWidth="5" />
+                              <line id="Line_2" data-name="Line 2" x1="28.015" y2="28.015" transform="translate(2728.993 151.993)" fill="none" stroke="#fff" strokeLinecap="round" strokeWidth="5" />
+                            </g>
+                          </svg>
+                        </div>
+                      </div>
+                    )
+                  }
+                </div>
+
                 <div className="create-post-actions">
                   <div className="icon-btns">
-                    <button>
-                      <FontAwesomeIcon icon={faImage} />
-                    </button>
+                    <div id="select-image">
+                      <input type="file" name="image" id="post-img" onChange={this.showImage} accept="image/*" />
+                      <button onClick={this.selectImage}>
+                        <FontAwesomeIcon icon={faImage} />
+                      </button>
+                    </div>
 
                     <button>
                       <FontAwesomeIcon icon={faSmile} />
