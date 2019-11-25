@@ -43,7 +43,7 @@
 }
 
 body {
-  color: #7C62A9;
+  color: #7c62a9;
 }
 
 .container {
@@ -68,7 +68,7 @@ nav {
       font-size: 50%;
       font-weight: 300;
       padding: 0.1em 0.5em;
-      background-color: #7C62A9;
+      background-color: #7c62a9;
       color: white;
       border-radius: 100px;
       margin-left: 1em;
@@ -121,7 +121,7 @@ nav {
 }
 
 .auth-nav .search {
-  flex: auto
+  flex: auto;
 }
 
 .alt-search {
@@ -157,8 +157,8 @@ nav {
 input,
 select,
 textarea {
-  font-family: 'Poppins', sans-serif;
-  border: 1px solid #7C62A9;
+  font-family: "Poppins", sans-serif;
+  border: 1px solid #7c62a9;
   border-radius: 5px;
   padding: 0.7em 1.3em;
   transition: 0.3s ease-in-out;
@@ -167,7 +167,7 @@ textarea {
 
 input[type="text"]:focus {
   /* border: 2px solid #7C62A9; */
-  box-shadow: 0 0 8px 0 #B1A3E1;
+  box-shadow: 0 0 8px 0 #b1a3e1;
   outline: none;
 }
 
@@ -190,30 +190,29 @@ input[type="text"]:focus {
   position: absolute;
   top: 0.8em;
   left: 0.8em;
-  color: #B1A3E1;
+  color: #b1a3e1;
 }
 
-input[type="text"]:focus+.icon {
-  color: #7C62A9;
+input[type="text"]:focus + .icon {
+  color: #7c62a9;
 }
 
 .btn-input {
   background: white;
   font-weight: 600;
-  color: #7C62A9;
+  color: #7c62a9;
   cursor: pointer;
   transition: 0.3s ease-in-out;
 }
 
 .btn-input:hover {
-  background: #B1A3E1;
+  background: #b1a3e1;
   color: white;
-  border-color: #B1A3E1;
-  ;
+  border-color: #b1a3e1;
 }
 
 .btn-pri {
-  background: #7C62A9;
+  background: #7c62a9;
   color: white;
   margin-top: 3em;
 }
@@ -301,7 +300,7 @@ select {
   }
 
   input:focus {
-    box-shadow: 0 0 8px 0 #B1A3E1;
+    box-shadow: 0 0 8px 0 #b1a3e1;
   }
 }
 
@@ -336,7 +335,7 @@ select {
 .main-nav,
 .friends {
   flex: 1;
-  background-color: #F2EFF6;
+  background-color: #f2eff6;
   padding: 1em 2em;
   border-radius: 5px;
 }
@@ -365,7 +364,7 @@ select {
 
 .main-nav a {
   text-decoration: none;
-  color: #7C62A9;
+  color: #7c62a9;
 }
 
 .main-nav svg {
@@ -394,13 +393,13 @@ select {
 }
 
 .create-post {
-  border: 1px solid #F2EFF6;
+  border: 1px solid #f2eff6;
   border-radius: 5px;
 }
 
 .create-post h3 {
   padding: 0.3em 0.8em;
-  background-color: #F2EFF6;
+  background-color: #f2eff6;
 }
 
 .create-post textarea {
@@ -409,7 +408,6 @@ select {
   border: none;
   width: 100%;
   margin-bottom: 0.5em;
-  ;
 }
 
 .create-post-actions {
@@ -419,7 +417,7 @@ select {
 }
 
 .friend-container hr {
-  border: 1px solid #F2EFF6;
+  border: 1px solid #f2eff6;
   margin: 1em 0;
 }
 
@@ -467,8 +465,8 @@ button:focus {
 
     img {
       width: 100%;
-      border: 1px solid #F2EFF6;
-      border-radius: 10px;
+      border: 1px solid #f2eff6;
+      border-radius: 17px;
     }
 
     .close {
@@ -481,13 +479,11 @@ button:focus {
       border-radius: 100%;
       cursor: pointer;
       background-color: rgba($color: #000, $alpha: 0.5);
-      ;
       transition: 0.3s ease-in-out;
     }
 
     .close:hover {
       background-color: rgba($color: #000, $alpha: 0.7);
-      ;
     }
   }
 }
@@ -499,7 +495,7 @@ button:focus {
 
     svg {
       font-size: x-large;
-      color: #7C62A9;
+      color: #7c62a9;
     }
   }
 
@@ -520,12 +516,12 @@ button:focus {
 }
 
 .btn {
-  background: #7C62A9;
+  background: #7c62a9;
   color: white;
   border: none;
   padding: 0.5em 2em;
   border-radius: 5px;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   font-weight: 500;
   outline: none;
 }
@@ -534,7 +530,15 @@ button:focus {
   padding: 1em 2em;
   margin: 1em 0 0 0;
   border-radius: 5px;
-  background: #F2EFF6;
+  background: #f2eff6;
+
+  .post-image {
+    padding: 1em 0;
+    img {
+      width: 100%;
+      border-radius: 17px;
+    }
+  }
 }
 
 .bookmarks .post {
@@ -573,12 +577,12 @@ small {
 
 .post-action {
   background: none;
-  color: #7C62A9;
+  color: #7c62a9;
   border: none;
   padding: 0.5em 0.7em;
   margin-right: 3em;
   border-radius: 5px;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   font-weight: 500;
   outline: none;
 }
@@ -660,7 +664,7 @@ small {
 
 .chat-input {
   padding: 1em 2em;
-  background-color: #B1A3E1;
+  background-color: #b1a3e1;
 }
 
 .chats {
@@ -671,7 +675,7 @@ small {
 
 .chat-messages {
   flex: 1;
-  background-color: #F2EFF6;
+  background-color: #f2eff6;
   height: 90%;
   overflow-y: scroll;
 }
@@ -723,7 +727,7 @@ small {
   }
 
   div {
-    background-color: #B1A3E1;
+    background-color: #b1a3e1;
     color: white;
     border-radius: 10px 0 10px 10px;
   }
@@ -783,7 +787,7 @@ h3 {
     align-items: center;
     border-radius: 5px 5px 0 0;
     padding: 1em 2em;
-    background-color: #B1A3E1;
+    background-color: #b1a3e1;
 
     svg {
       font-size: 2.7em;
@@ -818,7 +822,7 @@ h3 {
 
   #burger-slided {
     div {
-      background: #7C62A9;
+      background: #7c62a9;
     }
 
     .line1 {
@@ -851,7 +855,7 @@ h3 {
   }
 }
 
-@media(max-width: 1100px) {
+@media (max-width: 1100px) {
   .main-nav {
     flex: 0;
 
@@ -881,7 +885,7 @@ h3 {
   }
 
   nav h1 {
-    color: #7C62A9;
+    color: #7c62a9;
   }
 
   .auth-nav-right input {
@@ -991,7 +995,7 @@ h3 {
     z-index: 10;
     border-radius: unset;
     bottom: 0;
-    box-shadow: 0 0 4px #B1A3E1;
+    box-shadow: 0 0 4px #b1a3e1;
 
     ul {
       display: flex;

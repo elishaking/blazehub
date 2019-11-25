@@ -85,12 +85,13 @@ class Home extends Component {
   };
 
   createPost = () => {
+    const { postText, postImgDataUrl } = this.state;
     const newPost = {
       user: this.props.auth.user,
-      text: this.state.postText,
+      text: postText,
       isBookmarked: false,
       date: Date.now(),
-      imageUrl: '',
+      imageUrl: postImgDataUrl,
       // likes: { name: "likes" },
       // comments: { name: "comments" },
       // shares: { name: "shares" }

@@ -146,7 +146,9 @@ export default class Post extends Component {
 
         <p>{post.text}</p>
         {post.imageUrl && (
-          <img src={post.imageUrl} alt="" srcSet="" />
+          <div className="post-image">
+            <img src={post.imageUrl} alt="" srcSet="" />
+          </div>
         )}
 
         <hr />
