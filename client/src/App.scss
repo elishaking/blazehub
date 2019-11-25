@@ -582,6 +582,17 @@ button:focus {
     border: 0.5px solid #7c62a91c;
   }
 
+  .image-loading {
+    padding: 1em;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #7c62a91a;
+    border-radius: 20px;
+    margin: 1em 0;
+  }
+
   .post-image {
     padding: 1em 0;
 

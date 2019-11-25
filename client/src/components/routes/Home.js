@@ -43,6 +43,7 @@ class Home extends Component {
 
   setupFirebase = () => {
     this.postsRef = app.database().ref('posts');
+    this.postImagesRef = app.database().ref('post-images');
     this.bookmarksRef = app.database().ref("bookmarks").child(this.props.auth.user.id);
 
     this.postsRef.on('child_added', (newPostSnapShot) => {
@@ -51,6 +52,12 @@ class Home extends Component {
         key: newPostSnapShot.key,
         ...newPostSnapShot.val()
       };
+
+      // if (newPost.imageUrl && newPost.imageUrl !== true) {
+      //   this.postImagesRef.child(newPost.key).set(newPost.imageUrl);
+      //   this.postsRef.child(newPost.key).child("imageUrl").set(true);
+      // }
+
       if (this.state.loading) this.setState({ loading: false });
       const { posts } = this.state;
       posts.unshift(newPost);
@@ -99,14 +106,18 @@ class Home extends Component {
       text: postText,
       isBookmarked: false,
       date: Date.now(),
-      imageUrl: postImgDataUrl,
+      imageUrl: postImgDataUrl !== "",
       // likes: { name: "likes" },
       // comments: { name: "comments" },
       // shares: { name: "shares" }
     };
     this.postsRef.push(newPost, (err) => {
       if (err) console.error(err);
+    }).then((post) => {
+      if (newPost.imageUrl)
+        this.postImagesRef.child(post.key).set(postImgDataUrl);
     });
+
     this.setState({
       postText: '',
       postImgDataUrl: ''
@@ -189,6 +200,7 @@ class Home extends Component {
                   <Post
                     key={post.key}
                     postRef={this.postsRef.child(post.key)}
+                    postImageRef={this.postImagesRef.child(post.key)}
                     bookmarkRef={this.bookmarksRef.child(post.key)}
                     post={post}
                     user={user}

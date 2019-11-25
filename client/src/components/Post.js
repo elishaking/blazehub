@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle, faComments, faThumbsUp, faBookmark, faTrash } from '@fortawesome/free-solid-svg-icons';
+import Spinner from './Spinner';
 
 export default class Post extends Component {
   beforeMountStyle = {
@@ -26,7 +27,9 @@ export default class Post extends Component {
       showComments: false,
       commentText: '',
       transitionStyle: this.beforeMountStyle,
-      isBookmarked: false
+      isBookmarked: false,
+      loadingImage: this.props.post.imageUrl,
+      postImage: ''
     };
   }
 
@@ -36,7 +39,14 @@ export default class Post extends Component {
     //     post: updatedPostSnapShot.val()
     //   });
     // });
-    const { bookmarkRef, postRef } = this.props;
+    const { bookmarkRef, postRef, postImageRef } = this.props;
+
+    if (this.state.loadingImage) {
+      postImageRef.once("value", (postImageSnapShot) => {
+        this.setState({ postImage: postImageSnapShot.val(), loadingImage: false });
+        // this.setState({ postImage: postImageSnapShot.val() });
+      });
+    }
 
     if (this.props.canBookmark) {
       bookmarkRef.once("value", (bookmarkSnapShot) => {
@@ -139,7 +149,7 @@ export default class Post extends Component {
   }
 
   render() {
-    const { post, showComments, transitionStyle, isBookmarked } = this.state;
+    const { post, loadingImage, postImage, showComments, transitionStyle, isBookmarked } = this.state;
     return (
       <div className="post" style={transitionStyle}>
         <header>
@@ -161,11 +171,22 @@ export default class Post extends Component {
         </header>
 
         <p>{post.text}</p>
-        {post.imageUrl && (
+        {/* {post.imageUrl && (
           <div className="post-image">
             <img src={post.imageUrl} alt="" srcSet="" />
           </div>
-        )}
+        )} */}
+        {
+          post.imageUrl && (loadingImage ? (
+            <div className="image-loading">
+              <Spinner />
+            </div>
+          ) : (
+              <div className="post-image">
+                <img src={postImage} alt="" srcSet="" />
+              </div>
+            ))
+        }
 
         <hr />
 
