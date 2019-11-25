@@ -58,6 +58,14 @@ class Home extends Component {
         posts
       });
     });
+
+    this.postsRef.on('child_removed', (removedPostSnapShot) => {
+      const { posts } = this.state;
+
+      posts.splice(posts.map((post) => post.key).indexOf(removedPostSnapShot.key), 1);
+
+      this.setState({ posts });
+    });
   }
 
   selectImage = (e) => {
@@ -98,7 +106,10 @@ class Home extends Component {
     };
     this.postsRef.push(newPost, (err) => {
       if (err) console.error(err);
-      else console.log('post created');
+    });
+    this.setState({
+      postText: '',
+      postImgDataUrl: ''
     });
   };
 
@@ -112,7 +123,7 @@ class Home extends Component {
   render() {
     const hasProfilePic = false;
     const { user } = this.props.auth;
-    const { postImgDataUrl } = this.state;
+    const { postText, postImgDataUrl } = this.state;
 
     return (
       <div className="container">
@@ -127,7 +138,12 @@ class Home extends Component {
                 <h3>Create Post</h3>
 
                 <div className="icon-input">
-                  <textarea name="postText" placeholder="Share your thoughts" rows={3} onChange={this.onChange}></textarea>
+                  <textarea
+                    name="postText"
+                    placeholder="Share your thoughts"
+                    rows={3}
+                    value={postText}
+                    onChange={this.onChange}></textarea>
                   <FontAwesomeIcon icon={faUserAlt} className="icon" />
                 </div>
 
