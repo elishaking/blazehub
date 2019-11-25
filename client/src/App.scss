@@ -193,7 +193,7 @@ input[type="text"]:focus {
   color: #b1a3e1;
 }
 
-input[type="text"]:focus + .icon {
+input[type="text"]:focus+.icon {
   color: #7c62a9;
 }
 
@@ -335,13 +335,14 @@ select {
 .main-nav,
 .friends {
   flex: 1;
-  background-color: #f2eff6;
   padding: 1em 2em;
   border-radius: 5px;
 }
 
 .main-nav {
   max-width: 300px;
+  background-color: white;
+  border: 1px solid #ede0ff;
 }
 
 .main-nav h3 {
@@ -504,6 +505,7 @@ button:focus {
     position: relative;
 
     input {
+      width: 2em;
       position: absolute;
       left: 0;
       visibility: hidden;
@@ -530,10 +532,11 @@ button:focus {
   padding: 1em 2em;
   margin: 1em 0 0 0;
   border-radius: 5px;
-  background: #f2eff6;
+  border: 1px solid #ede0ff;
 
   .post-image {
     padding: 1em 0;
+
     img {
       width: 100%;
       border-radius: 17px;
@@ -980,6 +983,7 @@ h3 {
     height: 100%;
     transform: translateX(130%);
     transition: 0.3s ease-in-out;
+    background-color: #f2eff6;
   }
 
   .post-action {
