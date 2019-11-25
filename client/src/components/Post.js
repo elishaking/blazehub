@@ -1,7 +1,7 @@
 //@ts-check
 import React, { Component } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserCircle, faComments, faThumbsUp, faBookmark } from '@fortawesome/free-solid-svg-icons';
+import { faUserCircle, faComments, faThumbsUp, faBookmark, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 export default class Post extends Component {
   beforeMountStyle = {
@@ -71,6 +71,12 @@ export default class Post extends Component {
     });
   }
 
+  deletePost = (key) => {
+    this.props.postRef.remove((err) => {
+      if (err) console.log(err.message)
+    });
+  };
+
   likePost = () => {
     const { postRef, user } = this.props;
     if (this.state.post.likes && this.state.post.likes[user.firstName]) {
@@ -137,11 +143,21 @@ export default class Post extends Component {
     return (
       <div className="post" style={transitionStyle}>
         <header>
-          <FontAwesomeIcon icon={faUserCircle} />
-          <div>
-            <h4>{`${post.user.firstName}  ${post.user.lastName}`}</h4>
-            <small>{new Date(post.date).toLocaleTimeString()}</small>
+          <div className="user-post">
+            <FontAwesomeIcon icon={faUserCircle} />
+            <div>
+              <h4>{`${post.user.firstName}  ${post.user.lastName}`}</h4>
+              <small>{new Date(post.date).toLocaleTimeString()}</small>
+            </div>
           </div>
+
+          {
+            post.user.email == this.props.user.email && (
+              <div className="delete-post" onClick={() => { this.deletePost(post.key) }}>
+                <FontAwesomeIcon icon={faTrash} />
+              </div>
+            )
+          }
         </header>
 
         <p>{post.text}</p>

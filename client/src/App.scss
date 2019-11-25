@@ -544,6 +544,44 @@ button:focus {
   border-radius: 5px;
   border: 1px solid #ede0ff;
 
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.7em;
+
+    .user-post {
+      display: flex;
+    }
+
+    .delete-post {
+      svg {
+        font-size: 1em;
+        opacity: 0.7;
+        transition: 0.3s ease-in-out;
+        cursor: pointer;
+      }
+
+      svg:hover {
+        opacity: 1;
+      }
+    }
+
+    svg {
+      font-size: 2.7em;
+      margin-right: 0.5em;
+    }
+
+    p {
+      word-break: break-word;
+    }
+  }
+
+  hr {
+    margin: 0.7em 0;
+    border: 0.5px solid #7c62a91c;
+  }
+
   .post-image {
     padding: 1em 0;
 
@@ -559,29 +597,9 @@ button:focus {
   margin: 0 0 1em 0;
 }
 
-.post header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 0.7em;
-}
-
-.post header svg {
-  font-size: 2.7em;
-  margin-right: 0.5em;
-}
-
-.post p {
-  word-break: break-word;
-}
-
 small {
   /* color: #7c62a9bf; */
   font-size: 70%;
-}
-
-.post hr {
-  margin: 0.7em 0;
-  border: 0.5px solid #7c62a91c;
 }
 
 .post-actions {

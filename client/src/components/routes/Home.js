@@ -185,7 +185,7 @@ class Home extends Component {
 
             <div className="posts">
               {
-                this.state.loading ? (<Spinner />) : this.state.posts.map((post) => (
+                this.state.loading ? (<Spinner />) : this.state.posts.map((post, idx) => (
                   <Post
                     key={post.key}
                     postRef={this.postsRef.child(post.key)}
