@@ -51,7 +51,7 @@ class Home extends Component {
         key: newPostSnapShot.key,
         ...newPostSnapShot.val()
       };
-      if (this.state.loading) this.setState({ loading: false });
+      // if (this.state.loading) this.setState({ loading: false });
       const { posts } = this.state;
       posts.unshift(newPost);
       this.setState({

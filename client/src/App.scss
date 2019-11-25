@@ -193,7 +193,7 @@ input[type="text"]:focus {
   color: #b1a3e1;
 }
 
-input[type="text"]:focus+.icon {
+input[type="text"]:focus + .icon {
   color: #7c62a9;
 }
 
@@ -1038,4 +1038,19 @@ h3 {
   /* .form-container h1 {
     text-align: center;
   } */
+}
+
+.spinner {
+  font-size: 2.7em;
+  animation: loading 0.7s linear infinite forwards;
+}
+
+@keyframes loading {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
