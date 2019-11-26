@@ -84,7 +84,7 @@ class Home extends Component {
     });
   }
 
-  selectImage = (e) => {
+  selectImage = () => {
     const postImgInput = document.getElementById("post-img");
     postImgInput.click();
   };
@@ -101,11 +101,41 @@ class Home extends Component {
       const imgReader = new FileReader();
 
       imgReader.onload = (e) => {
-        this.setState({ postImgDataUrl: e.target.result });
+        if (postImgInput.files[0].size > 100000)
+          this.resizeImage(e.target.result, postImgInput.files[0].type).then((dataUrl) => {
+            this.setState({ postImgDataUrl: dataUrl });
+          });
+
+        else this.setState({ postImgDataUrl: e.target.result });
       };
 
       imgReader.readAsDataURL(postImgInput.files[0]);
     }
+  };
+
+  resizeImage = (dataUrl, type) => {
+    const img = document.createElement("img");
+    img.src = dataUrl;
+    return new Promise((resolve, reject) => {
+      img.onload = () => {
+        // console.log(img.height);
+        const canvas = document.createElement('canvas');
+        const max = img.height > img.width ? img.height : img.width;
+        if (max > 1000) {
+          canvas.height = (img.height / max) * 1000;
+          canvas.width = (img.width / max) * 1000;
+
+          const context = canvas.getContext('2d');
+          context.scale(1000 / max, 1000 / max);
+          context.drawImage(img, 0, 0);
+          // return canvas.toDataURL();
+          resolve(canvas.toDataURL(type, 0.5));
+        } else {
+          // return dataUrl;
+          resolve(dataUrl);
+        }
+      }
+    });
   };
 
   createPost = () => {
