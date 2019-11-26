@@ -38,7 +38,9 @@ class Home extends Component {
     //     this.setupFirebase();
     //   });
     // }
+    this.mountedOn = Date.now();
     this.setupFirebase();
+    console.log("mounter");
   }
 
   setupFirebase = () => {
@@ -69,7 +71,7 @@ class Home extends Component {
 
       if (this.state.loading) this.setState({ loading: false });
       const { posts } = this.state;
-      posts.push(newPost);
+      newPost.date > this.mountedOn ? posts.unshift(newPost) : posts.push(newPost);
       this.setState({
         posts
       });
