@@ -36,7 +36,7 @@ class Bookmarks extends Component {
         ).then((bookmarkedPostSnapshots) => {
           let { bookmarkedPosts } = this.state;
           bookmarkedPostSnapshots.forEach((bookmarkedPostSnapshot) => {
-            bookmarkedPosts.unshift({
+            bookmarkedPosts.push({
               key: bookmarkedPostSnapshot.key,
               ...bookmarkedPostSnapshot.val()
             });
