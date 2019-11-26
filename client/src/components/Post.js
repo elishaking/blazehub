@@ -43,8 +43,15 @@ export default class Post extends Component {
 
     if (this.state.loadingImage) {
       postImageRef.once("value", (postImageSnapShot) => {
+        // compress images in database
+        // this.resizeImage(postImageSnapShot.val(), this.base64MimeType(postImageSnapShot.val()) || "image/png")
+        //   .then((dataUrl) => {
+        //     postImageRef.set(dataUrl).then(() => {
+        //       this.setState({ postImage: dataUrl, loadingImage: false });
+        //     })
+        //   });
+
         this.setState({ postImage: postImageSnapShot.val(), loadingImage: false });
-        // this.setState({ postImage: postImageSnapShot.val() });
       });
     }
 
@@ -79,6 +86,47 @@ export default class Post extends Component {
         post
       });
     });
+  }
+
+  resizeImage = (dataUrl, type) => {
+    const img = document.createElement("img");
+    img.src = dataUrl;
+    return new Promise((resolve, reject) => {
+      img.onload = () => {
+        // console.log(img.height);
+        const canvas = document.createElement('canvas');
+        const max = img.height > img.width ? img.height : img.width;
+        if (max > 1000) {
+          canvas.height = (img.height / max) * 1000;
+          canvas.width = (img.width / max) * 1000;
+
+          const context = canvas.getContext('2d');
+          context.scale(1000 / max, 1000 / max);
+          context.drawImage(img, 0, 0);
+          // return canvas.toDataURL();
+          resolve(canvas.toDataURL(type, 0.5));
+        } else {
+          // return dataUrl;
+          resolve(dataUrl);
+        }
+      }
+    });
+  };
+
+  base64MimeType = (encoded) => {
+    var result = null;
+
+    if (typeof encoded !== 'string') {
+      return result;
+    }
+
+    var mime = encoded.match(/data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+).*,.*/);
+
+    if (mime && mime.length) {
+      result = mime[1];
+    }
+
+    return result;
   }
 
   deletePost = (key) => {
