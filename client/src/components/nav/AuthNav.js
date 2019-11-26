@@ -36,7 +36,8 @@ class AuthNav extends Component {
 
           <div className="auth-nav-right">
             {hasProfilePic ? <img src="" alt={firstName} srcSet="" /> : <FontAwesomeIcon icon={faUserCircle} className="icon" />} &nbsp;&nbsp;&nbsp;
-              <span>{`${firstName} ${lastName}`}</span>
+              {/* <span>{`${firstName} ${lastName}`}</span> */}
+            <span>{`${firstName}`}</span>
             <input type="button" value="Sign Out" className="btn-input" onClick={this.signOut} />
           </div>
         </nav>

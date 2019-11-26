@@ -46,21 +46,30 @@ class Home extends Component {
     this.postImagesRef = app.database().ref('post-images');
     this.bookmarksRef = app.database().ref("bookmarks").child(this.props.auth.user.id);
 
-    this.postsRef.on('child_added', (newPostSnapShot) => {
+    this.postsRef.orderByChild("date").on('child_added', (newPostSnapShot) => {
       // console.log('child_added');
       const newPost = {
         key: newPostSnapShot.key,
         ...newPostSnapShot.val()
       };
 
+      // update imageUrl
       // if (newPost.imageUrl && newPost.imageUrl !== true) {
       //   this.postImagesRef.child(newPost.key).set(newPost.imageUrl);
       //   this.postsRef.child(newPost.key).child("imageUrl").set(true);
       // }
 
+      // update date
+      // if (newPost.date < 1e+13) {
+      //   this.postsRef.child(newPost.key).child("date").set(1e+15 - newPost.date);
+      // }
+
+      // set date
+      newPost.date = 1e+15 - newPost.date;
+
       if (this.state.loading) this.setState({ loading: false });
       const { posts } = this.state;
-      posts.unshift(newPost);
+      posts.push(newPost);
       this.setState({
         posts
       });
