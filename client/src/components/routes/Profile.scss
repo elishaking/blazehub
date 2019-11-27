@@ -117,4 +117,37 @@
       }
     }
   }
+
+  .profile-content {
+    margin-top: 3em;
+    display: flex;
+
+    .loading-container {
+      // padding: 1em 0;
+      border: 1px solid #ede0ff;
+      border-radius: 5px;
+    }
+
+    .user-posts {
+      flex: 2;
+      margin-right: 1em;
+    }
+
+    .user-data {
+      flex: 1;
+      margin-top: 1em;
+      border: 1px solid #ede0ff;
+      border-radius: 5px;
+      padding: 1em;
+
+      h3 {
+        padding-bottom: 1em;
+        border-bottom: 1px solid #ede0ff;
+
+        svg {
+          margin-right: 1em;
+        }
+      }
+    }
+  }
 }

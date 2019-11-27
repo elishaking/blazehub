@@ -2,23 +2,52 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCamera } from '@fortawesome/free-solid-svg-icons';
+import { faCamera, faUser } from '@fortawesome/free-solid-svg-icons';
 import app from 'firebase/app';
 import 'firebase/database';
 import AuthNav from '../nav/AuthNav';
 import MainNav from '../nav/MainNav';
 import './Profile.scss';
+import Post from '../Post';
+import Spinner from '../Spinner';
 
 class Profile extends Component {
   state = {
     avatar: '',
     coverPhoto: '',
+    posts: [],
+    loadingPosts: true
   }
 
   updateCover = false;
 
   componentDidMount() {
+    const { user } = this.props.auth;
 
+    this.postsRef = app.database().ref('posts');
+    this.postImagesRef = app.database().ref('post-images');
+    this.bookmarksRef = app.database().ref("bookmarks").child(user.id);
+
+    this.postsRef.orderByChild('user/id')
+      .equalTo(user.id).once("value", (postsSnapShot) => {
+        const posts = postsSnapShot.val();
+
+        this.setState({
+          posts: Object.keys(posts).map((_, i, postKeys) => {
+            const postKey = postKeys[postKeys.length - i - 1];
+            const newPost = {
+              key: postKey,
+              ...posts[postKey]
+            };
+            // set date
+            newPost.date = 1e+15 - newPost.date;
+
+            if (this.state.loadingPosts) this.setState({ loadingPosts: false });
+
+            return newPost;
+          })
+        })
+      })
   }
 
   selectCoverPhoto = () => {
@@ -84,7 +113,7 @@ class Profile extends Component {
   render() {
     const hasProfilePic = false;
     const { user } = this.props.auth;
-    const { avatar, coverPhoto } = this.state;
+    const { avatar, coverPhoto, posts, loadingPosts } = this.state;
 
     return (
       <div className="container">
@@ -128,6 +157,33 @@ class Profile extends Component {
                     </button>
                   </div>
                 </div>
+              </div>
+            </div>
+
+            <div className="profile-content">
+              <div className="user-posts">
+                {
+                  loadingPosts ? (
+                    <div className="loading-container"><Spinner /></div>
+                  ) : posts.map((post) => (
+                    <Post
+                      key={post.key}
+                      postRef={this.postsRef.child(post.key)}
+                      postImageRef={this.postImagesRef.child(post.key)}
+                      bookmarkRef={this.bookmarksRef.child(post.key)}
+                      notificationsRef={app.database().ref('notifications')}
+                      post={post}
+                      user={user}
+                      canBookmark={true} />
+                  ))
+                }
+              </div>
+
+              <div className="user-data">
+                <h3>
+                  <FontAwesomeIcon icon={faUser} />
+                  <span>{`${user.firstName} ${user.lastName}`}</span>
+                </h3>
               </div>
             </div>
           </div>
