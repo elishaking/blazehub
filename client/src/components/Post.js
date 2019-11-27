@@ -22,13 +22,14 @@ export default class Post extends Component {
 
     this.state = {
       post: {
-        ...this.props.post
+        ...props.post
       },
       showComments: false,
+      liked: props.post.likes && props.post.likes[props.user.firstName],
       commentText: '',
       transitionStyle: this.beforeMountStyle,
       isBookmarked: false,
-      loadingImage: this.props.post.imageUrl,
+      loadingImage: props.post.imageUrl,
       postImage: ''
     };
   }
@@ -96,11 +97,21 @@ export default class Post extends Component {
 
   likePost = () => {
     const { postRef, user } = this.props;
-    if (this.state.post.likes && this.state.post.likes[user.firstName]) {
-      postRef.child('likes').child(user.firstName).remove();
+    const { liked } = this.state;
+    // if (this.state.post.likes && this.state.post.likes[user.firstName]) {
+    if (liked) {
+      postRef.child('likes').child(user.firstName).remove((err) => {
+        if (err) return console.log(err);
+
+        this.setState({ liked: false });
+      });
     } else {
       postRef.child('likes').update({
         [user.firstName]: 1  //todo: change to user_id
+      }, (err) => {
+        if (err) return console.log(err);
+
+        this.setState({ liked: true });
       });
     }
   };
@@ -177,7 +188,7 @@ export default class Post extends Component {
   };
 
   render() {
-    const { post, loadingImage, postImage, showComments, transitionStyle, isBookmarked } = this.state;
+    const { post, liked, loadingImage, postImage, showComments, transitionStyle, isBookmarked } = this.state;
     return (
       <div className="post" style={transitionStyle}>
         <header>
@@ -222,8 +233,8 @@ export default class Post extends Component {
         <div className="post-actions">
           <div>
             <button className="post-action" onClick={this.likePost}>
-              <FontAwesomeIcon icon={faThumbsUp} />
-              <span>{post.likes ? Object.keys(post.likes).length : 0}</span>
+              <FontAwesomeIcon icon={faThumbsUp} style={{ color: liked ? "#7c62a9" : "#888888" }} />
+              <span style={{ color: liked ? "#7c62a9" : "#888888" }}>{post.likes ? Object.keys(post.likes).length : 0}</span>
             </button>
             <button className="post-action" onClick={this.toggleComments}>
               <FontAwesomeIcon icon={faComments} />
