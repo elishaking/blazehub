@@ -1,0 +1,31 @@
+.profile {
+  .pics {
+    position: relative;
+
+    .cover {
+      .cover-placeholder {
+        width: 100%;
+        height: 30vh;
+        background-color: #ede0ff;
+        border-radius: 5px;
+      }
+    }
+
+    .avatar {
+      position: absolute;
+      bottom: -30px;
+      left: 30px;
+
+      .avatar-placeholder {
+        width: 50vw;
+        height: 50vw;
+        max-width: 150px;
+        max-height: 150px;
+        background-color: #7c62a9;
+        border: 10px solid white;
+        border-radius: 100%;
+        box-shadow: 0 0 1px black;
+      }
+    }
+  }
+}
