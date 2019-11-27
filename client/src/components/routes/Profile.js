@@ -27,6 +27,7 @@ class Profile extends Component {
       posts: [],
       loadingPosts: true,
 
+      editProfile: false,
       name: `${user.firstName} ${user.lastName}`,
       bio: '',
       errors: {},
@@ -137,14 +138,14 @@ class Profile extends Component {
     });
   };
 
-  editProfile = () => {
-
+  toggleEditProfile = () => {
+    this.setState({ editProfile: !this.state.editProfile });
   };
 
   render() {
     const hasProfilePic = false;
     const { user } = this.props.auth;
-    const { avatar, coverPhoto, posts, loadingPosts, name, errors } = this.state;
+    const { avatar, coverPhoto, posts, loadingPosts, editProfile, name, errors } = this.state;
 
     return (
       <div className="container">
@@ -215,65 +216,78 @@ class Profile extends Component {
                   <FontAwesomeIcon icon={faUser} />
                   <span>{`${user.firstName} ${user.lastName}`}</span>
                 </h3>
-                <button className="btn" onClick={this.editProfile}>Edit Profile</button>
+                <button className="btn" onClick={this.toggleEditProfile}>Edit Profile</button>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="edit-profile">
-          <div className="inner-content">
-            <div className="modal">
-              <form>
-                <label htmlFor="name">Name</label>
-                <TextFormInput
-                  name="name"
-                  placeholder="name"
-                  type="text"
-                  value={name}
-                  onChange={this.onChange}
-                  error={errors.name}
-                />
+        {
+          editProfile && (
+            <div className="edit-profile">
+              <div className="inner-content">
+                <div className="modal">
+                  <div className="close" onClick={this.toggleEditProfile}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 49.243 49.243">
+                      <g id="Group_153" data-name="Group 153" transform="translate(-2307.379 -2002.379)">
+                        <line id="Line_1" data-name="Line 1" x2="45" y2="45" transform="translate(2309.5 2004.5)" fill="none" stroke="#fff" strokeLinecap="round" strokeWidth="7" />
+                        <line id="Line_2" data-name="Line 2" x1="45" y2="45" transform="translate(2309.5 2004.5)" fill="none" stroke="#fff" strokeLinecap="round" strokeWidth="7" />
+                      </g>
+                    </svg>
+                  </div>
 
-                <label htmlFor="name">Bio</label>
-                <TextAreaFormInput
-                  name="bio"
-                  placeholder="bio"
-                  onChange={this.onChange}
-                  error={errors.bio}
-                />
+                  <form>
+                    <label htmlFor="name">Name</label>
+                    <TextFormInput
+                      name="name"
+                      placeholder="name"
+                      type="text"
+                      value={name}
+                      onChange={this.onChange}
+                      error={errors.name}
+                    />
 
-                <label htmlFor="location">Location</label>
-                <TextFormInput
-                  name="location"
-                  placeholder="location"
-                  type="text"
-                  onChange={this.onChange}
-                  error={errors.location}
-                />
+                    <label htmlFor="name">Bio</label>
+                    <TextAreaFormInput
+                      name="bio"
+                      placeholder="bio"
+                      onChange={this.onChange}
+                      error={errors.bio}
+                    />
 
-                <label htmlFor="website">Website</label>
-                <TextFormInput
-                  name="website"
-                  placeholder="website"
-                  type="text"
-                  onChange={this.onChange}
-                  error={errors.website}
-                />
+                    <label htmlFor="location">Location</label>
+                    <TextFormInput
+                      name="location"
+                      placeholder="location"
+                      type="text"
+                      onChange={this.onChange}
+                      error={errors.location}
+                    />
 
-                <label htmlFor="birth">Birth Date</label>
-                <DateFormInput
-                  name="birth"
-                  placeholder="birth"
-                  onChange={this.onChange}
-                  error={errors.birth}
-                />
+                    <label htmlFor="website">Website</label>
+                    <TextFormInput
+                      name="website"
+                      placeholder="website"
+                      type="text"
+                      onChange={this.onChange}
+                      error={errors.website}
+                    />
 
-                <input type="submit" value="Save" className="btn" />
-              </form>
+                    <label htmlFor="birth">Birth Date</label>
+                    <DateFormInput
+                      name="birth"
+                      placeholder="birth"
+                      onChange={this.onChange}
+                      error={errors.birth}
+                    />
+
+                    <input type="submit" value="Save" className="btn" />
+                  </form>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          )
+        }
       </div>
     )
   }

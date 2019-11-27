@@ -184,6 +184,7 @@
 }
 
 .edit-profile {
+  // display: none;
   position: absolute;
   top: 0;
   left: 0;
@@ -198,16 +199,44 @@
     align-items: center;
 
     .modal {
+      position: relative;
       background: white;
       padding: 3em;
       width: 80vw;
       max-width: 700px;
       border-radius: 10px;
+      animation: scaleIn 0.3s ease-out;
 
       // input {
       //   display: block;
       //   width: 100%;
       // }
+      .close {
+        position: absolute;
+        background: rgba($color: #000000, $alpha: 0.7);
+        cursor: pointer;
+        right: 0;
+        top: 0;
+        margin: 1em;
+        border-radius: 100%;
+        display: flex;
+        padding: 0.5em;
+        transition: 0.3s ease-in-out;
+      }
+
+      .close:hover {
+        background: rgba($color: #000000, $alpha: 0.9);
+      }
     }
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0);
+  }
+
+  to {
+    transform: scale(1);
   }
 }
