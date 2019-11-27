@@ -60,7 +60,7 @@ class Signin extends Component {
       password: this.state.password
     }
     this.props.signinUser(userData);
-  }
+  };
 
   render() {
     const { errors } = this.state;
