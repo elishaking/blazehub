@@ -142,11 +142,43 @@ nav {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-}
 
-.auth-nav-right svg {
-  height: 2em;
-  width: 2em !important;
+  svg {
+    font-size: 2em;
+  }
+
+  #notifications {
+    margin-right: 1em;
+    position: relative;
+
+    svg {
+      font-size: 1.7em;
+      transition: 0.3s ease-in-out;
+      cursor: pointer;
+    }
+
+    svg:hover {
+      color: #b1a3e1;
+    }
+
+    div {
+      position: absolute;
+      top: -0.7em;
+      right: -0.7em;
+      width: 1.3em;
+      height: 1.3em;
+      display: flex;
+      justify-content: center;
+      // align-items: center;
+      background: #b1a3e1;
+      color: white;
+      border-radius: 100%;
+
+      small {
+        height: 100%;
+      }
+    }
+  }
 }
 
 .auth-nav-right img,
@@ -610,7 +642,7 @@ button:focus {
 
 small {
   /* color: #7c62a9bf; */
-  font-size: 70%;
+  // font-size: 70%;
 }
 
 .post-actions {
@@ -996,8 +1028,10 @@ h3 {
     margin-right: 0;
   }
 
-  .auth-nav-right span {
-    margin-right: 0;
+  .auth-nav-right {
+    #notifications {
+      margin-right: 0;
+    }
   }
 }
 

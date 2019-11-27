@@ -42,7 +42,7 @@ class Home extends Component {
     // }
     this.mountedOn = Date.now();
     this.setupFirebase();
-    console.log("mounter");
+    // console.log("mounter");
   }
 
   setupFirebase = () => {
@@ -52,26 +52,7 @@ class Home extends Component {
     this.postImagesRef = app.database().ref('post-images');
     this.bookmarksRef = app.database().ref("bookmarks").child(user.id);
 
-    this.notificationsRef = app.database().ref('notifications');
-
-
-    this.notificationsRef.child(user.id).orderByChild("date").on('child_added', (newNotificationSnapShot) => {
-      const newNotification = {
-        key: newNotificationSnapShot.key,
-        ...newNotificationSnapShot.val()
-      };
-
-      // set date
-      newNotification.date = 1e+15 - newNotification.date;
-
-      if (this.state.loading) this.setState({ loading: false });
-
-      const { notifications } = this.state;
-      newNotification.date > this.mountedOn ? notifications.unshift(newNotification) : notifications.push(newNotification);
-      this.setState({
-        notifications
-      });
-    });
+    // this.notificationsRef = app.database().ref('notifications');
 
     this.postsRef.orderByChild("date").on('child_added', (newPostSnapShot) => {
       // console.log('child_added');
@@ -205,7 +186,10 @@ class Home extends Component {
 
     return (
       <div className="container">
-        <AuthNav showSearch={true} history={this.props.history} />
+        <AuthNav
+          showSearch={true}
+          hello="hello"
+          notificationsRef={app.database().ref('notifications')} />
 
         <div className="main">
           <MainNav user={user} />
@@ -269,7 +253,7 @@ class Home extends Component {
                     postRef={this.postsRef.child(post.key)}
                     postImageRef={this.postImagesRef.child(post.key)}
                     bookmarkRef={this.bookmarksRef.child(post.key)}
-                    notificationsRef={this.notificationsRef}
+                    notificationsRef={app.database().ref('notifications')}
                     post={post}
                     user={user}
                     canBookmark={true} />
