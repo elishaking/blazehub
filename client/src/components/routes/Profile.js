@@ -11,6 +11,7 @@ import './Profile.scss';
 import Post from '../Post';
 import Spinner from '../Spinner';
 import { TextFormInput, TextAreaFormInput } from '../form/TextFormInput';
+import { DateFormInput } from '../form/DateFormInput';
 
 class Profile extends Component {
   updateCover = false;
@@ -261,10 +262,9 @@ class Profile extends Component {
                 />
 
                 <label htmlFor="birth">Birth Date</label>
-                <TextFormInput
+                <DateFormInput
                   name="birth"
                   placeholder="birth"
-                  type="text"
                   onChange={this.onChange}
                   error={errors.birth}
                 />
