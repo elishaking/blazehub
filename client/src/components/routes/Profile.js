@@ -241,6 +241,35 @@ class Profile extends Component {
                   onChange={this.onChange}
                   error={errors.bio}
                 />
+
+                <label htmlFor="location">Location</label>
+                <TextFormInput
+                  name="location"
+                  placeholder="location"
+                  type="text"
+                  onChange={this.onChange}
+                  error={errors.location}
+                />
+
+                <label htmlFor="website">Website</label>
+                <TextFormInput
+                  name="website"
+                  placeholder="website"
+                  type="text"
+                  onChange={this.onChange}
+                  error={errors.website}
+                />
+
+                <label htmlFor="birth">Birth Date</label>
+                <TextFormInput
+                  name="birth"
+                  placeholder="birth"
+                  type="text"
+                  onChange={this.onChange}
+                  error={errors.birth}
+                />
+
+                <input type="submit" value="Save" className="btn" />
               </form>
             </div>
           </div>

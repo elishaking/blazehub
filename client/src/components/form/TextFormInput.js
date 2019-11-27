@@ -23,6 +23,8 @@ export function TextAreaFormInput({ name, placeholder, onChange, error, value = 
         name={name}
         value={value}
         placeholder={placeholder}
+        rows={3}
+        style={{ resize: "none" }}
         className={`fill-parent ${error ? "error" : ""}`} onChange={onChange} />
       {
         error && (<small>{error}</small>)
