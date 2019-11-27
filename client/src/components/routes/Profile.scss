@@ -8,6 +8,7 @@
 
       #img-input {
         position: absolute;
+        width: 1em;
         z-index: -10;
         left: 3em;
       }
@@ -124,6 +125,7 @@
 
     .loading-container {
       // padding: 1em 0;
+      margin-top: 1em;
       border: 1px solid #ede0ff;
       border-radius: 5px;
     }
@@ -156,6 +158,26 @@
 
       button:hover {
         opacity: 0.7;
+      }
+    }
+  }
+
+  @media (max-width: 760px) {
+    .profile-content {
+      flex-direction: column-reverse;
+
+      .user-posts {
+        margin-right: 0;
+      }
+
+      .user-data {
+        text-align: center;
+        margin-bottom: 1em;
+
+        button {
+          max-width: 300px;
+
+        }
       }
     }
   }
