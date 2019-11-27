@@ -10,18 +10,33 @@ import MainNav from '../nav/MainNav';
 import './Profile.scss';
 import Post from '../Post';
 import Spinner from '../Spinner';
+import { TextFormInput, TextAreaFormInput } from '../form/TextFormInput';
 
 class Profile extends Component {
-  state = {
-    avatar: '',
-    coverPhoto: '',
-    posts: [],
-    loadingPosts: true
-  }
-
   updateCover = false;
 
+  constructor(props) {
+    super(props);
+
+    const { user } = this.props.auth;
+
+    this.state = {
+      avatar: '',
+      coverPhoto: '',
+      posts: [],
+      loadingPosts: true,
+
+      name: `${user.firstName} ${user.lastName}`,
+      bio: '',
+      errors: {},
+    }
+  }
+
   componentDidMount() {
+    // this.loadData();
+  }
+
+  loadData = () => {
     const { user } = this.props.auth;
 
     this.postsRef = app.database().ref('posts');
@@ -47,7 +62,7 @@ class Profile extends Component {
             return newPost;
           })
         })
-      })
+      });
   }
 
   selectCoverPhoto = () => {
@@ -70,7 +85,7 @@ class Profile extends Component {
 
       imgReader.onload = (e) => {
         if (imgInput.files[0].size > 100000)
-          this.resizeImage(e.target.result, imgInput.files[0].type).then((dataUrl) => {
+          this.resizeImage(e.target.result.toString(), imgInput.files[0].type).then((dataUrl) => {
             this.setState({ [key]: dataUrl });
           });
 
@@ -85,6 +100,10 @@ class Profile extends Component {
   updateAvatar = (e) => {
   };
 
+  /**
+   * @param {string} dataUrl
+   * @param {string} type
+   */
   resizeImage = (dataUrl, type) => {
     const img = document.createElement("img");
     img.src = dataUrl;
@@ -110,10 +129,21 @@ class Profile extends Component {
     });
   };
 
+  /** @param {React.ChangeEvent<HTMLInputElement>} e */
+  onChange = (e) => {
+    this.setState({
+      [e.target.name]: e.target.value
+    });
+  };
+
+  editProfile = () => {
+
+  };
+
   render() {
     const hasProfilePic = false;
     const { user } = this.props.auth;
-    const { avatar, coverPhoto, posts, loadingPosts } = this.state;
+    const { avatar, coverPhoto, posts, loadingPosts, name, errors } = this.state;
 
     return (
       <div className="container">
@@ -184,7 +214,34 @@ class Profile extends Component {
                   <FontAwesomeIcon icon={faUser} />
                   <span>{`${user.firstName} ${user.lastName}`}</span>
                 </h3>
+                <button className="btn" onClick={this.editProfile}>Edit Profile</button>
               </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="edit-profile">
+          <div className="inner-content">
+            <div className="modal">
+              <form>
+                <label htmlFor="name">Name</label>
+                <TextFormInput
+                  name="name"
+                  placeholder="name"
+                  type="text"
+                  value={name}
+                  onChange={this.onChange}
+                  error={errors.name}
+                />
+
+                <label htmlFor="name">Bio</label>
+                <TextAreaFormInput
+                  name="bio"
+                  placeholder="bio"
+                  onChange={this.onChange}
+                  error={errors.bio}
+                />
+              </form>
             </div>
           </div>
         </div>
