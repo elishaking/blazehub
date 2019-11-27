@@ -155,6 +155,27 @@ export default class Post extends Component {
     });
   }
 
+  formatPostDate = (date) => {
+    let now = Date.now();
+    // date = 1e+15 - date;
+
+    if ((now - date) > 86400000) return new Date(date).toDateString().split(" ").slice(1, 3).join(" ");
+
+    now /= 1000;
+    date /= 1000;
+
+    // console.log(date);
+    // console.log(now - date);
+    // console.log(new Date(now))
+    // console.log(new Date(date))
+
+    if ((now - date) > 3600) return `${Math.floor((now - date) / 60 / 60)} hrs ago`;
+
+    if ((now - date) > 60) return `${Math.floor((now - date) / 60)} mins ago`
+
+    return "now";
+  };
+
   render() {
     const { post, loadingImage, postImage, showComments, transitionStyle, isBookmarked } = this.state;
     return (
@@ -164,7 +185,8 @@ export default class Post extends Component {
             <FontAwesomeIcon icon={faUserCircle} />
             <div>
               <h4>{`${post.user.firstName}  ${post.user.lastName}`}</h4>
-              <small>{new Date(post.date).toLocaleTimeString()}</small>
+              {/* <small>{new Date(post.date).toLocaleTimeString()}</small> */}
+              <small>{this.formatPostDate(post.date)}</small>
             </div>
           </div>
 

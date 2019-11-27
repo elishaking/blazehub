@@ -146,7 +146,7 @@ class Home extends Component {
       user: this.props.auth.user,
       text: postText,
       isBookmarked: false,
-      date: Date.now(),
+      date: 1e+15 - Date.now(),
       imageUrl: postImgDataUrl !== "",
       // likes: { name: "likes" },
       // comments: { name: "comments" },
