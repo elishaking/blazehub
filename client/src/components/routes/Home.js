@@ -48,6 +48,8 @@ class Home extends Component {
     this.postImagesRef = app.database().ref('post-images');
     this.bookmarksRef = app.database().ref("bookmarks").child(this.props.auth.user.id);
 
+    this.notificationsRef = app.database().ref('notifications');
+
     this.postsRef.orderByChild("date").on('child_added', (newPostSnapShot) => {
       // console.log('child_added');
       const newPost = {
@@ -243,6 +245,7 @@ class Home extends Component {
                     postRef={this.postsRef.child(post.key)}
                     postImageRef={this.postImagesRef.child(post.key)}
                     bookmarkRef={this.bookmarksRef.child(post.key)}
+                    notificationsRef={this.notificationsRef}
                     post={post}
                     user={user}
                     canBookmark={true} />

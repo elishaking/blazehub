@@ -97,7 +97,7 @@ export default class Post extends Component {
 
   likePost = () => {
     const { postRef, user } = this.props;
-    const { liked } = this.state;
+    const { liked, post } = this.state;
     // if (this.state.post.likes && this.state.post.likes[user.firstName]) {
     if (liked) {
       postRef.child('likes').child(user.firstName).remove((err) => {
@@ -110,6 +110,17 @@ export default class Post extends Component {
         [user.firstName]: 1  //todo: change to user_id
       }, (err) => {
         if (err) return console.log(err);
+
+        const newNotification = {
+          type: "new_like",
+          user: user,
+          post: post.key,
+          read: false,
+          date: 1e+15 - Date.now()
+        }
+        this.props.notificationsRef.child(post.user.id).push(newNotification, (err) => {
+          if (err) return console.log(err);
+        });
 
         this.setState({ liked: true });
       });
