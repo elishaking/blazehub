@@ -10,6 +10,10 @@ class AuthNav extends Component {
   }
 
   componentDidMount() {
+    // this.getNotifications();
+  }
+
+  getNotifications = () => {
     console.log(this.props.hello)
     this.props.notificationsRef.child(this.props.user.id).orderByChild("date").on('child_added', (newNotificationSnapShot) => {
       const newNotification = {
