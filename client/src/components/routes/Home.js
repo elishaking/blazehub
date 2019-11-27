@@ -25,7 +25,9 @@ class Home extends Component {
       postText: '',
       postImgDataUrl: '',
       posts: [],
-      loading: true
+      notifications: [],
+      loading: true,
+      loadingNotifications: true
     }
   }
 
@@ -44,11 +46,32 @@ class Home extends Component {
   }
 
   setupFirebase = () => {
+    const { user } = this.props.auth;
+
     this.postsRef = app.database().ref('posts');
     this.postImagesRef = app.database().ref('post-images');
-    this.bookmarksRef = app.database().ref("bookmarks").child(this.props.auth.user.id);
+    this.bookmarksRef = app.database().ref("bookmarks").child(user.id);
 
     this.notificationsRef = app.database().ref('notifications');
+
+
+    this.notificationsRef.child(user.id).orderByChild("date").on('child_added', (newNotificationSnapShot) => {
+      const newNotification = {
+        key: newNotificationSnapShot.key,
+        ...newNotificationSnapShot.val()
+      };
+
+      // set date
+      newNotification.date = 1e+15 - newNotification.date;
+
+      if (this.state.loading) this.setState({ loading: false });
+
+      const { notifications } = this.state;
+      newNotification.date > this.mountedOn ? notifications.unshift(newNotification) : notifications.push(newNotification);
+      this.setState({
+        notifications
+      });
+    });
 
     this.postsRef.orderByChild("date").on('child_added', (newPostSnapShot) => {
       // console.log('child_added');
@@ -72,6 +95,7 @@ class Home extends Component {
       newPost.date = 1e+15 - newPost.date;
 
       if (this.state.loading) this.setState({ loading: false });
+
       const { posts } = this.state;
       newPost.date > this.mountedOn ? posts.unshift(newPost) : posts.push(newPost);
       this.setState({
