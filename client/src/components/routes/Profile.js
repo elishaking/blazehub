@@ -255,6 +255,10 @@ class Profile extends Component {
     };
   };
 
+  findFriends = () => {
+    this.props.history.push("/find");
+  }
+
   render() {
     const hasProfilePic = false;
     const { user } = this.props.auth;
@@ -372,6 +376,8 @@ class Profile extends Component {
                       </div>
                     ))
                   }
+
+                  <button className="btn" onClick={this.findFriends}>Find Friends</button>
                 </div>
               </div>
             </div>
