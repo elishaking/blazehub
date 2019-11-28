@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCamera, faUser, faBible, faAddressBook, faGlobe, faBaby } from '@fortawesome/free-solid-svg-icons';
+import { faCamera, faUser, faBible, faAddressBook, faGlobe, faBaby, faPeopleCarry } from '@fortawesome/free-solid-svg-icons';
 import app from 'firebase/app';
 import 'firebase/database';
 import AuthNav from '../nav/AuthNav';
@@ -70,26 +70,26 @@ class Profile extends Component {
       });
     });
 
-    this.postsRef.orderByChild('user/id')
-      .equalTo(user.id).once("value", (postsSnapShot) => {
-        const posts = postsSnapShot.val();
+    // this.postsRef.orderByChild('user/id')
+    //   .equalTo(user.id).once("value", (postsSnapShot) => {
+    //     const posts = postsSnapShot.val();
 
-        this.setState({
-          posts: Object.keys(posts).map((_, i, postKeys) => {
-            const postKey = postKeys[postKeys.length - i - 1];
-            const newPost = {
-              key: postKey,
-              ...posts[postKey]
-            };
-            // set date
-            newPost.date = 1e+15 - newPost.date;
+    //     this.setState({
+    //       posts: Object.keys(posts).map((_, i, postKeys) => {
+    //         const postKey = postKeys[postKeys.length - i - 1];
+    //         const newPost = {
+    //           key: postKey,
+    //           ...posts[postKey]
+    //         };
+    //         // set date
+    //         newPost.date = 1e+15 - newPost.date;
 
-            if (this.state.loadingPosts) this.setState({ loadingPosts: false });
+    //         if (this.state.loadingPosts) this.setState({ loadingPosts: false });
 
-            return newPost;
-          })
-        })
-      });
+    //         return newPost;
+    //       })
+    //     })
+    //   });
   }
 
   selectCoverPhoto = () => {
@@ -307,35 +307,44 @@ class Profile extends Component {
               </div>
 
               <div className="user-data">
-                <h3>
-                  <FontAwesomeIcon icon={faUser} />
-                  <span>{`${user.firstName} ${user.lastName}`}</span>
-                </h3>
-                {bio !== '' && (
-                  <div className="data">
-                    <FontAwesomeIcon icon={faBible} />
-                    <small>{bio}</small>
-                  </div>
-                )}
-                {location !== '' && (
-                  <div className="data">
-                    <FontAwesomeIcon icon={faAddressBook} />
-                    <small>{location}</small>
-                  </div>
-                )}
-                {website !== '' && (
-                  <div className="data">
-                    <FontAwesomeIcon icon={faGlobe} />
-                    <small>{website}</small>
-                  </div>
-                )}
-                {birth && (
-                  <div className="data">
-                    <FontAwesomeIcon icon={faBaby} />
-                    <small>{birth}</small>
-                  </div>
-                )}
-                <button className="btn" onClick={this.toggleEditProfile}>Edit Profile</button>
+                <div className="data-container">
+                  <h3>
+                    <FontAwesomeIcon icon={faUser} />
+                    <span>{name}</span>
+                  </h3>
+                  {bio !== '' && (
+                    <div className="data">
+                      <FontAwesomeIcon icon={faBible} />
+                      <small>{bio}</small>
+                    </div>
+                  )}
+                  {location !== '' && (
+                    <div className="data">
+                      <FontAwesomeIcon icon={faAddressBook} />
+                      <small>{location}</small>
+                    </div>
+                  )}
+                  {website !== '' && (
+                    <div className="data">
+                      <FontAwesomeIcon icon={faGlobe} />
+                      <small>{website}</small>
+                    </div>
+                  )}
+                  {birth && (
+                    <div className="data">
+                      <FontAwesomeIcon icon={faBaby} />
+                      <small>{birth}</small>
+                    </div>
+                  )}
+                  <button className="btn" onClick={this.toggleEditProfile}>Edit Profile</button>
+                </div>
+
+                <div className="data-container">
+                  <h3>
+                    <FontAwesomeIcon icon={faPeopleCarry} />
+                    <span>Friends</span>
+                  </h3>
+                </div>
               </div>
             </div>
           </div>

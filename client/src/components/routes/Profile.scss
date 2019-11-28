@@ -137,21 +137,24 @@
 
     .user-data {
       flex: 1;
-      margin-top: 1em;
-      border: 1px solid #ede0ff;
-      border-radius: 5px;
-      padding: 1em;
 
-      .data {
-        display: flex;
-        margin-bottom: 1em;
+      .data-container {
+        border: 1px solid #ede0ff;
+        margin-top: 1em;
+        border-radius: 5px;
+        padding: 1em;
 
-        svg {
-          margin: 0.1em 1em 0 0;
-        }
+        .data {
+          display: flex;
+          margin-bottom: 1em;
 
-        small {
-          line-height: 1.3;
+          svg {
+            margin: 0.1em 1em 0 0;
+          }
+
+          small {
+            line-height: 1.3;
+          }
         }
       }
 
@@ -159,6 +162,7 @@
         padding-bottom: 1em;
         margin-bottom: 1em;
         border-bottom: 1px solid #ede0ff;
+        display: flex;
 
         svg {
           margin-right: 1em;
