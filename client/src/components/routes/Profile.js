@@ -13,7 +13,7 @@ import Spinner from '../Spinner';
 import { TextFormInput, TextAreaFormInput } from '../form/TextFormInput';
 import { DateFormInput } from '../form/DateFormInput';
 import { getFriends } from '../../redux_actions/friendActions';
-import { getAvatar, updateProfilePic } from '../../redux_actions/profileActions';
+import { getProfilePic, updateProfilePic } from '../../redux_actions/profileActions';
 
 class Profile extends Component {
   updateCover = false;
@@ -50,8 +50,12 @@ class Profile extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.profile.avatar && nextProps.profile.avatar !== this.state.avatar) {
+    if (nextProps.profile.avatar !== this.state.avatar) {
       this.setPic("avatar", nextProps.profile.avatar);
+    }
+
+    if (nextProps.profile.coverPhoto !== this.state.coverPhoto) {
+      this.setPic("coverPhoto", nextProps.profile.coverPhoto);
     }
 
     if (nextProps.friends) {
@@ -84,7 +88,9 @@ class Profile extends Component {
     friendKeys.length === 0 ? this.props.getFriends(user.id) : this.setFriends(friendKeys, friends);
 
     const avatar = profile.avatar;
-    avatar ? this.setPic("avatar", avatar) : this.props.getAvatar(user.id);
+    avatar ? this.setPic("avatar", avatar) : this.props.getProfilePic(user.id, "avatar");
+    const coverPhoto = profile.coverPhoto;
+    coverPhoto ? this.setPic("coverPhoto", coverPhoto) : this.props.getProfilePic(user.id, "coverPhoto");
 
     this.postsRef = app.database().ref('posts');
     this.postImagesRef = app.database().ref('post-images');
@@ -288,7 +294,7 @@ class Profile extends Component {
   render() {
     const hasProfilePic = false;
     const { user } = this.props.auth;
-    const { loadingAvatar, avatar, coverPhoto, posts, loadingPosts, loadingProfile, loadingFriends, friends,
+    const { loadingAvatar, loadingCoverPhoto, avatar, coverPhoto, posts, loadingPosts, loadingProfile, loadingFriends, friends,
       editProfile, name, bio, location, website, birth, errors } = this.state;
 
     return (
@@ -300,14 +306,14 @@ class Profile extends Component {
 
           <div className="profile">
             <div className="pics">
-              <div className="cover main">
+              <div className={`cover main ${loadingCoverPhoto ? "disable" : ""}`}>
                 <input accept="image/*" type="file" name="img-input" id="img-input" onChange={this.processPic} />
                 {coverPhoto ? (
                   <div className="cover-img main">
                     <img src={coverPhoto} alt="Cover Photo" />
                   </div>
                 ) : (
-                    <div className="cover-placeholder">
+                    <div className={`cover-placeholder ${loadingCoverPhoto ? "loading-pic" : ""}`}>
                     </div>
                   )}
                 <button onClick={this.selectCoverPhoto}>
@@ -511,4 +517,4 @@ const mapStateToProps = (state) => ({
   profile: state.profile
 });
 
-export default connect(mapStateToProps, { getFriends, getAvatar, updateProfilePic })(Profile);
+export default connect(mapStateToProps, { getFriends, getProfilePic, updateProfilePic })(Profile);

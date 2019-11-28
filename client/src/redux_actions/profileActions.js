@@ -1,23 +1,24 @@
 import app from 'firebase/app';
 import 'firebase/database';
-import { SET_AVATAR } from "./types";
+import { SET_PROFILE_PIC } from "./types";
 
 /**
  * @param {string} key
  * @param {string} dataUrl
  */
-const setAvatar = (key, dataUrl) => ({
-  type: SET_AVATAR,
+const setProfilePic = (key, dataUrl) => ({
+  type: SET_PROFILE_PIC,
   payload: { key, dataUrl }
 });
 
 /**
  * @param {string} userKey
+ * @param {string} key
  */
-export const getAvatar = (userKey) => (dispatch) => {
-  app.database().ref('profile-photos').child(userKey).child('avatar')
-    .once("value", (avatarSnapShot) => {
-      dispatch(setAvatar("avatar", avatarSnapShot.val()));
+export const getProfilePic = (userKey, key) => (dispatch) => {
+  app.database().ref('profile-photos').child(userKey).child(key)
+    .once("value", (picSnapShot) => {
+      dispatch(setProfilePic(key, picSnapShot.val()));
     });
 };
 
@@ -27,10 +28,10 @@ export const getAvatar = (userKey) => (dispatch) => {
  * @param {string} dataUrl
  */
 export const updateProfilePic = (userKey, key, dataUrl) => (dispatch) => {
-  app.database().ref('profile-photos').child(userKey).child('avatar')
+  app.database().ref('profile-photos').child(userKey).child(key)
     .set(dataUrl, (err) => {
       if (err) return console.log(err);
 
-      dispatch(setAvatar(key, dataUrl));
+      dispatch(setProfilePic(key, dataUrl));
     });
 }

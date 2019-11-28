@@ -1,11 +1,14 @@
-import { SET_AVATAR } from "../redux_actions/types";
+import { SET_PROFILE_PIC } from "../redux_actions/types";
 
-export default function (state = {}, action) {
+/**
+ * @param {{ type: string; payload: { key: string; dataUrl: string; }; }} action
+ */
+export default function (state = { avatar: '', coverPhoto: '' }, action) {
   switch (action.type) {
-    case SET_AVATAR:
+    case SET_PROFILE_PIC:
       return {
         ...state,
-        avatar: action.payload
+        [action.payload.key]: action.payload.dataUrl
       };
 
     default:
