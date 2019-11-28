@@ -13,6 +13,7 @@ import Spinner from '../Spinner';
 import { TextFormInput, TextAreaFormInput } from '../form/TextFormInput';
 import { DateFormInput } from '../form/DateFormInput';
 import { getFriends } from '../../redux_actions/friendActions';
+import { getAvatar, updateAvatar } from '../../redux_actions/profileActions';
 
 class Profile extends Component {
   updateCover = false;
@@ -23,6 +24,8 @@ class Profile extends Component {
     const { user } = this.props.auth;
 
     this.state = {
+      loadingAvatar: true,
+      loadingCoverPhoto: true,
       avatar: '',
       coverPhoto: '',
       posts: [],
@@ -47,24 +50,41 @@ class Profile extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    if (nextProps.profile.avatar && nextProps.profile.avatar !== this.state.avatar) {
+      this.setPic("avatar", nextProps.profile.avatar);
+    }
+
     if (nextProps.friends) {
       const { friends } = this.state;
       const friendKeys = Object.keys(nextProps.friends);
       if (friends.length !== friendKeys.length) {
-        this.setState({
-          friends: friendKeys.map((friendKey) => ({
-            key: friendKey,
-            ...nextProps.friends[friendKey]
-          }))
-        })
+        this.setFriends(friendKeys, nextProps.friends);
       }
     }
   }
 
+  setPic = (key, dataUrl) => {
+    key === "avatar" ? this.setState({ avatar: dataUrl, loadingAvatar: false }) : this.setState({ coverPhoto: dataUrl, loadingCoverPhoto: false });
+  }
+
+  setFriends = (friendKeys, friends) => {
+    this.setState({
+      friends: friendKeys.map((friendKey) => ({
+        key: friendKey,
+        ...friends[friendKey]
+      }))
+    })
+  };
+
   loadData = () => {
     const { user } = this.props.auth;
+    const { friends, profile } = this.props;
 
-    this.props.getFriends(user.id);
+    const friendKeys = Object.keys(friends);
+    friendKeys.length === 0 ? this.props.getFriends(user.id) : this.setFriends(friendKeys, friends);
+
+    const avatar = profile.avatar;
+    avatar ? this.setPic("avatar", avatar) : this.props.getAvatar(user.id);
 
     this.postsRef = app.database().ref('posts');
     this.postImagesRef = app.database().ref('post-images');
@@ -125,28 +145,33 @@ class Profile extends Component {
 
 
   /** @param {React.ChangeEvent<HTMLInputElement>} e */
-  updatePic = (e) => {
+  processPic = (e) => {
     const imgInput = e.target;
     if (imgInput.files && imgInput.files[0]) {
       const imgReader = new FileReader();
-      const key = this.updateCover ? "coverPhoto" : "avatar"
+      // const key = this.updateCover ? "coverPhoto" : "avatar";
 
       imgReader.onload = (e) => {
         if (imgInput.files[0].size > 100000)
           this.resizeImage(e.target.result.toString(), imgInput.files[0].type).then((dataUrl) => {
-            this.setState({ [key]: dataUrl });
+            this.updatePic(dataUrl);
           });
 
-        else this.setState({ [key]: e.target.result });
+        else this.updatePic(e.target.result);
       };
 
       imgReader.readAsDataURL(imgInput.files[0]);
     }
   };
 
-  /** @param {React.ChangeEvent<HTMLInputElement>} e */
-  updateAvatar = (e) => {
-  };
+  updatePic = (dataUrl) => {
+    if (this.updateCover) {
+      this.setState({ loadingCoverPhoto: true });
+    } else {
+      this.setState({ loadingAvatar: true });
+      this.props.updateAvatar(this.props.auth.user.id, dataUrl);
+    }
+  }
 
   /**
    * @param {string} dataUrl
@@ -262,7 +287,7 @@ class Profile extends Component {
   render() {
     const hasProfilePic = false;
     const { user } = this.props.auth;
-    const { avatar, coverPhoto, posts, loadingPosts, loadingProfile, loadingFriends, friends,
+    const { loadingAvatar, avatar, coverPhoto, posts, loadingPosts, loadingProfile, loadingFriends, friends,
       editProfile, name, bio, location, website, birth, errors } = this.state;
 
     return (
@@ -275,7 +300,7 @@ class Profile extends Component {
           <div className="profile">
             <div className="pics">
               <div className="cover main">
-                <input accept="image/*" type="file" name="img-input" id="img-input" onChange={this.updatePic} />
+                <input accept="image/*" type="file" name="img-input" id="img-input" onChange={this.processPic} />
                 {coverPhoto ? (
                   <div className="cover-img main">
                     <img src={coverPhoto} alt="Cover Photo" />
@@ -292,13 +317,13 @@ class Profile extends Component {
                 </button>
               </div>
               <div className="avatar">
-                <div className="avatar-container main">
+                <div className={`avatar-container main ${loadingAvatar ? "disable" : ""}`}>
                   {avatar ? (
                     <div className="avatar-img main">
                       <img src={avatar} alt="Profile Picture" />
                     </div>
                   ) : (
-                      <div className="avatar-placeholder"></div>
+                      <div className={`avatar-placeholder ${loadingAvatar ? "loading-pic" : ""}`}></div>
                     )}
 
                   <div className="btn-container">
@@ -481,7 +506,8 @@ class Profile extends Component {
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  friends: state.friends
+  friends: state.friends,
+  profile: state.profile
 });
 
-export default connect(mapStateToProps, { getFriends })(Profile);
+export default connect(mapStateToProps, { getFriends, getAvatar, updateAvatar })(Profile);

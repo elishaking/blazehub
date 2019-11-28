@@ -104,6 +104,7 @@
 
       .avatar-placeholder {
         box-shadow: 0 0 1px black;
+        // animation: colorBlend 1s ease-in-out infinite;
       }
 
       img {
@@ -269,4 +270,26 @@
   to {
     transform: scale(1);
   }
+}
+
+@keyframes colorBlend {
+  0% {
+    background-color: #7c62a9;
+  }
+
+  50% {
+    background-color: #ede0ff;
+  }
+
+  100% {
+    background-color: #7c62a9;
+  }
+}
+
+.loading-pic {
+  animation: colorBlend 1.5s ease-in-out infinite;
+}
+
+.disable {
+  pointer-events: none;
 }
