@@ -12,6 +12,7 @@ import Post from '../Post';
 import Spinner from '../Spinner';
 import { TextFormInput, TextAreaFormInput } from '../form/TextFormInput';
 import { DateFormInput } from '../form/DateFormInput';
+import { getFriends } from '../../redux_actions/friendActions';
 
 class Profile extends Component {
   updateCover = false;
@@ -35,6 +36,9 @@ class Profile extends Component {
       website: '',
       birth: '',
       errors: {},
+
+      loadingFriends: true,
+      friends: []
     }
   }
 
@@ -42,8 +46,25 @@ class Profile extends Component {
     this.loadData();
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.friends) {
+      const { friends } = this.state;
+      const friendKeys = Object.keys(nextProps.friends);
+      if (friends.length !== friendKeys.length) {
+        this.setState({
+          friends: friendKeys.map((friendKey) => ({
+            key: friendKey,
+            ...nextProps.friends[friendKey]
+          }))
+        })
+      }
+    }
+  }
+
   loadData = () => {
     const { user } = this.props.auth;
+
+    this.props.getFriends(user.id);
 
     this.postsRef = app.database().ref('posts');
     this.postImagesRef = app.database().ref('post-images');
@@ -237,10 +258,8 @@ class Profile extends Component {
   render() {
     const hasProfilePic = false;
     const { user } = this.props.auth;
-    const { avatar, coverPhoto, posts, loadingPosts, loadingProfile,
+    const { avatar, coverPhoto, posts, loadingPosts, loadingProfile, loadingFriends, friends,
       editProfile, name, bio, location, website, birth, errors } = this.state;
-    console.log(birth);
-    console.log(bio)
 
     return (
       <div className="container">
@@ -344,6 +363,15 @@ class Profile extends Component {
                     <FontAwesomeIcon icon={faPeopleCarry} />
                     <span>Friends</span>
                   </h3>
+
+                  {
+                    friends.length > 0 && friends.map((friend) => (
+                      <div key={friend.key} className="data">
+                        <FontAwesomeIcon icon={faUser} />
+                        <small>{friend.name}</small>
+                      </div>
+                    ))
+                  }
                 </div>
               </div>
             </div>
@@ -428,7 +456,8 @@ class Profile extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  auth: state.auth
+  auth: state.auth,
+  friends: state.friends
 });
 
-export default connect(mapStateToProps)(Profile);
+export default connect(mapStateToProps, { getFriends })(Profile);
