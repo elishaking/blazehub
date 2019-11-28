@@ -46,6 +46,7 @@ class Profile extends Component {
   }
 
   componentDidMount() {
+    console.log(this.props.match);
     this.loadData();
   }
 
