@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCamera, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faCamera, faUser, faBible, faAddressBook, faGlobe, faBaby } from '@fortawesome/free-solid-svg-icons';
 import app from 'firebase/app';
 import 'firebase/database';
 import AuthNav from '../nav/AuthNav';
@@ -33,7 +33,7 @@ class Profile extends Component {
       bio: '',
       location: '',
       website: '',
-      birth: null,
+      birth: '',
       errors: {},
     }
   }
@@ -57,7 +57,7 @@ class Profile extends Component {
         bio: '',
         location: '',
         website: '',
-        birth: null
+        birth: ''
       };
 
       this.setState({
@@ -66,7 +66,7 @@ class Profile extends Component {
         bio: profile.bio,
         location: profile.location,
         website: profile.website,
-        birth: null
+        birth: profile.birth
       });
     });
 
@@ -176,7 +176,7 @@ class Profile extends Component {
 
     const { isValid, errors } = this.validateInput({ name, bio, location, website, birth });
 
-    console.log({ isValid, errors });
+    // console.log({ isValid, errors });
 
     this.setState({ errors });
 
@@ -195,7 +195,7 @@ class Profile extends Component {
     }
   };
 
-  /** @param {{name: string, bio: string, location: string, website: string,  birth: any,}} formData */
+  /** @param {{name: string, bio: string, location: string, website: string,  birth: string,}} formData */
   validateInput = (formData) => {
     const errors = {};
 
@@ -220,7 +220,7 @@ class Profile extends Component {
     // if (formData.bio === '')
     //   errors.bio = 'Your project needs a bio';
     if (formData.bio !== '' && (formData.bio.length < 20 || formData.bio.length > 300))
-      errors.bio = 'Your bio should be between 5-300 characters';
+      errors.bio = 'Your bio should be between 20-300 characters';
 
     if (formData.location.length > 300)
       errors.location = 'Your location should be less than 300 characters';
@@ -239,6 +239,8 @@ class Profile extends Component {
     const { user } = this.props.auth;
     const { avatar, coverPhoto, posts, loadingPosts, loadingProfile,
       editProfile, name, bio, location, website, birth, errors } = this.state;
+    console.log(birth);
+    console.log(bio)
 
     return (
       <div className="container">
@@ -309,6 +311,30 @@ class Profile extends Component {
                   <FontAwesomeIcon icon={faUser} />
                   <span>{`${user.firstName} ${user.lastName}`}</span>
                 </h3>
+                {bio !== '' && (
+                  <div className="data">
+                    <FontAwesomeIcon icon={faBible} />
+                    <small>{bio}</small>
+                  </div>
+                )}
+                {location !== '' && (
+                  <div className="data">
+                    <FontAwesomeIcon icon={faAddressBook} />
+                    <small>{location}</small>
+                  </div>
+                )}
+                {website !== '' && (
+                  <div className="data">
+                    <FontAwesomeIcon icon={faGlobe} />
+                    <small>{website}</small>
+                  </div>
+                )}
+                {birth && (
+                  <div className="data">
+                    <FontAwesomeIcon icon={faBaby} />
+                    <small>{birth}</small>
+                  </div>
+                )}
                 <button className="btn" onClick={this.toggleEditProfile}>Edit Profile</button>
               </div>
             </div>

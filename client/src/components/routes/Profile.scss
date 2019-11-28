@@ -142,6 +142,19 @@
       border-radius: 5px;
       padding: 1em;
 
+      .data {
+        display: flex;
+        margin-bottom: 1em;
+
+        svg {
+          margin: 0.1em 1em 0 0;
+        }
+
+        small {
+          line-height: 1.3;
+        }
+      }
+
       h3 {
         padding-bottom: 1em;
         margin-bottom: 1em;
@@ -154,6 +167,7 @@
 
       button {
         width: 100%;
+        margin: 1em 0;
       }
 
       button:hover {
