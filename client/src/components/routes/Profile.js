@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCamera, faUser, faBible, faAddressBook, faGlobe, faBaby, faPeopleCarry } from '@fortawesome/free-solid-svg-icons';
+import { faCamera, faUser, faBible, faAddressBook, faGlobe, faBaby, faPeopleCarry, faImages } from '@fortawesome/free-solid-svg-icons';
 import app from 'firebase/app';
 import 'firebase/database';
 import AuthNav from '../nav/AuthNav';
@@ -91,26 +91,26 @@ class Profile extends Component {
       });
     });
 
-    // this.postsRef.orderByChild('user/id')
-    //   .equalTo(user.id).once("value", (postsSnapShot) => {
-    //     const posts = postsSnapShot.val();
+    this.postsRef.orderByChild('user/id')
+      .equalTo(user.id).once("value", (postsSnapShot) => {
+        const posts = postsSnapShot.val();
 
-    //     this.setState({
-    //       posts: Object.keys(posts).map((_, i, postKeys) => {
-    //         const postKey = postKeys[postKeys.length - i - 1];
-    //         const newPost = {
-    //           key: postKey,
-    //           ...posts[postKey]
-    //         };
-    //         // set date
-    //         newPost.date = 1e+15 - newPost.date;
+        this.setState({
+          posts: Object.keys(posts).map((_, i, postKeys) => {
+            const postKey = postKeys[postKeys.length - i - 1];
+            const newPost = {
+              key: postKey,
+              ...posts[postKey]
+            };
+            // set date
+            newPost.date = 1e+15 - newPost.date;
 
-    //         if (this.state.loadingPosts) this.setState({ loadingPosts: false });
+            if (this.state.loadingPosts) this.setState({ loadingPosts: false });
 
-    //         return newPost;
-    //       })
-    //     })
-    //   });
+            return newPost;
+          })
+        })
+      });
   }
 
   selectCoverPhoto = () => {
@@ -378,6 +378,24 @@ class Profile extends Component {
                   }
 
                   <button className="btn" onClick={this.findFriends}>Find Friends</button>
+                </div>
+
+                <div className="data-container">
+                  <h3>
+                    <FontAwesomeIcon icon={faImages} />
+                    <span>Photos</span>
+                  </h3>
+
+                  {/* {
+                    friends.length > 0 && friends.map((friend) => (
+                      <div key={friend.key} className="data">
+                        <FontAwesomeIcon icon={faUser} />
+                        <small>{friend.name}</small>
+                      </div>
+                    ))
+                  } */}
+
+                  <button className="btn">Add Photo</button>
                 </div>
               </div>
             </div>
