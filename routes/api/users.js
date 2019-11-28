@@ -68,7 +68,13 @@ router.post("/signup", (req, res) => {
                 }
               }, (err) => {
                 if (err) return console.error(err);
-                res.json({ success: true });
+
+                dbRef.child('profiles').child(userKey)
+                  .child('username').set(`${newUser.firstName}.${newUser.lastName}`.toLocaleLowerCase(), (err) => {
+                    if (err) return console.log(err);
+
+                    res.json({ success: true });
+                  });
               });
             });
         });
