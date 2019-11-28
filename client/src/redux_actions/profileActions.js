@@ -2,23 +2,35 @@ import app from 'firebase/app';
 import 'firebase/database';
 import { SET_AVATAR } from "./types";
 
-const setAvatar = (avatarDataUrl) => ({
+/**
+ * @param {string} key
+ * @param {string} dataUrl
+ */
+const setAvatar = (key, dataUrl) => ({
   type: SET_AVATAR,
-  payload: avatarDataUrl
+  payload: { key, dataUrl }
 });
 
+/**
+ * @param {string} userKey
+ */
 export const getAvatar = (userKey) => (dispatch) => {
   app.database().ref('profile-photos').child(userKey).child('avatar')
     .once("value", (avatarSnapShot) => {
-      dispatch(setAvatar(avatarSnapShot.val()));
+      dispatch(setAvatar("avatar", avatarSnapShot.val()));
     });
 };
 
-export const updateAvatar = (userKey, newAvatar) => (dispatch) => {
+/**
+ * @param {string} userKey
+ * @param {string} key
+ * @param {string} dataUrl
+ */
+export const updateProfilePic = (userKey, key, dataUrl) => (dispatch) => {
   app.database().ref('profile-photos').child(userKey).child('avatar')
-    .set(newAvatar, (err) => {
+    .set(dataUrl, (err) => {
       if (err) return console.log(err);
 
-      dispatch(setAvatar(newAvatar));
+      dispatch(setAvatar(key, dataUrl));
     });
 }

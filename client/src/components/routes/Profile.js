@@ -13,7 +13,7 @@ import Spinner from '../Spinner';
 import { TextFormInput, TextAreaFormInput } from '../form/TextFormInput';
 import { DateFormInput } from '../form/DateFormInput';
 import { getFriends } from '../../redux_actions/friendActions';
-import { getAvatar, updateAvatar } from '../../redux_actions/profileActions';
+import { getAvatar, updateProfilePic } from '../../redux_actions/profileActions';
 
 class Profile extends Component {
   updateCover = false;
@@ -167,9 +167,10 @@ class Profile extends Component {
   updatePic = (dataUrl) => {
     if (this.updateCover) {
       this.setState({ loadingCoverPhoto: true });
+      this.props.updateProfilePic(this.props.auth.user.id, "coverPhoto", dataUrl);
     } else {
       this.setState({ loadingAvatar: true });
-      this.props.updateAvatar(this.props.auth.user.id, dataUrl);
+      this.props.updateProfilePic(this.props.auth.user.id, "avatar", dataUrl);
     }
   }
 
@@ -510,4 +511,4 @@ const mapStateToProps = (state) => ({
   profile: state.profile
 });
 
-export default connect(mapStateToProps, { getFriends, getAvatar, updateAvatar })(Profile);
+export default connect(mapStateToProps, { getFriends, getAvatar, updateProfilePic })(Profile);
