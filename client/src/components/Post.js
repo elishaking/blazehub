@@ -1,5 +1,6 @@
 //@ts-check
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle, faComments, faThumbsUp, faBookmark, faTrash } from '@fortawesome/free-solid-svg-icons';
 import Spinner from './Spinner';
@@ -206,7 +207,14 @@ export default class Post extends Component {
           <div className="user-post">
             <FontAwesomeIcon icon={faUserCircle} />
             <div>
-              <h4>{`${post.user.firstName}  ${post.user.lastName}`}</h4>
+              {
+                post.user.username ? (
+                  <Link to={`/p/${post.user.username}`}><h4>{`${post.user.firstName}  ${post.user.lastName}`}</h4></Link>
+                ) : (
+                    <h4>{`${post.user.firstName}  ${post.user.lastName}`}</h4>
+                  )
+              }
+
               {/* <small>{new Date(post.date).toLocaleTimeString()}</small> */}
               <small>{this.formatPostDate(post.date)}</small>
             </div>
