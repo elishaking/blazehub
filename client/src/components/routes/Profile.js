@@ -17,6 +17,7 @@ import Posts from '../Posts';
 
 class Profile extends Component {
   updateCover = false;
+  otherUser = true;
 
   constructor(props) {
     super(props);
@@ -47,10 +48,12 @@ class Profile extends Component {
 
   componentDidMount() {
     if (this.props.match.params && this.props.match.params.username) {
-      this.otherUser = true;
       this.loadOtherProfileData();
     }
-    else this.loadUserProfileData();
+    else {
+      this.otherUser = false;
+      this.loadUserProfileData();
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -321,12 +324,16 @@ class Profile extends Component {
                     <div className={`cover-placeholder ${loadingCoverPhoto ? "loading-pic" : ""}`}>
                     </div>
                   )}
-                <button onClick={this.selectCoverPhoto}>
-                  <div>
-                    <FontAwesomeIcon icon={faCamera} />
-                    <span>Update Cover Photo</span>
-                  </div>
-                </button>
+                {
+                  !this.otherUser && (
+                    <button onClick={this.selectCoverPhoto}>
+                      <div>
+                        <FontAwesomeIcon icon={faCamera} />
+                        <span>Update Cover Photo</span>
+                      </div>
+                    </button>
+                  )
+                }
               </div>
               <div className="avatar">
                 <div className={`avatar-container main ${loadingAvatar ? "disable" : ""}`}>
@@ -338,11 +345,15 @@ class Profile extends Component {
                       <div className={`avatar-placeholder ${loadingAvatar ? "loading-pic" : ""}`}></div>
                     )}
 
-                  <div className="btn-container">
-                    <button onClick={this.selectAvatar}>
-                      <FontAwesomeIcon icon={faCamera} />
-                    </button>
-                  </div>
+                  {
+                    !this.otherUser && (
+                      <div className="btn-container">
+                        <button onClick={this.selectAvatar}>
+                          <FontAwesomeIcon icon={faCamera} />
+                        </button>
+                      </div>
+                    )
+                  }
                 </div>
               </div>
             </div>
@@ -395,7 +406,9 @@ class Profile extends Component {
                       <small>{birth}</small>
                     </div>
                   )}
-                  <button className="btn" onClick={this.toggleEditProfile}>Edit Profile</button>
+                  {
+                    !this.otherUser && <button className="btn" onClick={this.toggleEditProfile}>Edit Profile</button>
+                  }
                 </div>
 
                 <div className="data-container">
@@ -413,7 +426,9 @@ class Profile extends Component {
                     ))
                   }
 
-                  <button className="btn" onClick={this.findFriends}>Find Friends</button>
+                  {
+                    !this.otherUser && <button className="btn" onClick={this.findFriends}>Find Friends</button>
+                  }
                 </div>
 
                 <div className="data-container">
@@ -431,7 +446,9 @@ class Profile extends Component {
                     ))
                   } */}
 
-                  <button className="btn">Add Photo</button>
+                  {
+                    !this.otherUser && <button className="btn">Add Photo</button>
+                  }
                 </div>
               </div>
             </div>

@@ -13,8 +13,9 @@ export default class Posts extends Component {
   componentDidMount() {
     this.mountedOn = Date.now();
     this.user = this.props.user;
+    this.otherUser = this.props.otherUser;
 
-    const { forProfile, otherUser, otherUserId } = this.props;
+    const { forProfile, otherUserId } = this.props;
 
     this.postsRef = app.database().ref('posts');
     this.postImagesRef = app.database().ref('post-images');
@@ -22,7 +23,7 @@ export default class Posts extends Component {
 
     if (forProfile) {
       this.postsRef.orderByChild('user/id')
-        .equalTo(otherUser ? otherUserId : this.user.id).once("value", (postsSnapShot) => {
+        .equalTo(this.otherUser ? otherUserId : this.user.id).once("value", (postsSnapShot) => {
           const posts = postsSnapShot.val() || {};
 
           this.setState({
@@ -100,7 +101,8 @@ export default class Posts extends Component {
               notificationsRef={app.database().ref('notifications')}
               post={post}
               user={this.user}
-              canBookmark={true} />
+              canBookmark={true}
+              otherUser={this.otherUser} />
           ))
         }
       </React.Fragment>

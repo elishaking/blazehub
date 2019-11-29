@@ -213,7 +213,7 @@ export default class Post extends Component {
           </div>
 
           {
-            post.user.email == this.props.user.email && (
+            !this.props.otherUser && post.user.email == this.props.user.email && (
               <div className="delete-post" onClick={() => { this.deletePost(post.key) }}>
                 <FontAwesomeIcon icon={faTrash} />
               </div>
