@@ -22,8 +22,6 @@ class Profile extends Component {
   constructor(props) {
     super(props);
 
-    const { user } = this.props.auth;
-
     this.state = {
       loadingAvatar: true,
       loadingCoverPhoto: true,
@@ -33,7 +31,7 @@ class Profile extends Component {
       loadingProfile: true,
       editProfile: false,
       username: '',
-      name: `${user.firstName} ${user.lastName}`,
+      name: '',
       bio: '',
       location: '',
       website: '',
@@ -53,6 +51,8 @@ class Profile extends Component {
     }
     else {
       this.otherUser = false;
+      const { user } = this.props.auth;
+      this.setState({ name: `${user.firstName} ${user.lastName}` })
       this.loadUserProfileData();
     }
   }
@@ -126,20 +126,25 @@ class Profile extends Component {
     const coverPhoto = profile.coverPhoto;
     coverPhoto ? this.setPic("coverPhoto", coverPhoto) : this.props.getProfilePic(user.id, "coverPhoto");
 
-    // app.database().ref('users').once("value", (usersSnapShot) => {
-    //   const users = usersSnapShot.val();
-    //   const userKeys = Object.keys(users);
-    //   userKeys.forEach((userKey) => {
-    //     app.database().ref('profiles').child(userKey)
-    //       .child('username').once('value', (usernameSnapShot) => {
+    app.database().ref('users').once("value", (usersSnapShot) => {
+      const users = usersSnapShot.val();
+      const userKeys = Object.keys(users);
+      userKeys.forEach((userKey) => {
+        // app.database().ref('profiles').child(userKey)
+        //   .child('username').once('value', (usernameSnapShot) => {
 
-    //         usernameSnapShot.ref
-    //           .set(`${users[userKey].firstName.replace(/ /g, "")}.${users[userKey].lastName.replace(/ /g, "")}`
-    //             .toLowerCase())
+        //     usernameSnapShot.ref
+        //       .set(`${users[userKey].firstName.replace(/ /g, "")}.${users[userKey].lastName.replace(/ /g, "")}`
+        //         .toLowerCase())
 
-    //       });
-    //   })
-    // })
+        //   });
+        app.database().ref('profiles').child(userKey).child('name').once("value", (nameSnapShot) => {
+          if (nameSnapShot.exists()) return;
+
+          nameSnapShot.ref.set(`${users[userKey].firstName} ${users[userKey].lastName}`)
+        })
+      })
+    })
 
 
     this.profileRef = app.database().ref('profiles').child(user.id);
@@ -399,19 +404,19 @@ class Profile extends Component {
                     <FontAwesomeIcon icon={faUser} />
                     <span>{name}</span>
                   </h3>
-                  {bio !== '' && (
+                  {bio && (
                     <div className="data">
                       <FontAwesomeIcon icon={faBible} />
                       <small>{bio}</small>
                     </div>
                   )}
-                  {location !== '' && (
+                  {location && (
                     <div className="data">
                       <FontAwesomeIcon icon={faAddressBook} />
                       <small>{location}</small>
                     </div>
                   )}
-                  {website !== '' && (
+                  {website && (
                     <div className="data">
                       <FontAwesomeIcon icon={faGlobe} />
                       <small>{website}</small>
@@ -487,7 +492,7 @@ class Profile extends Component {
                   </div>
 
                   <form onSubmit={this.editProfile}>
-                    <label htmlFor="username">username</label>
+                    <label htmlFor="username">Username</label>
                     <TextFormInput
                       name="username"
                       placeholder="username"
