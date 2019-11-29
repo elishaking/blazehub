@@ -70,7 +70,7 @@ router.post("/signup", (req, res) => {
                 if (err) return console.error(err);
 
                 dbRef.child('profiles').child(userKey)
-                  .child('username').set(`${newUser.firstName}.${newUser.lastName}`.toLocaleLowerCase(), (err) => {
+                  .child('username').set(`${newUser.firstName.replace(/ /g, "")}.${newUser.lastName.replace(/ /g, "")}`.toLowerCase(), (err) => {
                     if (err) return console.log(err);
 
                     res.json({ success: true });
