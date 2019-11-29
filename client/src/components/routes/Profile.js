@@ -8,12 +8,12 @@ import 'firebase/database';
 import AuthNav from '../nav/AuthNav';
 import MainNav from '../nav/MainNav';
 import './Profile.scss';
-import Post from '../Post';
 import Spinner from '../Spinner';
 import { TextFormInput, TextAreaFormInput } from '../form/TextFormInput';
 import { DateFormInput } from '../form/DateFormInput';
 import { getFriends } from '../../redux_actions/friendActions';
 import { getProfilePic, updateProfilePic } from '../../redux_actions/profileActions';
+import Posts from '../Posts';
 
 class Profile extends Component {
   updateCover = false;
@@ -28,8 +28,6 @@ class Profile extends Component {
       loadingCoverPhoto: true,
       avatar: '',
       coverPhoto: '',
-      posts: [],
-      loadingPosts: true,
 
       loadingProfile: true,
       editProfile: false,
@@ -106,36 +104,12 @@ class Profile extends Component {
     const coverPhoto = profile.coverPhoto;
     coverPhoto ? this.setPic("coverPhoto", coverPhoto) : this.props.getProfilePic(user.id, "coverPhoto");
 
-    this.postsRef = app.database().ref('posts');
-    this.postImagesRef = app.database().ref('post-images');
-    this.bookmarksRef = app.database().ref("bookmarks").child(user.id);
 
     this.profileRef = app.database().ref('profiles').child(user.id);
 
     this.profileRef.once("value", (profileSnapShot) => {
       this.setProfile(profileSnapShot.val());
     });
-
-    this.postsRef.orderByChild('user/id')
-      .equalTo(user.id).once("value", (postsSnapShot) => {
-        const posts = postsSnapShot.val();
-
-        this.setState({
-          posts: Object.keys(posts).map((_, i, postKeys) => {
-            const postKey = postKeys[postKeys.length - i - 1];
-            const newPost = {
-              key: postKey,
-              ...posts[postKey]
-            };
-            // set date
-            newPost.date = 1e+15 - newPost.date;
-
-            if (this.state.loadingPosts) this.setState({ loadingPosts: false });
-
-            return newPost;
-          })
-        })
-      });
   }
 
   /**
@@ -357,21 +331,9 @@ class Profile extends Component {
 
             <div className="profile-content">
               <div className="user-posts">
-                {
-                  loadingPosts ? (
-                    <div className="loading-container"><Spinner /></div>
-                  ) : posts.map((post) => (
-                    <Post
-                      key={post.key}
-                      postRef={this.postsRef.child(post.key)}
-                      postImageRef={this.postImagesRef.child(post.key)}
-                      bookmarkRef={this.bookmarksRef.child(post.key)}
-                      notificationsRef={app.database().ref('notifications')}
-                      post={post}
-                      user={user}
-                      canBookmark={true} />
-                  ))
-                }
+                <Posts
+                  user={user}
+                  forProfile={true} />
               </div>
 
               <div className="user-data">
