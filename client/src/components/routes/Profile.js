@@ -32,6 +32,7 @@ class Profile extends Component {
 
       loadingProfile: true,
       editProfile: false,
+      username: '',
       name: `${user.firstName} ${user.lastName}`,
       bio: '',
       location: '',
@@ -149,11 +150,12 @@ class Profile extends Component {
   }
 
   /**
-   * @param {{ name: string; bio: string; location: string; website: string; birth: string; }} profile
+   * @param {{ name: string; username: string; bio: string; location: string; website: string; birth: string; }} profile
    */
   setProfile = (profile) => {
     this.setState({
       loadingProfile: false,
+      username: profile.username,
       name: profile.name,
       bio: profile.bio,
       location: profile.location,
@@ -318,7 +320,7 @@ class Profile extends Component {
     const hasProfilePic = false;
     const { user } = this.props.auth;
     const { loadingAvatar, loadingCoverPhoto, avatar, coverPhoto, loadingProfile, loadingFriends, friends,
-      editProfile, name, bio, location, website, birth, errors, loadingOtherUserId } = this.state;
+      editProfile, username, name, bio, location, website, birth, errors, loadingOtherUserId } = this.state;
 
     return (
       <div className="container">
@@ -485,6 +487,16 @@ class Profile extends Component {
                   </div>
 
                   <form onSubmit={this.editProfile}>
+                    <label htmlFor="username">username</label>
+                    <TextFormInput
+                      name="username"
+                      placeholder="username"
+                      type="text"
+                      value={username}
+                      onChange={this.onChange}
+                      error={errors.username}
+                    />
+
                     <label htmlFor="name">Name</label>
                     <TextFormInput
                       name="name"
