@@ -39,12 +39,15 @@ class Profile extends Component {
       errors: {},
 
       loadingFriends: true,
-      friends: []
+      friends: [],
+
+      loadingOtherUserId: true,
     }
   }
 
   componentDidMount() {
     if (this.props.match.params && this.props.match.params.username) {
+      this.otherUser = true;
       this.loadOtherProfileData();
     }
     else this.loadUserProfileData();
@@ -86,9 +89,24 @@ class Profile extends Component {
       .equalTo(this.props.match.params.username).once("value", (profileSnapShot) => {
         if (!profileSnapShot.exists()) return window.location.href = "/home";
 
-        this.setProfile(profileSnapShot.val());
-        const otherUserId = profileSnapShot.key;
+        const profile = profileSnapShot.val();
+        this.otherUserId = Object.keys(profile)[0];
+        this.setProfile(profile[this.otherUserId]);
+        console.log(profileSnapShot.val())
+        this.setState({ loadingOtherUserId: false });
 
+        app.database().ref('friends').child(this.otherUserId).once("value", (friendsSnapShot) => {
+          if (friendsSnapShot.exists()) {
+            const friends = friendsSnapShot.val();
+            this.setFriends(Object.keys(friends), friends);
+          }
+        });
+
+        app.database().ref('profile-photos').child(this.otherUserId).once("value", (photosSnapShot) => {
+          const photos = photosSnapShot.exists() ? photosSnapShot.val() : { avatar: '', coverPhoto: '' };
+          this.setPic("avatar", photos.avatar);
+          this.setPic("coverPhoto", photos.coverPhoto);
+        });
       });
   };
 
@@ -281,8 +299,8 @@ class Profile extends Component {
   render() {
     const hasProfilePic = false;
     const { user } = this.props.auth;
-    const { loadingAvatar, loadingCoverPhoto, avatar, coverPhoto, posts, loadingPosts, loadingProfile, loadingFriends, friends,
-      editProfile, name, bio, location, website, birth, errors } = this.state;
+    const { loadingAvatar, loadingCoverPhoto, avatar, coverPhoto, loadingProfile, loadingFriends, friends,
+      editProfile, name, bio, location, website, birth, errors, loadingOtherUserId } = this.state;
 
     return (
       <div className="container">
@@ -331,9 +349,20 @@ class Profile extends Component {
 
             <div className="profile-content">
               <div className="user-posts">
-                <Posts
-                  user={user}
-                  forProfile={true} />
+                {
+                  this.otherUser ?
+                    !loadingOtherUserId && (
+                      <Posts
+                        user={user}
+                        forProfile={true}
+                        otherUser={this.otherUser}
+                        otherUserId={this.otherUserId} />
+                    ) : (
+                      <Posts
+                        user={user}
+                        forProfile={true} />
+                    )
+                }
               </div>
 
               <div className="user-data">

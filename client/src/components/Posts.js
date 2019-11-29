@@ -14,14 +14,16 @@ export default class Posts extends Component {
     this.mountedOn = Date.now();
     this.user = this.props.user;
 
+    const { forProfile, otherUser, otherUserId } = this.props;
+
     this.postsRef = app.database().ref('posts');
     this.postImagesRef = app.database().ref('post-images');
     this.bookmarksRef = app.database().ref("bookmarks").child(this.user.id);
 
-    if (this.props.forProfile) {
+    if (forProfile) {
       this.postsRef.orderByChild('user/id')
-        .equalTo(this.user.id).once("value", (postsSnapShot) => {
-          const posts = postsSnapShot.val();
+        .equalTo(otherUser ? otherUserId : this.user.id).once("value", (postsSnapShot) => {
+          const posts = postsSnapShot.val() || {};
 
           this.setState({
             posts: Object.keys(posts).map((_, i, postKeys) => {
