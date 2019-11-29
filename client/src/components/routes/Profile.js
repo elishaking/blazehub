@@ -46,8 +46,10 @@ class Profile extends Component {
   }
 
   componentDidMount() {
-    console.log(this.props.match);
-    this.loadData();
+    if (this.props.match.params && this.props.match.params.username) {
+      this.loadOtherProfileData();
+    }
+    else this.loadUserProfileData();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -81,7 +83,18 @@ class Profile extends Component {
     })
   };
 
-  loadData = () => {
+  loadOtherProfileData = () => {
+    app.database().ref('profiles').orderByChild('username')
+      .equalTo(this.props.match.params.username).once("value", (profileSnapShot) => {
+        if (!profileSnapShot.exists()) return window.location.href = "/home";
+
+        this.setProfile(profileSnapShot.val());
+        const otherUserId = profileSnapShot.key;
+
+      });
+  };
+
+  loadUserProfileData = () => {
     const { user } = this.props.auth;
     const { friends, profile } = this.props;
 
@@ -100,22 +113,7 @@ class Profile extends Component {
     this.profileRef = app.database().ref('profiles').child(user.id);
 
     this.profileRef.once("value", (profileSnapShot) => {
-      const profile = profileSnapShot.val() || {
-        name: `${user.firstName} ${user.lastName}`,
-        bio: '',
-        location: '',
-        website: '',
-        birth: ''
-      };
-
-      this.setState({
-        loadingProfile: false,
-        name: profile.name,
-        bio: profile.bio,
-        location: profile.location,
-        website: profile.website,
-        birth: profile.birth
-      });
+      this.setProfile(profileSnapShot.val());
     });
 
     this.postsRef.orderByChild('user/id')
@@ -138,6 +136,20 @@ class Profile extends Component {
           })
         })
       });
+  }
+
+  /**
+   * @param {{ name: string; bio: string; location: string; website: string; birth: string; }} profile
+   */
+  setProfile = (profile) => {
+    this.setState({
+      loadingProfile: false,
+      name: profile.name,
+      bio: profile.bio,
+      location: profile.location,
+      website: profile.website,
+      birth: profile.birth
+    });
   }
 
   selectCoverPhoto = () => {

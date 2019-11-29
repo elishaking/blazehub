@@ -119,7 +119,7 @@ class Landing extends Component {
 
   render() {
     const { errors } = this.state;
-    console.log(errors);
+    // console.log(errors);
 
     return (
       <div className="container landing-bg">

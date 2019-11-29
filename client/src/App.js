@@ -88,7 +88,7 @@ class App extends Component {
           </Switch>
 
           <Switch>
-            <PrivateRoute exact path="/:username" component={Profile} />
+            <PrivateRoute exact path="/p/:username" component={Profile} />
           </Switch>
         </Router>
       </Provider>
