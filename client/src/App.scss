@@ -645,6 +645,7 @@ button:focus {
     padding: 1em 0;
 
     img {
+      cursor: pointer;
       width: 100%;
       border: 1px solid #E0E0E0;
       border-radius: 17px;
@@ -1140,6 +1141,75 @@ h3 {
 .spinner {
   font-size: 2.7em;
   animation: loading 0.7s linear infinite forwards;
+}
+
+.modal-container {
+  // display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 100;
+  background: rgba($color: #000000, $alpha: 0.7);
+
+  .close {
+    position: absolute;
+    background: rgba($color: #000, $alpha: 0.3);
+    cursor: pointer;
+    right: 0;
+    top: 0;
+    margin: 1em;
+    border-radius: 100%;
+    display: flex;
+    padding: 0.7em;
+    transition: 0.3s ease-in-out;
+  }
+
+  .close:hover {
+    background: rgba($color: #000, $alpha: 0.9);
+  }
+
+  .inner-content {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .modal {
+      position: relative;
+      padding: 3em;
+      width: 80vw;
+      max-height: 90vh;
+      display: flex;
+      justify-content: center;
+      // max-width: 700px;
+      border-radius: 10px;
+      z-index: 100;
+      animation: scaleIn 0.3s ease-out;
+
+      div {
+        text-align: center;
+      }
+
+      img {
+        // border: 0.3px solid #f2eff6;
+        margin: auto;
+        border-radius: 10px;
+        height: 100%;
+      }
+    }
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0);
+  }
+
+  to {
+    transform: scale(1);
+  }
 }
 
 @keyframes loading {

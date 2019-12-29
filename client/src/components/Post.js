@@ -31,7 +31,8 @@ class Post extends Component {
       transitionStyle: this.beforeMountStyle,
       isBookmarked: false,
       loadingImage: props.post.imageUrl,
-      postImage: ''
+      postImage: '',
+      viewImage: false
     };
   }
 
@@ -206,110 +207,138 @@ class Post extends Component {
       this.props.history.push(`/p/${post.user.username}`);
   }
 
+  togglePostImage = () => {
+    this.setState({ viewImage: !this.state.viewImage });
+  }
+
   render() {
-    const { post, liked, loadingImage, postImage, showComments, transitionStyle, isBookmarked } = this.state;
+    const { post, liked, loadingImage, postImage, viewImage, showComments, transitionStyle, isBookmarked } = this.state;
     return (
-      <div className="post" style={transitionStyle}>
-        <header>
-          <div className="user-post">
-            <FontAwesomeIcon icon={faUserCircle} />
-            <div>
-              {/* {
+      <div>
+        <div className="post" style={transitionStyle}>
+          <header>
+            <div className="user-post">
+              <FontAwesomeIcon icon={faUserCircle} />
+              <div>
+                {/* {
                 post.user.username ? (
                   <Link to={`/p/${post.user.username}`}><h4>{`${post.user.firstName}  ${post.user.lastName}`}</h4></Link>
                 ) : (
                     <h4>{`${post.user.firstName}  ${post.user.lastName}`}</h4>
                   )
               } */}
-              <h4 onClick={this.viewPostUserProfile}>{`${post.user.firstName}  ${post.user.lastName}`}</h4>
+                <h4 onClick={this.viewPostUserProfile}>{`${post.user.firstName}  ${post.user.lastName}`}</h4>
 
-              {/* <small>{new Date(post.date).toLocaleTimeString()}</small> */}
-              <small>{this.formatPostDate(post.date)}</small>
-            </div>
-          </div>
-
-          {
-            !this.props.otherUser && post.user.email == this.props.user.email && (
-              <div className="delete-post" onClick={() => { this.deletePost(post.key) }}>
-                <FontAwesomeIcon icon={faTrash} />
+                {/* <small>{new Date(post.date).toLocaleTimeString()}</small> */}
+                <small>{this.formatPostDate(post.date)}</small>
               </div>
-            )
-          }
-        </header>
+            </div>
 
-        <p>{post.text}</p>
-        {/* {post.imageUrl && (
+            {
+              !this.props.otherUser && post.user.email == this.props.user.email && (
+                <div className="delete-post" onClick={() => { this.deletePost(post.key) }}>
+                  <FontAwesomeIcon icon={faTrash} />
+                </div>
+              )
+            }
+          </header>
+
+          <p>{post.text}</p>
+          {/* {post.imageUrl && (
           <div className="post-image">
             <img src={post.imageUrl} alt="" srcSet="" />
           </div>
         )} */}
-        {
-          post.imageUrl && (loadingImage ? (
-            <div className="image-loading">
-              <Spinner />
-            </div>
-          ) : (
-              <div className="post-image">
-                <img src={postImage} alt="" srcSet="" />
+          {
+            post.imageUrl && (loadingImage ? (
+              <div className="image-loading">
+                <Spinner />
               </div>
-            ))
-        }
+            ) : (
+                <div className="post-image">
+                  <img onClick={this.togglePostImage} src={postImage} alt="Post Image" srcSet="" />
+                </div>
+              ))
+          }
 
-        <hr />
+          <hr />
 
-        <div className="post-actions">
-          <div>
-            <button className="post-action" onClick={this.likePost}>
-              <FontAwesomeIcon icon={faThumbsUp} style={{ color: liked ? "#7c62a9" : "#888888" }} />
-              <span style={{ color: liked ? "#7c62a9" : "#888888" }}>{post.likes ? Object.keys(post.likes).length : 0}</span>
-            </button>
-            <button className="post-action" onClick={this.toggleComments}>
-              <FontAwesomeIcon icon={faComments} />
-              <span>{post.comments ? Object.keys(post.comments).length : 0}</span>
-            </button>
-          </div>
-          {/* <button className="post-action">
+          <div className="post-actions">
+            <div>
+              <button className="post-action" onClick={this.likePost}>
+                <FontAwesomeIcon icon={faThumbsUp} style={{ color: liked ? "#7c62a9" : "#888888" }} />
+                <span style={{ color: liked ? "#7c62a9" : "#888888" }}>{post.likes ? Object.keys(post.likes).length : 0}</span>
+              </button>
+              <button className="post-action" onClick={this.toggleComments}>
+                <FontAwesomeIcon icon={faComments} />
+                <span>{post.comments ? Object.keys(post.comments).length : 0}</span>
+              </button>
+            </div>
+            {/* <button className="post-action">
             <FontAwesomeIcon icon={faShare} />
             <span>{post.shares ? Object.keys(post.shares).length : 0}</span>
           </button> */}
+            {
+              this.props.canBookmark && <button style={{ marginRight: 0, color: isBookmarked ? "#7C62A9" : "#b1a3e1" }} className="post-action" onClick={this.toggleBookmarkPost}>
+                <FontAwesomeIcon icon={faBookmark} />
+              </button>
+            }
+          </div>
+
           {
-            this.props.canBookmark && <button style={{ marginRight: 0, color: isBookmarked ? "#7C62A9" : "#b1a3e1" }} className="post-action" onClick={this.toggleBookmarkPost}>
-              <FontAwesomeIcon icon={faBookmark} />
-            </button>
+            showComments &&
+            (
+              <div className="comments">
+                <hr />
+                <div className="comment-input">
+                  <FontAwesomeIcon icon={faUserCircle} />
+                  <input type="text" name="commentText" placeholder="Write a comment" onKeyPress={this.addComment} onChange={this.onChange} />
+                </div>
+
+                {
+                  post.comments && Object.keys(post.comments).map((commentKey) => {
+                    const comment = post.comments[commentKey];
+                    return (
+                      <div key={commentKey} className="comment">
+                        <div className="comment-display">
+                          <FontAwesomeIcon icon={faUserCircle} />
+                          <div>
+                            <p><span>{`${comment.user.firstName} ${comment.user.lastName}`}</span> {comment.text}</p>
+                            <small>{new Date(comment.date).toLocaleTimeString()}</small>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })
+                }
+              </div>
+            )
           }
         </div>
 
         {
-          showComments &&
-          (
-            <div className="comments">
-              <hr />
-              <div className="comment-input">
-                <FontAwesomeIcon icon={faUserCircle} />
-                <input type="text" name="commentText" placeholder="Write a comment" onKeyPress={this.addComment} onChange={this.onChange} />
+          viewImage && (
+            <div className="modal-container">
+              <div className="close" onClick={this.togglePostImage}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 49.243 49.243">
+                  <g id="Group_153" data-name="Group 153" transform="translate(-2307.379 -2002.379)">
+                    <line id="Line_1" data-name="Line 1" x2="45" y2="45" transform="translate(2309.5 2004.5)" fill="none" stroke="#fff" strokeLinecap="round" strokeWidth="7" />
+                    <line id="Line_2" data-name="Line 2" x1="45" y2="45" transform="translate(2309.5 2004.5)" fill="none" stroke="#fff" strokeLinecap="round" strokeWidth="7" />
+                  </g>
+                </svg>
               </div>
 
-              {
-                post.comments && Object.keys(post.comments).map((commentKey) => {
-                  const comment = post.comments[commentKey];
-                  return (
-                    <div key={commentKey} className="comment">
-                      <div className="comment-display">
-                        <FontAwesomeIcon icon={faUserCircle} />
-                        <div>
-                          <p><span>{`${comment.user.firstName} ${comment.user.lastName}`}</span> {comment.text}</p>
-                          <small>{new Date(comment.date).toLocaleTimeString()}</small>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })
-              }
+              <div className="inner-content">
+                <div className="modal">
+                  <div>
+                    <img src={postImage} alt="Post Image" />
+                  </div>
+                </div>
+              </div>
             </div>
           )
         }
       </div>
-
     );
   }
 }
