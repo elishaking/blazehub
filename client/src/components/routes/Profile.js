@@ -96,7 +96,7 @@ class Profile extends Component {
         const profile = profileSnapShot.val();
         this.otherUserId = Object.keys(profile)[0];
         this.setProfile(profile[this.otherUserId]);
-        console.log(profileSnapShot.val())
+        // console.log(profileSnapShot.val())
         this.setState({ loadingOtherUserId: false });
 
         app.database().ref('friends').child(this.otherUserId).once("value", (friendsSnapShot) => {

@@ -1,11 +1,11 @@
 //@ts-check
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle, faComments, faThumbsUp, faBookmark, faTrash } from '@fortawesome/free-solid-svg-icons';
 import Spinner from './Spinner';
 
-export default class Post extends Component {
+class Post extends Component {
   beforeMountStyle = {
     opacity: 0,
     transform: "scale(0.7)",
@@ -200,7 +200,10 @@ export default class Post extends Component {
   };
 
   viewPostUserProfile = () => {
+    const { post } = this.state;
 
+    if (post.user.username)
+      this.props.history.push(`/p/${post.user.username}`);
   }
 
   render() {
@@ -310,6 +313,8 @@ export default class Post extends Component {
     );
   }
 }
+
+export default withRouter(Post);
 
 // resizeImage = (dataUrl, type) => {
 //   const img = document.createElement("img");
