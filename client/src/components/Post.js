@@ -199,6 +199,10 @@ export default class Post extends Component {
     return "now";
   };
 
+  viewPostUserProfile = () => {
+
+  }
+
   render() {
     const { post, liked, loadingImage, postImage, showComments, transitionStyle, isBookmarked } = this.state;
     return (
@@ -207,13 +211,14 @@ export default class Post extends Component {
           <div className="user-post">
             <FontAwesomeIcon icon={faUserCircle} />
             <div>
-              {
+              {/* {
                 post.user.username ? (
                   <Link to={`/p/${post.user.username}`}><h4>{`${post.user.firstName}  ${post.user.lastName}`}</h4></Link>
                 ) : (
                     <h4>{`${post.user.firstName}  ${post.user.lastName}`}</h4>
                   )
-              }
+              } */}
+              <h4 onClick={this.viewPostUserProfile}>{`${post.user.firstName}  ${post.user.lastName}`}</h4>
 
               {/* <small>{new Date(post.date).toLocaleTimeString()}</small> */}
               <small>{this.formatPostDate(post.date)}</small>

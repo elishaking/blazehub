@@ -575,6 +575,23 @@ button:focus {
   border-radius: 5px;
   border: 1px solid #ede0ff;
 
+  h4 {
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+  }
+
+  h4:hover {
+    color: darken($color: #7c62a9, $amount: 30);
+  }
+
+  small {
+    color: gray;
+  }
+
+  p {
+    color: #000;
+  }
+
   header {
     display: flex;
     align-items: center;
