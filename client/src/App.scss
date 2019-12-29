@@ -1179,7 +1179,8 @@ h3 {
     .modal {
       position: relative;
       padding: 3em;
-      width: 80vw;
+      // width: 80vw;
+      width: 100vw;
       max-height: 90vh;
       display: flex;
       justify-content: center;
@@ -1190,16 +1191,46 @@ h3 {
 
       div {
         text-align: center;
+        width: 100%;
+        border-radius: 10px;
       }
 
       img {
         // border: 0.3px solid #f2eff6;
         margin: auto;
-        border-radius: 10px;
         height: 100%;
+        width: 100%;
+        object-fit: contain;
       }
     }
   }
+
+  .modal-actions {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+    .actions {
+      padding: 0.7em 0;
+      display: flex;
+      justify-content: space-around;
+      width: 80vw;
+      max-width: 500px;
+      border-radius: 100px;
+      background-color: rgba($color: #fff, $alpha: 0.9);
+      margin-bottom: 1em;
+    }
+  }
+
+  // @media (max-width: 1100px) {
+  //   .inner-content {
+  //     .modal {
+  //       width: 100vw;
+  //     }
+  //   }
+  // }
 }
 
 @keyframes scaleIn {

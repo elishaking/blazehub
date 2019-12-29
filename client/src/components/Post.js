@@ -335,6 +335,24 @@ class Post extends Component {
                   </div>
                 </div>
               </div>
+
+              <div className="modal-actions">
+                <div className="actions">
+                  <button className="post-action" onClick={this.likePost}>
+                    <FontAwesomeIcon icon={faThumbsUp} style={{ color: liked ? "#7c62a9" : "#888888" }} />
+                    <span style={{ color: liked ? "#7c62a9" : "#888888" }}>{post.likes ? Object.keys(post.likes).length : 0}</span>
+                  </button>
+                  {/* <button className="post-action" onClick={this.toggleComments}>
+                  <FontAwesomeIcon icon={faComments} />
+                  <span>{post.comments ? Object.keys(post.comments).length : 0}</span>
+                </button> */}
+                  {
+                    this.props.canBookmark && <button style={{ marginRight: 0, color: isBookmarked ? "#7C62A9" : "#b1a3e1" }} className="post-action" onClick={this.toggleBookmarkPost}>
+                      <FontAwesomeIcon icon={faBookmark} />
+                    </button>
+                  }
+                </div>
+              </div>
             </div>
           )
         }
