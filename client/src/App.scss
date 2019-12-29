@@ -407,10 +407,9 @@ select {
     margin-right: 1em;
   }
 
-  nav svg {
-    width: 1.3em !important;
-    height: 1.3em;
-  }
+  // nav svg {
+  //   font-size: 1.3em;
+  // }
 }
 
 /* .main-nav header div {
@@ -949,6 +948,10 @@ h3 {
       margin-bottom: 0;
     }
 
+    nav svg {
+      font-size: 1.3em;
+    }
+
     a {
       svg {
         margin-right: 0;
@@ -1074,13 +1077,19 @@ h3 {
   .main-nav {
     width: 100%;
     margin-left: -5vw;
-    padding: 1em 2em;
+    padding: 1.5em 2em;
     max-width: unset;
     position: fixed;
     z-index: 10;
+    border: none;
     border-radius: unset;
     bottom: 0;
+    background-color: #7c62a9;
     box-shadow: 0 0 4px #b1a3e1;
+
+    svg {
+      color: white;
+    }
 
     ul {
       display: flex;
