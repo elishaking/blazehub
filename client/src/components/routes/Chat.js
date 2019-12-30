@@ -15,6 +15,7 @@ import AuthNav from '../nav/AuthNav';
 import Spinner from '../Spinner';
 // @ts-ignore
 import notificationSound from './notification.ogg';
+import './Chat.scss';
 
 const SLIDE_IN = {
   display: "block",
