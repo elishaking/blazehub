@@ -241,13 +241,14 @@ class Chat extends Component {
                     Object.keys(chats[currentChatKey]).map((messageKey) => {
                       const message = chats[currentChatKey][messageKey];
                       const timeString = new Date(message.date).toLocaleTimeString().split(":");
-                      const time = `${timeString[0]}:${timeString[1]} ${timeString[2].split(" ")[1]}`
+                      const meridiem = timeString[2].split(" ")[1];
+                      const time = `${timeString[0]}:${timeString[1]} ${meridiem || ""}`
                       if (message.user.key === this.userKey) return (
                         <div key={messageKey} className="chat chat-me">
                           <FontAwesomeIcon icon={faUserCircle} />
                           <div>
                             <p>{message.text}</p>
-                            <small>{time} </small>
+                            <small>{time}</small>
                           </div>
                         </div>
                       );
@@ -257,7 +258,7 @@ class Chat extends Component {
                           <div>
                             <h5>{message.user.name}</h5>
                             <p>{message.text}</p>
-                            <small>{time} </small>
+                            <small>{time}</small>
                           </div>
 
                         </div>
