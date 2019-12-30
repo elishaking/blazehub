@@ -271,13 +271,19 @@ class Chat extends Component {
                 {
                   loadingChat ? (<Spinner />) :
                     chats[currentChatKey] &&
-                    Object.keys(chats[currentChatKey]).map((messageKey) => {
+                    Object.keys(chats[currentChatKey]).map((messageKey, idx, messageKeys) => {
                       const message = chats[currentChatKey][messageKey];
                       const timeString = new Date(message.date).toLocaleTimeString().split(":");
                       const meridiem = timeString[2].split(" ")[1];
-                      const time = `${timeString[0]}:${timeString[1]} ${meridiem || ""}`
+                      const time = `${timeString[0]}:${timeString[1]} ${meridiem || ""}`;
+                      const prevMessageKey = messageKeys[idx - 1];
+
                       if (message.user.key === this.userKey) return (
-                        <div key={messageKey} className="chat chat-me">
+                        <div key={messageKey} className="chat chat-me"
+                          style={{
+                            marginTop: prevMessageKey &&
+                              chats[currentChatKey][prevMessageKey].user.key !== message.user.key ? "1.3em" : "0.5em"
+                          }}>
                           {avatar ? <Avatar avatar={avatar} /> : <FontAwesomeIcon icon={faUserCircle} className="icon" />}
                           <div>
                             <p>{message.text}</p>
@@ -287,7 +293,10 @@ class Chat extends Component {
                       );
                       else return (
                         <div key={messageKey} className="chat chat-other"
-                        >
+                          style={{
+                            marginTop: prevMessageKey &&
+                              chats[currentChatKey][prevMessageKey].user.key !== message.user.key ? "1.3em" : "0.5em"
+                          }}>
                           {
                             friends[currentFriendKey] && friends[currentFriendKey].avatar ?
                               <Avatar
@@ -297,7 +306,7 @@ class Chat extends Component {
                               /> : <FontAwesomeIcon icon={faUserCircle} className="icon" />
                           }
                           <div>
-                            <h5>{message.user.name}</h5>
+                            {/* <h5>{message.user.name}</h5> */}
                             <p>{message.text}</p>
                             <small>{time}</small>
                           </div>
