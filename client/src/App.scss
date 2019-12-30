@@ -881,20 +881,6 @@ h3 {
     margin: 0;
   }
 
-  .chats {
-    height: 63vh;
-  }
-
-  .friends {
-    display: none;
-    position: absolute;
-    width: 90%;
-    height: 100%;
-    transform: translateX(130%);
-    transition: 0.3s ease-in-out;
-    background-color: #f2eff6;
-  }
-
   .post-action {
     margin-right: 1em;
   }
@@ -902,7 +888,7 @@ h3 {
 
 @media (max-width: 470px) {
   body {
-    font-size: 70%;
+    font-size: 80%;
   }
 
   nav h1 span {
