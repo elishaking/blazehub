@@ -27,11 +27,20 @@ export const getProfilePic = (userKey, key) => (dispatch) => {
  * @param {string} key
  * @param {string} dataUrl
  */
-export const updateProfilePic = (userKey, key, dataUrl) => (dispatch) => {
-  app.database().ref('profile-photos').child(userKey).child(key)
+export const updateProfilePic = (userKey, key, dataUrl, dataUrlSmall = "") => (dispatch) => {
+  const profileRef = app.database().ref('profile-photos').child(userKey);
+  profileRef.child(key)
     .set(dataUrl, (err) => {
       if (err) return console.log(err);
 
-      dispatch(setProfilePic(key, dataUrl));
+      if (dataUrlSmall) {
+        profileRef.child("avatar-small").set(dataUrlSmall, (err) => {
+          if (err) return console.log(err);
+
+          dispatch(setProfilePic(key, dataUrl));
+        });
+      } else {
+        dispatch(setProfilePic(key, dataUrl));
+      }
     });
 }

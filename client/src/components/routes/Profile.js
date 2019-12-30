@@ -46,6 +46,18 @@ class Profile extends Component {
   }
 
   componentDidMount() {
+    // const profileRef = app.database().ref('profile-photos');
+    // profileRef.once("value", (p) => {
+    //   const pp = p.val();
+
+    //   Object.keys(pp).forEach((key) => {
+    //     var mime = pp[key].avatar.match(/data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+).*,.*/);
+    //     this.resizeImage(pp[key].avatar, "image/jpeg", 50).then((sm) => {
+    //       profileRef.child(key).child("avatar-small").set(sm);
+    //     });
+    //   });
+    // });
+
     if (this.props.match.params && this.props.match.params.username) {
       this.loadOtherProfileData();
     }
@@ -190,7 +202,14 @@ class Profile extends Component {
       imgReader.onload = (e) => {
         if (imgInput.files[0].size > 100000)
           this.resizeImage(e.target.result.toString(), imgInput.files[0].type).then((dataUrl) => {
-            this.updatePic(dataUrl);
+            if (this.updateCover) {
+              this.updatePic(dataUrl);
+            } else {
+              this.resizeImage(e.target.result.toString(), imgInput.files[0].type, 50)
+                .then((dataUrlSmall) => {
+                  this.updatePic(dataUrl, dataUrlSmall);
+                });
+            }
           });
 
         else this.updatePic(e.target.result);
@@ -200,21 +219,22 @@ class Profile extends Component {
     }
   };
 
-  updatePic = (dataUrl) => {
+  updatePic = (dataUrl, dataUrlSmall = "") => {
     if (this.updateCover) {
       this.setState({ loadingCoverPhoto: true });
       this.props.updateProfilePic(this.props.auth.user.id, "coverPhoto", dataUrl);
     } else {
       this.setState({ loadingAvatar: true });
-      this.props.updateProfilePic(this.props.auth.user.id, "avatar", dataUrl);
+      this.props.updateProfilePic(this.props.auth.user.id, "avatar", dataUrl, dataUrlSmall);
     }
   }
 
   /**
    * @param {string} dataUrl
    * @param {string} type
+   * @param {number} maxSize
    */
-  resizeImage = (dataUrl, type) => {
+  resizeImage = (dataUrl, type, maxSize = 1000) => {
     const img = document.createElement("img");
     img.src = dataUrl;
     return new Promise((resolve, reject) => {
@@ -222,12 +242,12 @@ class Profile extends Component {
         // console.log(img.height);
         const canvas = document.createElement('canvas');
         const max = img.height > img.width ? img.height : img.width;
-        if (max > 1000) {
-          canvas.height = (img.height / max) * 1000;
-          canvas.width = (img.width / max) * 1000;
+        if (max > maxSize) {
+          canvas.height = (img.height / max) * maxSize;
+          canvas.width = (img.width / max) * maxSize;
 
           const context = canvas.getContext('2d');
-          context.scale(1000 / max, 1000 / max);
+          context.scale(maxSize / max, maxSize / max);
           context.drawImage(img, 0, 0);
           // return canvas.toDataURL();
           resolve(canvas.toDataURL(type, 0.5));
