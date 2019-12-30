@@ -10,9 +10,13 @@ import 'firebase/database';
 
 import { getFriends } from '../../redux_actions/friendActions';
 import { listenForNewChats } from '../../redux_actions/chatActions';
+import { getProfilePic } from '../../redux_actions/profileActions';
+
 import MainNav from '../nav/MainNav';
 import AuthNav from '../nav/AuthNav';
 import Spinner from '../Spinner';
+import Avatar from '../Avatar';
+
 // @ts-ignore
 import notificationSound from './notification.ogg';
 import './Chat.scss';
@@ -35,7 +39,8 @@ class Chat extends Component {
       loading: true,
       loadingChat: false,
       slideInStyle: {},
-      chatsHeight: 300
+      chatsHeight: 300,
+      avatar: ""
     };
 
     this.userKey = this.getUserKey(props.auth.user.email);
@@ -46,6 +51,16 @@ class Chat extends Component {
   componentDidMount() {
     this.setupFirebase();
 
+    const { profile, auth } = this.props;
+    if (profile.avatar) {
+      this.setState({
+        // loadingAvatar: false,
+        avatar: profile.avatar
+      });
+    } else {
+      this.props.getProfilePic(auth.user.id, "avatar");
+    }
+
     this.setChatsHeight();
 
     window.addEventListener('resize', () => {
@@ -54,6 +69,13 @@ class Chat extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    if (nextProps.profile.avatar && nextProps.profile.avatar !== this.state.avatar) {
+      this.setState({
+        // loadingAvatar: false,
+        avatar: nextProps.profile.avatar
+      });
+    }
+
     this.updateFriends(nextProps);
     this.updateChats(nextProps);
 
@@ -209,12 +231,15 @@ class Chat extends Component {
   render() {
     const hasProfilePic = false;
     const { user } = this.props.auth;
-    const { loading, friends, chatTitle, slideInStyle, chatsHeight, currentChatKey, chats, loadingChat } = this.state;
+    const { loading, avatar, friends, chatTitle, slideInStyle, chatsHeight, currentChatKey, chats, loadingChat } = this.state;
     const friendKeys = Object.keys(friends);
 
     return (
       <div className="container">
-        <AuthNav history={this.props.history} />
+        <AuthNav
+          history={this.props.history}
+          avatar={avatar}
+        />
 
         <div className="main">
           <MainNav user={user} />
@@ -245,7 +270,7 @@ class Chat extends Component {
                       const time = `${timeString[0]}:${timeString[1]} ${meridiem || ""}`
                       if (message.user.key === this.userKey) return (
                         <div key={messageKey} className="chat chat-me">
-                          <FontAwesomeIcon icon={faUserCircle} />
+                          {avatar ? <Avatar avatar={avatar} /> : <FontAwesomeIcon icon={faUserCircle} className="icon" />}
                           <div>
                             <p>{message.text}</p>
                             <small>{time}</small>
@@ -311,8 +336,9 @@ class Chat extends Component {
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
+  profile: state.profile,
   friends: state.friends,
   chats: state.chats
 });
 
-export default connect(mapStateToProps, { getFriends, listenForNewChats })(Chat);
+export default connect(mapStateToProps, { getProfilePic, getFriends, listenForNewChats })(Chat);

@@ -10,7 +10,8 @@ export default function Avatar({ avatar }) {
         height: "40px",
         objectFit: "cover",
         border: "1px solid #a491c3",
-        borderRadius: "100px"
+        borderRadius: "100px",
+        marginRight: "1em"
       }}
     />
   )
