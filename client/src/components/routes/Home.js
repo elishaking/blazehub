@@ -8,6 +8,7 @@ import 'firebase/database';
 // import axios from 'axios';
 
 import { signoutUser } from '../../redux_actions/authActions';
+import { getProfilePic } from '../../redux_actions/profileActions';
 
 import MainNav from '../nav/MainNav';
 import AuthNav from '../nav/AuthNav';
@@ -24,7 +25,9 @@ class Home extends Component {
       postText: '',
       postImgDataUrl: '',
       notifications: [],
-      loadingNotifications: true
+      loadingNotifications: true,
+      avatar: "",
+      loadingAvatar: true
     }
   }
 
@@ -40,6 +43,25 @@ class Home extends Component {
 
     this.setupFirebase();
     // console.log("mounter");
+
+    const { profile, auth } = this.props;
+    if (profile.avatar) {
+      this.setState({
+        loadingAvatar: false,
+        avatar: profile.avatar
+      });
+    } else {
+      this.props.getProfilePic(auth.user.id, "avatar");
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.profile.avatar && nextProps.profile.avatar !== this.state.avatar) {
+      this.setState({
+        loadingAvatar: false,
+        avatar: nextProps.profile.avatar
+      });
+    }
   }
 
   setupFirebase = () => {
@@ -80,7 +102,7 @@ class Home extends Component {
     }
   };
 
-  resizeImage = (dataUrl, type) => {
+  resizeImage = (dataUrl, type, maxSize = 1000) => {
     const img = document.createElement("img");
     img.src = dataUrl;
     return new Promise((resolve, reject) => {
@@ -88,12 +110,12 @@ class Home extends Component {
         // console.log(img.height);
         const canvas = document.createElement('canvas');
         const max = img.height > img.width ? img.height : img.width;
-        if (max > 1000) {
-          canvas.height = (img.height / max) * 1000;
-          canvas.width = (img.width / max) * 1000;
+        if (max > maxSize) {
+          canvas.height = (img.height / max) * maxSize;
+          canvas.width = (img.width / max) * maxSize;
 
           const context = canvas.getContext('2d');
-          context.scale(1000 / max, 1000 / max);
+          context.scale(maxSize / max, maxSize / max);
           context.drawImage(img, 0, 0);
           // return canvas.toDataURL();
           resolve(canvas.toDataURL(type, 0.5));
@@ -140,13 +162,14 @@ class Home extends Component {
   render() {
     const hasProfilePic = false;
     const { user } = this.props.auth;
-    const { postText, postImgDataUrl } = this.state;
+    const { postText, postImgDataUrl, avatar } = this.state;
 
     return (
       <div className="container">
         <AuthNav
           showSearch={true}
           hello="hello"
+          avatar={avatar}
           notificationsRef={app.database().ref('notifications')} />
 
         <div className="main">
@@ -218,10 +241,11 @@ class Home extends Component {
 }
 
 /**
- * @param {{ auth: any; }} state
+ * @param {{ auth: any; profile: any }} state
  */
 const mapStateToProps = (state) => ({
-  auth: state.auth
+  auth: state.auth,
+  profile: state.profile
 });
 
-export default connect(mapStateToProps, { signoutUser })(Home);
+export default connect(mapStateToProps, { signoutUser, getProfilePic })(Home);

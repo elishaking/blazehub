@@ -86,6 +86,7 @@ export default class Posts extends Component {
 
   render() {
     const { loadingPosts, posts } = this.state;
+    const { avatar } = this.props;
 
     return (
       <React.Fragment>

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faUserCircle, faBell } from '@fortawesome/free-solid-svg-icons';
 import { signoutUser } from '../../redux_actions/authActions';
+import Avatar from '../Avatar';
 
 class AuthNav extends Component {
   state = {
@@ -42,7 +43,7 @@ class AuthNav extends Component {
 
   render() {
     const { notifications } = this.state;
-    const { user, showSearch, hasProfilePic = false } = this.props;
+    const { user, showSearch, avatar = "" } = this.props;
     const { firstName, lastName } = user;
 
     return (
@@ -69,7 +70,7 @@ class AuthNav extends Component {
           }
 
           <div className="auth-nav-right">
-            {hasProfilePic ? <img src="" alt={firstName} srcSet="" /> : <FontAwesomeIcon icon={faUserCircle} className="icon" />} &nbsp;&nbsp;&nbsp;
+            {avatar ? <Avatar avatar={avatar} /> : <FontAwesomeIcon icon={faUserCircle} className="icon" />} &nbsp;&nbsp;&nbsp;
               {/* <span>{`${firstName} ${lastName}`}</span> */}
             <span>{`${firstName}`}</span>
 
