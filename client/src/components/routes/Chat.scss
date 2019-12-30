@@ -1,5 +1,6 @@
 .chat-space {
   border: 1px solid #ede0ff;
+  border-radius: 5px;
 
   header {
     display: flex;
@@ -55,6 +56,55 @@
 
     .line3 {
       transform: rotate(45deg) translate(-3px, -6px);
+    }
+  }
+
+  .chat-messages {
+    flex: 1;
+    // background-color: #f2eff6;
+    height: 90%;
+    padding: 1em;
+    overflow-y: scroll;
+  }
+
+  .chat {
+    display: flex;
+    // align-items: center;
+    margin: 0.5em;
+
+    div {
+      position: relative;
+      padding: 0.5em 1.7em 1.1em 1em;
+    }
+
+    small {
+      position: absolute;
+      font-size: x-small;
+      letter-spacing: 0.3px;
+      right: 1em;
+      bottom: 0.2em;
+    }
+  }
+
+  .chat-me {
+    div {
+      background-color: #7c62a9;
+      color: white;
+      border-radius: 0 13px 13px 13px;
+    }
+  }
+
+  .chat-other {
+    flex-direction: row-reverse;
+
+    svg {
+      margin: 0 0 0 0.5em;
+    }
+
+    div {
+      background-color: #b1a3e1;
+      color: white;
+      border-radius: 13px 0 13px 13px;
     }
   }
 }

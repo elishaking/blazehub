@@ -267,7 +267,7 @@ class Chat extends Component {
               </div>
 
               {
-                chatTitle != "BlazeHub" && (
+                chatTitle !== "BlazeHub" && (
                   <div className="chat-input">
                     <input type="text" name="messageText" placeholder="Type a message" onChange={this.onChange} onKeyPress={this.sendMessage} />
                     {/* <button>

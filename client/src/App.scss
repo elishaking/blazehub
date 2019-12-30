@@ -718,13 +718,6 @@ button:focus {
   flex-direction: column;
 }
 
-.chat-messages {
-  flex: 1;
-  // background-color: #f2eff6;
-  height: 90%;
-  overflow-y: scroll;
-}
-
 .chat-input {
   padding: 1em 2em;
   border-radius: 0 0 5px 5px;
@@ -734,55 +727,6 @@ button:focus {
   width: 100%;
   border-radius: 100px;
   border: none;
-}
-
-.chat {
-  display: flex;
-  // align-items: center;
-  margin: 2em 1em;
-
-  div {
-    position: relative;
-    padding: 0.5em 1.7em 1.1em 1.7em;
-  }
-
-  small {
-    letter-spacing: 0.3px;
-  }
-}
-
-.chat-me {
-  div {
-    background-color: #676767;
-    color: white;
-    border-radius: 0 10px 10px 10px;
-  }
-
-  small {
-    position: absolute;
-    right: 1em;
-    bottom: 0.2em;
-  }
-}
-
-.chat-other {
-  flex-direction: row-reverse;
-
-  svg {
-    margin: 0 0 0 0.5em;
-  }
-
-  div {
-    background-color: #b1a3e1;
-    color: white;
-    border-radius: 10px 0 10px 10px;
-  }
-
-  small {
-    position: absolute;
-    right: 1em;
-    bottom: 0.2em;
-  }
 }
 
 .friends {
