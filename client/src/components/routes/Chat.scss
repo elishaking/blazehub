@@ -75,7 +75,7 @@
 
     div {
       position: relative;
-      padding: 0.5em 1.7em 1.1em 1em;
+      // padding: 0.5em 1.7em 1.1em 1em;
 
       p {
         margin-bottom: 0.3em;
@@ -96,6 +96,7 @@
       background-color: #7c62a9;
       color: white;
       border-radius: 0 1em 1em 1em;
+      padding: 0.5em 2em 1.1em 1em;
     }
   }
 
@@ -110,6 +111,7 @@
       background-color: #b1a3e1;
       color: white;
       border-radius: 1em 0 1em 1em;
+      padding: 0.5em 1em 1.1em 2em;
     }
   }
 }
