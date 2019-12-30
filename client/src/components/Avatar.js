@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Avatar({ avatar }) {
+export default function Avatar({ avatar, marginRight = "1em", marginLeft = "0" }) {
   return (
     <img
       src={avatar}
@@ -11,7 +11,8 @@ export default function Avatar({ avatar }) {
         objectFit: "cover",
         border: "1px solid #a491c3",
         borderRadius: "100px",
-        marginRight: "1em"
+        marginRight,
+        marginLeft
       }}
     />
   )

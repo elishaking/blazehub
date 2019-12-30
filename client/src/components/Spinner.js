@@ -13,8 +13,8 @@ export default function Spinner({ full = true, padding = true }) {
       <svg className="spinner" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 595.44 595.44">
         <defs>
           <linearGradient id="linear-gradient" x1="0.646" y1="0.068" x2="0.96" y2="0.811" gradientUnits="objectBoundingBox">
-            <stop offset="0" stop-color="#7c62a9" />
-            <stop offset="1" stop-color="#ede0ff" />
+            <stop offset="0" stopColor="#7c62a9" />
+            <stop offset="1" stopColor="#ede0ff" />
           </linearGradient>
         </defs>
         <g id="Group_1" data-name="Group 1" transform="translate(-202.28 -202.28)">
