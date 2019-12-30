@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle, faComments, faThumbsUp, faBookmark, faTrash } from '@fortawesome/free-solid-svg-icons';
 import Spinner from './Spinner';
+import Avatar from './Avatar';
 
 class Post extends Component {
   beforeMountStyle = {
@@ -30,6 +31,7 @@ class Post extends Component {
       commentText: '',
       transitionStyle: this.beforeMountStyle,
       isBookmarked: false,
+      postUserImage: '',
       loadingImage: props.post.imageUrl,
       postImage: '',
       viewImage: false
@@ -42,7 +44,12 @@ class Post extends Component {
     //     post: updatedPostSnapShot.val()
     //   });
     // });
-    const { bookmarkRef, postRef, postImageRef } = this.props;
+    const { bookmarkRef, postRef, profilePhotosRef, postImageRef } = this.props;
+
+    profilePhotosRef.child(this.state.post.user.id).child("avatar-small")
+      .once("value", (postUserImageSnapShot) => {
+        this.setState({ postUserImage: postUserImageSnapShot.val() });
+      });
 
     if (this.state.loadingImage) {
       postImageRef.once("value", (postImageSnapShot) => {
@@ -212,13 +219,15 @@ class Post extends Component {
   }
 
   render() {
-    const { post, liked, loadingImage, postImage, viewImage, showComments, transitionStyle, isBookmarked } = this.state;
+    const { post, liked, loadingImage, postUserImage, postImage, viewImage, showComments, transitionStyle, isBookmarked } = this.state;
     return (
       <div>
         <div className="post" style={transitionStyle}>
           <header>
             <div className="user-post">
-              <FontAwesomeIcon icon={faUserCircle} />
+              {
+                postUserImage ? (<Avatar avatar={postUserImage} />) : (<FontAwesomeIcon icon={faUserCircle} />)
+              }
               <div>
                 {/* {
                 post.user.username ? (

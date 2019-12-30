@@ -18,6 +18,7 @@ export default class Posts extends Component {
     const { forProfile, otherUserId } = this.props;
 
     this.postsRef = app.database().ref('posts');
+    this.profilePhotosRef = app.database().ref('profile-photos');
     this.postImagesRef = app.database().ref('post-images');
     this.bookmarksRef = app.database().ref("bookmarks").child(this.user.id);
 
@@ -98,6 +99,7 @@ export default class Posts extends Component {
               key={post.key}
               postRef={this.postsRef.child(post.key)}
               postImageRef={this.postImagesRef.child(post.key)}
+              profilePhotosRef={this.profilePhotosRef}
               bookmarkRef={this.bookmarksRef.child(post.key)}
               notificationsRef={app.database().ref('notifications')}
               post={post}
