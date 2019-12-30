@@ -46,6 +46,10 @@ class Post extends Component {
     // });
     const { bookmarkRef, postRef, profilePhotosRef, postImageRef } = this.props;
 
+    // profilesRef.child(this.state.post.user.id).child("username").once("value", (sn) => {
+    //   postRef.child("user").child("username").set(sn.val());
+    // });
+
     profilePhotosRef.child(this.state.post.user.id).child("avatar-small")
       .once("value", (postUserImageSnapShot) => {
         this.setState({ postUserImage: postUserImageSnapShot.val() });
