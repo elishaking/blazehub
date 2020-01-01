@@ -255,7 +255,13 @@ class Chat extends Component {
             <header>
               <div className="icon-text">
                 {/* <FontAwesomeIcon icon={faUserCircle} /> */}
-                {friends[currentFriendKey] && friends[currentFriendKey].avatar ? <Avatar avatar={friends[currentFriendKey].avatar} /> : <FontAwesomeIcon icon={faUserCircle} className="icon" />}
+                {
+                  friends[currentFriendKey] && friends[currentFriendKey].avatar ? (
+                    <Avatar
+                      avatar={friends[currentFriendKey].avatar}
+                      marginRight="0.5em" />
+                  ) : <FontAwesomeIcon icon={faUserCircle} className="icon" />
+                }
                 <h3>{chatTitle}</h3>
               </div>
 
@@ -284,7 +290,11 @@ class Chat extends Component {
                             marginTop: prevMessageKey &&
                               chats[currentChatKey][prevMessageKey].user.key !== message.user.key ? "1.3em" : "0.5em"
                           }}>
-                          {avatar ? <Avatar avatar={avatar} /> : <FontAwesomeIcon icon={faUserCircle} className="icon" />}
+                          {
+                            avatar ? (
+                              <Avatar avatar={avatar} />
+                            ) : <FontAwesomeIcon icon={faUserCircle} className="icon" />
+                          }
                           <div>
                             <p>{message.text}</p>
                             <small>{time}</small>

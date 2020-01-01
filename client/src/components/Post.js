@@ -230,7 +230,11 @@ class Post extends Component {
           <header>
             <div className="user-post">
               {
-                postUserImage ? (<Avatar avatar={postUserImage} />) : (<FontAwesomeIcon icon={faUserCircle} />)
+                postUserImage ? (
+                  <Avatar
+                    avatar={postUserImage}
+                    marginRight="0.5em" />
+                ) : (<FontAwesomeIcon icon={faUserCircle} />)
               }
               <div>
                 {/* {
