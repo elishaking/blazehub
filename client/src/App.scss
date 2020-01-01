@@ -411,9 +411,13 @@ select {
   padding: 0.3em 2em 1em 2.5em;
 }
 
-.friend-container hr {
-  border: 1px solid #f2eff6;
-  margin: 1em 0;
+.friend-container {
+  padding: 1em 2em 0 2em;
+
+  hr {
+    border: 0.5px solid #f2eff6;
+    margin: 1em 0;
+  }
 }
 
 .friend-main,
@@ -424,7 +428,21 @@ select {
 
 .friend-main {
   justify-content: space-between;
-  margin-bottom: 2em;
+}
+
+.friends-main {
+  border: 1px solid #ede0ff;
+  border-radius: 5px;
+  justify-content: space-between;
+  padding: 1em 0 2em 0;
+
+  svg {
+    margin-right: 0.5em;
+  }
+
+  .btn svg {
+    color: white;
+  }
 }
 
 .friend-inner {
@@ -433,14 +451,6 @@ select {
 
 .friend-inner svg {
   font-size: 2.7em;
-}
-
-.friends-main svg {
-  margin-right: 0.5em;
-}
-
-.friends-main .btn svg {
-  color: white;
 }
 
 button {
@@ -885,6 +895,10 @@ h3 {
   .post-action {
     margin-right: 1em;
   }
+
+  // .friends-main {
+  //   margin-bottom: 3em;
+  // }
 }
 
 @media (max-width: 470px) {

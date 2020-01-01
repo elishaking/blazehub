@@ -116,7 +116,7 @@ class FindFriends extends Component {
                       <h3 style={{ fontWeight: 500 }}>No friends to add</h3>
                     </div>
                   ) :
-                    userKeys.map((userKey) => {
+                    userKeys.map((userKey, idx, arr) => {
                       const user = users[userKey];
                       return (
                         <div className="friend-container" key={userKey}>
@@ -137,7 +137,7 @@ class FindFriends extends Component {
                               )
                             }
                           </div>
-                          <hr />
+                          {idx !== arr.length - 1 && (<hr />)}
                         </div>
                       );
                     })

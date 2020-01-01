@@ -344,7 +344,7 @@ class Chat extends Component {
             {loading ? (<Spinner />) :
               friendKeys.map((friendKey) => {
                 const friend = friends[friendKey];
-                console.log(friend);
+                // console.log(friend);
 
                 return (
                   <div key={friendKey}>
