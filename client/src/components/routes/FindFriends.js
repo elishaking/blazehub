@@ -1,13 +1,19 @@
 //@ts-check
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import app from 'firebase/app';
+import 'firebase/database';
 import axios from 'axios';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+
 import { getFriends, addFriend } from '../../redux_actions/friendActions';
+
 import MainNav from '../nav/MainNav';
 import AuthNav from '../nav/AuthNav';
 import Spinner from '../Spinner';
+import Avatar from '../Avatar';
 
 class FindFriends extends Component {
   constructor(props) {
@@ -45,11 +51,26 @@ class FindFriends extends Component {
 
   componentWillReceiveProps(nextProps) {
     const friendKeys = Object.keys(nextProps.friends);
-    let { users } = this.state
+    let { users } = this.state;
+
     Object.keys(users).forEach((userKey) => {
       if (friendKeys.indexOf(userKey) != -1) delete users[userKey];
     });
     // if (Object.keys(users).length == 2) users = {}
+
+    const userAvatarPromises = Object.keys(users).map(
+      (userKey) => app.database().ref('profile-photos').child(userKey).child('avatar-small')
+        .once("value")
+    );
+
+    Promise.all(userAvatarPromises).then((userAvatarSnapShots) => {
+      userAvatarSnapShots.forEach((userAvatarSnapShot) => {
+        if (userAvatarSnapShot.exists()) {
+          users[userAvatarSnapShot.ref.parent.key].avatar = userAvatarSnapShot.val();
+        }
+      });
+    });
+
     this.setState({
       users
     });
@@ -101,7 +122,13 @@ class FindFriends extends Component {
                         <div className="friend-container" key={userKey}>
                           <div className="friend-main">
                             <div className="friend-inner">
-                              <FontAwesomeIcon icon={faUserCircle} />
+                              {
+                                user.avatar ? (
+                                  <Avatar
+                                    avatar={user.avatar}
+                                    marginRight="1.5em" />
+                                ) : <FontAwesomeIcon icon={faUserCircle} className="icon" />
+                              }
                               <p>{user.firstName} {user.lastName}</p>
                             </div>
                             {
