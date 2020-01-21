@@ -26,10 +26,10 @@ server.get("/", (req, res) => {
 server.use(passport.initialize());
 
 //Passport Config
-const passportConfig = require('./config/passport');
+const passportConfig = require('./src/config/passport');
 passportConfig(passport);
 
-const users = require('./routes/api/users');
+const users = require('./src/routes/api/users');
 
 server.use("/api/users", users);
 
