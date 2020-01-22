@@ -141,7 +141,19 @@ const signinUser = (req, res) => {
   });
 };
 
+/**
+ * Get all Users
+ * @param {express.Request} req 
+ * @param {express.Response} res 
+ */
+const getUsers = (req, res) => {
+  dbRef.child('users').limitToLast(30).once("value", (usersSnapshot) => res.json({
+    users: usersSnapshot.val()
+  }));
+};
+
 module.exports = {
   signupUser,
-  signinUser
+  signinUser,
+  getUsers
 };

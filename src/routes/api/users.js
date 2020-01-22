@@ -15,7 +15,7 @@ const firebaseApp = app.initializeApp(firebaseConfig);
 
 const dbRef = firebaseApp.database().ref();
 
-const { signupUser, signinUser } = require('../../controllers/users');
+const { signupUser, signinUser, getUsers } = require('../../controllers/users');
 
 /**
  * @route POST api/users/signup
@@ -36,11 +36,7 @@ router.post('/signin', signinUser);
  * @description Send All users
  * @access Private
  */
-router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
-  dbRef.child('users').limitToLast(30).once("value", (usersSnapshot) => res.json({
-    users: usersSnapshot.val()
-  }));
-});
+router.get('/', passport.authenticate('jwt', { session: false }), getUsers);
 
 //@route GET /api/users/token
 //@description Send Auth token
