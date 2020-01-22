@@ -49,7 +49,25 @@ const addFriend = (req, res) => {
   });
 };
 
+/**
+ * Invite friend(s) to BlazeHub
+ * @param {express.Request} req 
+ * @param {express.Response} res 
+ */
+const inviteFriends = async (req, res) => {
+  const invitees = req.body;
+  if (invitees[0].email == '') return res.status(400).json({ success: false });
+
+  let success = true;
+  for (let i = 0; i < invitees.length; i++) {
+    success = await sendInviteMail(req.user, invitees[i].email) && success;
+  }
+
+  res.json({ success });
+}
+
 module.exports = {
   getFriends,
-  addFriend
+  addFriend,
+  inviteFriends
 };
