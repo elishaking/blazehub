@@ -4,6 +4,8 @@ require('firebase/database');
 
 const sendInviteMail = require('../utils/email');
 
+const { fetchFriends } = require('../services/friends');
+
 const dbRef = app.database().ref();
 
 /**
@@ -12,9 +14,8 @@ const dbRef = app.database().ref();
  * @param {express.Response} res 
  */
 const getFriends = (req, res) => {
-  dbRef.child('friends').child(req.body.userKey).once('value', (friendsSnapShot) => {
-    res.json({ friends: friendsSnapShot.val() });
-  });
+  fetchFriends(req.body.userKey)
+    .then();
 };
 
 /**

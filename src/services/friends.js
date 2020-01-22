@@ -8,6 +8,7 @@ const dbRef = app.database().ref();
 /**
  * Fetch friends from firebase
  * @param {string} userKey 
+ * @returns {Promise<{success: boolean, statusCode: number, message: string, data: any}>}
  */
 const fetchFriends = (userKey) => new Promise((resolve) => {
   dbRef.child('friends').child(userKey).once('value')
