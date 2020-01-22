@@ -1,5 +1,6 @@
 const isEmpty = require('../../src/validation/isEmpty');
 const validateSignupData = require('../../src/validation/signup');
+const ErrorMessage = require('../../src/utils/errorMessage');
 
 describe('Validation Unit Tests', () => {
   it('isEmpty() - should check if object is empty', () => {
@@ -29,5 +30,9 @@ describe('Validation Unit Tests', () => {
     const validationResult = validateSignupData(data);
 
     expect(validationResult.isValid).toBe(false);
+    expect(validationResult.errors.email).toEqual(ErrorMessage.RequireError('email'));
+    expect(validationResult.errors.firstName).toEqual(ErrorMessage.RequireError('first name'));
+    expect(validationResult.errors.lastName).toEqual(ErrorMessage.RequireError('last name'));
+    expect(validationResult.errors.password).toEqual(ErrorMessage.RequireError('password'));
   });
 });
