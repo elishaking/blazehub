@@ -19,6 +19,20 @@ describe('Validation Unit Tests', () => {
     expect(isEmpty(new Array(10).fill(10))).toBe(false);
   });
 
+  it('validateSignupData() - should validate data as true', () => {
+    const data = {
+      firstName: 'King',
+      lastName: 'Elisha',
+      email: 'test@mail.com',
+      password: '123409876',
+    };
+
+    const validationResult = validateSignupData(data);
+
+    expect(validationResult.isValid).toBe(true);
+    expect(validationResult.errors).toEqual({});
+  });
+
   it('validateSignupData() - should validate empty data fields as inValid', () => {
     const data = {
       firstName: '',
