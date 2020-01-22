@@ -1,5 +1,6 @@
 const Validator = require('validator').default;
 const isEmpty = require('./isEmpty');
+const ErrorMessage = require('../utils/errorMessage');
 
 const validateSigninData = (data) => {
   let errors = {};
@@ -8,15 +9,15 @@ const validateSigninData = (data) => {
   data.password = isEmpty(data.password) ? '' : data.password;
 
   if (Validator.isEmpty(data.email)) {
-    errors.signinEmail = "Your email is required"
+    errors.signinEmail = ErrorMessage.RequireError('email')
   } else if (!Validator.isEmail(data.email)) {
-    errors.signinEmail = "Please enter a valid email"
+    errors.signinEmail = ErrorMessage.InvalidError('email');
   }
 
   if (Validator.isEmpty(data.password)) {
-    errors.signinPassword = 'Your password is required';
+    errors.signinPassword = ErrorMessage.RequireError('password');
   } else if (!Validator.isLength(data.password, { min: 4, max: 30 })) {
-    errors.signinPassword = 'Your password must be between 4 and 30 characters';
+    errors.signinPassword = ErrorMessage.LengthError('password', 4, 30);
   }
 
   return {
