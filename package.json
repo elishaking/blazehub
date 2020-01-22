@@ -4,7 +4,7 @@
   "description": "A platform for connecting people: A place to chat, follow interesting conversions and be a part of a growing community",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest test/",
     "server": "nodemon server.js",
     "client": "cd client && yarn start",
     "dev": "concurrently \"yarn server\" \"yarn client\""
@@ -36,5 +36,7 @@
     "passport-jwt": "^4.0.0",
     "validator": "^11.1.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "jest": "25.1.0"
+  }
 }
