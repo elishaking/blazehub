@@ -1,3 +1,5 @@
+const express = require('express');
+
 const ResponseUtil = {
   /**
    * @param {boolean} success
@@ -10,7 +12,16 @@ const ResponseUtil = {
     statusCode,
     message,
     data
-  })
+  }),
+
+  /**
+   * @param {express.Response} res
+   * @param {{success: boolean, statusCode: number, message: string, data: any}} responseData
+   */
+  sendResponse: (res, responseData) => {
+    res.status(responseData.statusCode)
+      .json(responseData);
+  }
 };
 
 module.exports = ResponseUtil;
