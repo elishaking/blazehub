@@ -5,7 +5,7 @@ const passport = require('passport');
 const app = require('firebase/app');
 require('firebase/database');
 
-const sendInviteMail = require('./email');
+const sendInviteMail = require('../../utils/email');
 
 const validateSignupData = require('../../validation/signup');
 const validateSigninData = require('../../validation/signin');
