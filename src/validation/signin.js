@@ -8,7 +8,7 @@ const validateSigninData = (data) => {
   data.email = isEmpty(data.email) ? '' : data.email;
   data.password = isEmpty(data.password) ? '' : data.password;
 
-  if (Validator.isEmpty(data.email)) {
+  if (data.email === '') {
     errors.signinEmail = ErrorMessage.RequireError('email')
   } else if (typeof data.email !== 'string') {
     errors.signinEmail = ErrorMessage.InvalidError('email');
@@ -16,7 +16,7 @@ const validateSigninData = (data) => {
     errors.signinEmail = ErrorMessage.InvalidError('email');
   }
 
-  if (Validator.isEmpty(data.password)) {
+  if (data.password === '') {
     errors.signinPassword = ErrorMessage.RequireError('password');
   } else if (typeof data.password !== 'string') {
     errors.signinPassword = ErrorMessage.InvalidError('password');

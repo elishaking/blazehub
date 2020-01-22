@@ -91,4 +91,17 @@ describe('Validation Unit Tests', () => {
     expect(validationResult.isValid).toBe(true);
     expect(validationResult.errors).toEqual({});
   });
+
+  it('validateSigninData() - should validate empty data fields as inValid', () => {
+    const data = {
+      email: '',
+      password: '',
+    };
+
+    const validationResult = validateSigninData(data);
+
+    expect(validationResult.isValid).toBe(false);
+    expect(validationResult.errors.signinEmail).toEqual(ErrorMessage.RequireError('email'));
+    expect(validationResult.errors.signinPassword).toEqual(ErrorMessage.RequireError('password'));
+  });
 });
