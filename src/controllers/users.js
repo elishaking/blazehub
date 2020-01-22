@@ -75,6 +75,73 @@ const signupUser = (req, res) => {
     });
 };
 
+/**
+ * Authenticates a user and responds with a token
+ * @param {express.Request} req 
+ * @param {express.Response} res 
+ */
+const signinUser = (req, res) => {
+  const { isValid, errors } = validateSigninData(req.body);
+
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
+  const email = req.body.email;
+  const password = req.body.password;
+
+  const userKey = email.replace(/\./g, "~").replace(/@/g, "~~");
+  const userRef = dbRef.child('users').child(userKey);
+
+  userRef.once('value', (dataSnapshot) => {
+    if (!dataSnapshot.exists()) {
+      errors.signinEmail = "No user with this email, Please Sign Up";
+      return res.status(400).json(errors);
+    }
+
+    const user = dataSnapshot.val();
+    bcrypt.compare(password, user.password).then((isMatch) => {
+      if (isMatch) {
+        app.database().ref('profiles').child(userKey).child('username')
+          .once("value", (usernameSnapShot) => {
+            // JWT payload
+            const jwtPayload = {
+              id: userKey,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              email: user.email,
+              username: usernameSnapShot.val()
+            };
+
+            // Sign Token <==> encodes payload into token
+            jwt.sign(
+              jwtPayload,
+              process.env.SECRET_OR_KEY,
+              {
+                expiresIn: 3600 * 24
+              },
+              (err, token) => {
+                // dbRef.child('tokens').child(userKey).set(token, (err) => {
+                //   if (err) return console.error(err);
+
+
+                // });
+                return res.json({
+                  success: true,
+                  token: `Bearer ${token}`
+                });
+              }
+            );
+          });
+      } else {
+        errors.signinPassword = 'Password incorrect';
+        res.status(400).json(errors);
+      }
+    });
+  });
+};
+
 module.exports = {
-  signupUser
+  signupUser,
+  signinUser
 };
