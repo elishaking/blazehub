@@ -24,9 +24,11 @@ const firebaseApp = app.initializeApp(firebaseConfig);
 
 const dbRef = firebaseApp.database().ref();
 
-// @route POST api/users/signup
-// @description Register new user
-// @access Public
+/**
+ * @route POST api/users/signup
+ * @description Register new user
+ * @access Public
+ */
 router.post("/signup", (req, res) => {
   const { isValid, errors } = validateSignupData(req.body);
 
@@ -82,9 +84,11 @@ router.post("/signup", (req, res) => {
     });
 });
 
-//@route POST /api/users/signin
-//@description Authenticate user
-//@access Public
+/**
+ * @route POST /api/users/signin
+ * @description Authenticate user
+ * @access Public
+ */
 router.post('/signin', (req, res) => {
   const { isValid, errors } = validateSigninData(req.body);
 
@@ -146,9 +150,11 @@ router.post('/signin', (req, res) => {
   })
 });
 
-//@route GET /api/users/
-//@description Send All users
-//@access Private
+/**
+ * @route GET /api/users/
+ * @description Send All users
+ * @access Private
+ */
 router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
   dbRef.child('users').limitToLast(30).once("value", (usersSnapshot) => res.json({
     users: usersSnapshot.val()
@@ -167,25 +173,31 @@ router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => 
 //   });
 // });
 
-//@route GET /api/users/firebase
-//@description Send firebase credentials
-//@access Private
+/**
+ * @route GET /api/users/firebase
+ * @description Send firebase credentials
+ * @access Private
+ */
 router.get('/firebase', passport.authenticate('jwt', { session: false }), (req, res) => {
   res.json(firebaseConfig);
 });
 
-//@route POST /api/users/friends
-//@description Send all user friends
-//@access Private
+/**
+ * @route POST /api/users/friends
+ * @description Send all user friends
+ * @access Private
+ */
 router.post('/friends', passport.authenticate('jwt', { session: false }), (req, res) => {
   dbRef.child('friends').child(req.body.userKey).once('value', (friendsSnapShot) => {
     res.json({ friends: friendsSnapShot.val() });
   });
 });
 
-//@route POST /api/users/friends/add
-//@description Add a new friend
-//@access Private
+/**
+ * @route POST /api/users/friends/add
+ * @description Add a new friend
+ * @access Private
+ */
 router.post('/friends/add', passport.authenticate('jwt', { session: false }), (req, res) => {
   const { userKey, friendKey, friend } = req.body;
 
@@ -209,9 +221,11 @@ router.post('/friends/add', passport.authenticate('jwt', { session: false }), (r
   })
 });
 
-//@route POST /api/users/friends/invite
-//@description Invite friends to Blazehub
-//@access Private
+/**
+ * @route POST /api/users/friends/invite
+ * @description Invite friends to Blazehub
+ * @access Private
+ */
 router.post('/friends/invite', passport.authenticate('jwt', { session: false }), async (req, res) => {
   const invitees = req.body;
   if (invitees[0].email == '') return res.status(400).json({ success: false });
