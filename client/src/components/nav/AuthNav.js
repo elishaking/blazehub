@@ -1,14 +1,49 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faUserCircle } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faUserCircle, faBell } from '@fortawesome/free-solid-svg-icons';
 import { signoutUser } from '../../redux_actions/authActions';
+import Avatar from '../Avatar';
 
 class AuthNav extends Component {
+  state = {
+    notifications: []
+  }
+
+  componentDidMount() {
+    // this.getNotifications();
+  }
+
+  getNotifications = () => {
+    console.log(this.props.hello)
+    this.props.notificationsRef.child(this.props.user.id).orderByChild("date").on('child_added', (newNotificationSnapShot) => {
+      const newNotification = {
+        key: newNotificationSnapShot.key,
+        ...newNotificationSnapShot.val()
+      };
+
+      // set date
+      newNotification.date = 1e+15 - newNotification.date;
+
+      if (this.state.loading) this.setState({ loading: false });
+
+      const { notifications } = this.state;
+      newNotification.date > this.mountedOn ? notifications.unshift(newNotification) : notifications.push(newNotification);
+      this.setState({
+        notifications
+      });
+    });
+  }
+
   signOut = () => this.props.signoutUser(this.props.history);
 
+  openNotifications = () => {
+
+  }
+
   render() {
-    const { user, showSearch, hasProfilePic = false } = this.props;
+    const { notifications } = this.state;
+    const { user, showSearch, avatar = "" } = this.props;
     const { firstName, lastName } = user;
 
     return (
@@ -35,8 +70,19 @@ class AuthNav extends Component {
           }
 
           <div className="auth-nav-right">
-            {hasProfilePic ? <img src="" alt={firstName} srcSet="" /> : <FontAwesomeIcon icon={faUserCircle} className="icon" />} &nbsp;&nbsp;&nbsp;
-              <span>{`${firstName} ${lastName}`}</span>
+            {avatar ? <Avatar avatar={avatar} /> : <FontAwesomeIcon icon={faUserCircle} className="icon" />} &nbsp;&nbsp;&nbsp;
+              {/* <span>{`${firstName} ${lastName}`}</span> */}
+            <span>{`${firstName}`}</span>
+
+            <div id="notifications" onClick={this.openNotifications}>
+              <FontAwesomeIcon icon={faBell} className="icon" />
+              {notifications.length > 0 && (
+                <div>
+                  <small>{notifications.length}</small>
+                </div>
+              )}
+            </div>
+
             <input type="button" value="Sign Out" className="btn-input" onClick={this.signOut} />
           </div>
         </nav>

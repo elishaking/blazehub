@@ -68,7 +68,13 @@ router.post("/signup", (req, res) => {
                 }
               }, (err) => {
                 if (err) return console.error(err);
-                res.json({ success: true });
+
+                dbRef.child('profiles').child(userKey)
+                  .child('username').set(`${newUser.firstName.replace(/ /g, "")}.${newUser.lastName.replace(/ /g, "")}`.toLowerCase(), (err) => {
+                    if (err) return console.log(err);
+
+                    res.json({ success: true });
+                  });
               });
             });
         });
@@ -101,33 +107,37 @@ router.post('/signin', (req, res) => {
     const user = dataSnapshot.val();
     bcrypt.compare(password, user.password).then((isMatch) => {
       if (isMatch) {
-        // JWT payload
-        const jwtPayload = {
-          id: userKey,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          email: user.email
-        };
+        app.database().ref('profiles').child(userKey).child('username')
+          .once("value", (usernameSnapShot) => {
+            // JWT payload
+            const jwtPayload = {
+              id: userKey,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              email: user.email,
+              username: usernameSnapShot.val()
+            };
 
-        // Sign Token <==> encodes payload into token
-        jwt.sign(
-          jwtPayload,
-          process.env.SECRET_OR_KEY,
-          {
-            expiresIn: 3600 * 24
-          },
-          (err, token) => {
-            // dbRef.child('tokens').child(userKey).set(token, (err) => {
-            //   if (err) return console.error(err);
+            // Sign Token <==> encodes payload into token
+            jwt.sign(
+              jwtPayload,
+              process.env.SECRET_OR_KEY,
+              {
+                expiresIn: 3600 * 24
+              },
+              (err, token) => {
+                // dbRef.child('tokens').child(userKey).set(token, (err) => {
+                //   if (err) return console.error(err);
 
 
-            // });
-            return res.json({
-              success: true,
-              token: `Bearer ${token}`
-            });
-          }
-        )
+                // });
+                return res.json({
+                  success: true,
+                  token: `Bearer ${token}`
+                });
+              }
+            );
+          });
       } else {
         errors.signinPassword = 'Password incorrect';
         res.status(400).json(errors);

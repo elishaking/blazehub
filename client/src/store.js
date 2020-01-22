@@ -5,7 +5,7 @@ import rootReducer from './redux_reducers';
 const initialGlobalState = {};
 const middleware = [thunk];
 
-const store = process.env.NODE_ENV == "development" ? createStore(
+const store = process.env.NODE_ENV == "development" && window.__REDUX_DEVTOOLS_EXTENSION__ ? createStore(
   rootReducer,
   initialGlobalState,
   compose(

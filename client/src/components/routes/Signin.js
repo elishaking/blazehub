@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { signinUser } from '../../redux_actions/authActions';
 import Spinner from '../Spinner';
-import TextFormInput from '../form/TextFormInput';
+import { TextFormInput } from '../form/TextFormInput';
 
 class Signin extends Component {
   constructor(props) {
@@ -60,7 +60,7 @@ class Signin extends Component {
       password: this.state.password
     }
     this.props.signinUser(userData);
-  }
+  };
 
   render() {
     const { errors } = this.state;

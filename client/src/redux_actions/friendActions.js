@@ -1,4 +1,6 @@
 import axios from 'axios';
+import app from 'firebase/app';
+import 'firebase/database';
 import { SET_FRIENDS, ADD_FRIEND } from './types';
 
 // ===ACTIONS===
@@ -20,7 +22,26 @@ export const setFriend = (friendData) => ({
 // @description get user friends
 export const getFriends = (userKey) => (dispatch) => {
   axios.post('/api/users/friends', { userKey })
-    .then((res) => dispatch(setFriends(res.data.friends)))
+    .then((res) => {
+      const friends = res.data.friends;
+      dispatch(setFriends(friends));
+
+      const friendsWithAvatars = {};
+      const avatarPromises = Object.keys(friends).map((friendKey) => app.database().ref("profile-photos").child(friendKey)
+        .child("avatar-small").once("value"));
+
+      Promise.all(avatarPromises).then((avatarSnapShots) => {
+        avatarSnapShots.forEach((avatarSnapShot) => {
+          const friendKey = avatarSnapShot.ref.parent.key;
+          friendsWithAvatars[friendKey] = {
+            name: friends[friendKey].name,
+            avatar: avatarSnapShot.exists() ? avatarSnapShot.val() : ""
+          };
+        });
+
+        dispatch(setFriends(friendsWithAvatars));
+      });
+    })
     .catch((err) => console.error(err));
 };
 

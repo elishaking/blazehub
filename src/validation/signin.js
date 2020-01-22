@@ -1,4 +1,4 @@
-const Validator = require('validator');
+const Validator = require('validator').default;
 const isEmpty = require('./isEmpty');
 
 const validateSigninData = (data) => {

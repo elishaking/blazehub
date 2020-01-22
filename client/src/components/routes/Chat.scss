@@ -1,0 +1,141 @@
+.chat-space {
+  border: 1px solid #ede0ff;
+  border-radius: 5px;
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 5px 5px 0 0;
+    padding: 1em 2em;
+    background-color: #f2eff6;
+
+    svg,
+    img {
+      font-size: 2.7em;
+      margin-right: 0.5em;
+    }
+
+    .icon-text {
+      display: flex;
+      align-items: center;
+      color: #7c62a9;
+    }
+  }
+
+  .burger {
+    display: none;
+    cursor: pointer;
+    z-index: 10;
+
+    div {
+      height: 2px;
+      width: 23px;
+      background: #7c62a9;
+      border-radius: 100px;
+      margin-bottom: 4px;
+      transition: 0.3s ease-in-out;
+    }
+
+    div:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  #burger-slided {
+    // div {
+    //   background: #7c62a9;
+    // }
+
+    .line1 {
+      transform: rotate(-45deg) translate(-3px, 6px);
+    }
+
+    .line2 {
+      opacity: 0;
+    }
+
+    .line3 {
+      transform: rotate(45deg) translate(-3px, -6px);
+    }
+  }
+
+  .chat-messages {
+    flex: 1;
+    // background-color: #f2eff6;
+    height: 90%;
+    padding: 1em;
+    overflow-y: scroll;
+  }
+
+  .chat {
+    display: flex;
+    // align-items: center;
+    margin: 0.5em;
+
+    div {
+      position: relative;
+      // padding: 0.5em 1.7em 1.1em 1em;
+
+      p {
+        margin-bottom: 0.3em;
+      }
+    }
+
+    small {
+      position: absolute;
+      font-size: 0.7em;
+      letter-spacing: 0.3px;
+      right: 1em;
+      bottom: 0.3em;
+    }
+  }
+
+  .chat-me {
+    div {
+      background-color: #7c62a9;
+      color: white;
+      border-radius: 0 1em 1em 1em;
+      padding: 0.5em 2em 1.1em 1em;
+    }
+  }
+
+  .chat-other {
+    flex-direction: row-reverse;
+
+    svg {
+      margin: 0 0 0 0.5em;
+    }
+
+    div {
+      background-color: #b1a3e1;
+      color: white;
+      border-radius: 1em 0 1em 1em;
+      padding: 0.5em 1em 1.1em 2em;
+    }
+  }
+}
+
+@media (max-width: 760px) {
+  .chat-space {
+    margin: 0;
+
+    .burger {
+      display: block;
+    }
+
+    .chats {
+      height: 63vh;
+    }
+  }
+
+  .friends {
+    display: none;
+    position: absolute;
+    width: 90%;
+    height: 100%;
+    transform: translateX(130%);
+    transition: 0.3s ease-in-out;
+    background-color: #f2eff6;
+  }
+}

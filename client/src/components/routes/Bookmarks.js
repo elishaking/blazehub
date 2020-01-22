@@ -24,14 +24,19 @@ class Bookmarks extends Component {
     this.db = app.database();
 
     this.db.ref('bookmarks').child(this.props.auth.user.id).orderByValue().equalTo(true).once("value", (bookmarksSnapShot) => {
-      console.log(bookmarksSnapShot.val());
+      // console.log(bookmarksSnapShot.val());
       if (bookmarksSnapShot.exists()) {
         const bookmarks = bookmarksSnapShot.val();
         const bookmarkKeys = Object.keys(bookmarks);
-        Promise.all(bookmarkKeys.map((bookmarkKey) => this.db.ref('posts').child(bookmarkKey).once('value'))).then((bookmarkedPostSnapshots) => {
+        Promise.all(
+          bookmarkKeys.map(
+            (_, i, bookmarkKeys) => this.db.ref('posts')
+              .child(bookmarkKeys[bookmarkKeys.length - i - 1]).once('value')
+          )
+        ).then((bookmarkedPostSnapshots) => {
           let { bookmarkedPosts } = this.state;
           bookmarkedPostSnapshots.forEach((bookmarkedPostSnapshot) => {
-            bookmarkedPosts.unshift({
+            bookmarkedPosts.push({
               key: bookmarkedPostSnapshot.key,
               ...bookmarkedPostSnapshot.val()
             });
@@ -71,6 +76,7 @@ class Bookmarks extends Component {
                 <Post
                   key={bookmarkedPost.key}
                   postRef={this.db.ref('posts').child(bookmarkedPost.key)}
+                  postImageRef={this.db.ref('post-images').child(bookmarkedPost.key)}
                   bookmarkRef={this.db.ref('bookmarks').child(bookmarkedPost.key)}
                   post={bookmarkedPost}
                   user={user} />

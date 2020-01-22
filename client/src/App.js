@@ -86,6 +86,10 @@ class App extends Component {
           <Switch>
             <PrivateRoute exact path="/invite" component={InviteFriends} />
           </Switch>
+
+          <Switch>
+            <PrivateRoute exact path="/p/:username" component={Profile} />
+          </Switch>
         </Router>
       </Provider>
     )

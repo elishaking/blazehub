@@ -3,11 +3,11 @@ import { connect } from 'react-redux';
 
 import { signinUser, signupUser } from '../../redux_actions/authActions';
 import Spinner from '../Spinner';
-import TextFormInput from '../form/TextFormInput';
+import { TextFormInput } from '../form/TextFormInput';
 
 class Landing extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       method: "POST",
       navLogo: "logo.svg",
@@ -119,7 +119,7 @@ class Landing extends Component {
 
   render() {
     const { errors } = this.state;
-    console.log(errors);
+    // console.log(errors);
 
     return (
       <div className="container landing-bg">
