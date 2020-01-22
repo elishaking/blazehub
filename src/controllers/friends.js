@@ -5,6 +5,7 @@ require('firebase/database');
 const sendInviteMail = require('../utils/email');
 
 const { fetchFriends } = require('../services/friends');
+const ResponseUtil = require('../utils/response');
 
 const dbRef = app.database().ref();
 
@@ -15,7 +16,10 @@ const dbRef = app.database().ref();
  */
 const getFriends = (req, res) => {
   fetchFriends(req.body.userKey)
-    .then();
+    .then((responseData) => ResponseUtil.sendResponse(
+      res,
+      responseData
+    ));
 };
 
 /**
