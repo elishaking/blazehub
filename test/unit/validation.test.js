@@ -1,6 +1,5 @@
 const isEmpty = require('../../src/validation/isEmpty');
 const validateSignupData = require('../../src/validation/signup');
-const validateSigninData = require('../../src/validation/signin');
 
 describe('Validation Unit Tests', () => {
   it('isEmpty() - should check if object is empty', () => {
