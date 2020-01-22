@@ -1,19 +1,13 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const passport = require('passport');
 const app = require('firebase/app');
 require('firebase/database');
-
-const sendInviteMail = require('../utils/email');
 
 const validateSignupData = require('../validation/signup');
 const validateSigninData = require('../validation/signin');
 
-const firebaseConfig = require('../config/firebase');
-const firebaseApp = app.initializeApp(firebaseConfig);
-
-const dbRef = firebaseApp.database().ref();
+const dbRef = app.database().ref();
 
 /**
  * Create a new user and redirect to signin page

@@ -10,6 +10,11 @@ dotenv.config();
 
 server.use(helmet());
 
+const app = require('firebase/app');
+
+const firebaseConfig = require('./src/config/firebase');
+app.initializeApp(firebaseConfig);
+
 server.use(express.json());
 server.use(express.urlencoded({ extended: false }));
 

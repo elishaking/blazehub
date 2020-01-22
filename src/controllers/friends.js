@@ -1,14 +1,10 @@
 const express = require('express');
-const passport = require('passport');
 const app = require('firebase/app');
 require('firebase/database');
 
 const sendInviteMail = require('../utils/email');
 
-const firebaseConfig = require('../config/firebase');
-const firebaseApp = app.initializeApp(firebaseConfig);
-
-const dbRef = firebaseApp.database().ref();
+const dbRef = app.database().ref();
 
 /**
  * Get all friends
