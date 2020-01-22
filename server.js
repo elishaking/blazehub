@@ -30,8 +30,10 @@ const passportConfig = require('./src/config/passport');
 passportConfig(passport);
 
 const users = require('./src/routes/api/users');
+const friends = require('./src/routes/api/friends');
 
 server.use("/api/users", users);
+server.use("/api/friends", friends);
 
 server.listen(process.env.PORT, () => {
   console.log("Server online");
