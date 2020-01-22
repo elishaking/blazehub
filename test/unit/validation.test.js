@@ -1,5 +1,6 @@
 const isEmpty = require('../../src/validation/isEmpty');
 const validateSignupData = require('../../src/validation/signup');
+const validateSigninData = require('../../src/validation/signin');
 const ErrorMessage = require('../../src/utils/errorMessage');
 
 describe('Validation Unit Tests', () => {
@@ -77,5 +78,17 @@ describe('Validation Unit Tests', () => {
     expect(validationResult.errors.firstName).toEqual(ErrorMessage.InvalidError('first name'));
     expect(validationResult.errors.lastName).toEqual(ErrorMessage.InvalidError('last name'));
     expect(validationResult.errors.password).toEqual(ErrorMessage.InvalidError('password'));
+  });
+
+  it('validateSigninData() - should validate data as true', () => {
+    const data = {
+      email: 'test@mail.com',
+      password: '123409876',
+    };
+
+    const validationResult = validateSigninData(data);
+
+    expect(validationResult.isValid).toBe(true);
+    expect(validationResult.errors).toEqual({});
   });
 });
