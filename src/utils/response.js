@@ -3,7 +3,7 @@ const express = require('express');
 const ResponseUtil = {
   /**
    * @param {boolean} success
-   * @param {string} statusCode
+   * @param {number} statusCode
    * @param {string} message
    * @param {any} data
    */
