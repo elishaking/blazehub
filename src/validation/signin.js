@@ -10,12 +10,16 @@ const validateSigninData = (data) => {
 
   if (Validator.isEmpty(data.email)) {
     errors.signinEmail = ErrorMessage.RequireError('email')
+  } else if (typeof data.email !== 'string') {
+    errors.signinEmail = ErrorMessage.InvalidError('email');
   } else if (!Validator.isEmail(data.email)) {
     errors.signinEmail = ErrorMessage.InvalidError('email');
   }
 
   if (Validator.isEmpty(data.password)) {
     errors.signinPassword = ErrorMessage.RequireError('password');
+  } else if (typeof data.password !== 'string') {
+    errors.signinPassword = ErrorMessage.InvalidError('password');
   } else if (!Validator.isLength(data.password, { min: 4, max: 30 })) {
     errors.signinPassword = ErrorMessage.LengthError('password', 4, 30);
   }
