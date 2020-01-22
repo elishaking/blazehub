@@ -104,4 +104,27 @@ describe('Validation Unit Tests', () => {
     expect(validationResult.errors.signinEmail).toEqual(ErrorMessage.RequireError('email'));
     expect(validationResult.errors.signinPassword).toEqual(ErrorMessage.RequireError('password'));
   });
+
+  it('validateSigninData() - should validate empty data as inValid', () => {
+    const data = {};
+
+    const validationResult = validateSigninData(data);
+
+    expect(validationResult.isValid).toBe(false);
+    expect(validationResult.errors.signinEmail).toEqual(ErrorMessage.RequireError('email'));
+    expect(validationResult.errors.signinPassword).toEqual(ErrorMessage.RequireError('password'));
+  });
+
+  it('validateSigninData() - should validate invalid data as inValid', () => {
+    const data = {
+      email: { email: 'email' },
+      password: true
+    };
+
+    const validationResult = validateSigninData(data);
+
+    expect(validationResult.isValid).toBe(false);
+    expect(validationResult.errors.signinEmail).toEqual(ErrorMessage.InvalidError('email'));
+    expect(validationResult.errors.signinPassword).toEqual(ErrorMessage.InvalidError('password'));
+  });
 });
