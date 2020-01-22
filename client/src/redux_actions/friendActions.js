@@ -21,7 +21,7 @@ export const setFriend = (friendData) => ({
 // @action-type SET_FRIENDS
 // @description get user friends
 export const getFriends = (userKey) => (dispatch) => {
-  axios.post('/api/users/friends', { userKey })
+  axios.post('/api/friends', { userKey })
     .then((res) => {
       const friends = res.data.friends;
       dispatch(setFriends(friends));
@@ -48,7 +48,7 @@ export const getFriends = (userKey) => (dispatch) => {
 // @action-type ADD_FRIEND
 // @description add new friend
 export const addFriend = (userKey, friendKey, friendData) => (dispatch) => {
-  axios.post('/api/users/friends/add', {
+  axios.post('/api/friends/add', {
     userKey,
     friendKey,
     friend: friendData

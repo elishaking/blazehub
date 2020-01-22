@@ -33,7 +33,7 @@ class InviteFriends extends Component {
 
     this.setState({ loading: true });
 
-    axios.post("/api/users/friends/invite", this.state.friendEmails)
+    axios.post("/api/friends/invite", this.state.friendEmails)
       .then((res) => {
         this.setState({ loading: false, inviteSent: res.data.success });
 
