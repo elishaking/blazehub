@@ -12,8 +12,8 @@ describe('Validation Unit Tests', () => {
     expect(isEmpty(0)).toBe(false);
     expect(isEmpty('not empty')).toBe(false);
     expect(isEmpty([1])).toBe(false);
-    expect(false).toBe(false);
-    expect(true).toBe(false);
+    expect(isEmpty(false)).toBe(false);
+    expect(isEmpty(true)).toBe(false);
     expect(isEmpty(new Array(10).fill(10))).toBe(false);
   });
 });
