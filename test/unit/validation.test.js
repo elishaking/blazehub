@@ -1,4 +1,6 @@
 const isEmpty = require('../../src/validation/isEmpty');
+const validateSignupData = require('../../src/validation/signup');
+const validateSigninData = require('../../src/validation/signin');
 
 describe('Validation Unit Tests', () => {
   it('isEmpty() - should check if object is empty', () => {
@@ -15,5 +17,18 @@ describe('Validation Unit Tests', () => {
     expect(isEmpty(false)).toBe(false);
     expect(isEmpty(true)).toBe(false);
     expect(isEmpty(new Array(10).fill(10))).toBe(false);
+  });
+
+  it('validateSignupData() - should validate sign-up data', () => {
+    const data = {
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+    };
+
+    const validationResult = validateSignupData(data);
+
+    expect(validationResult.isValid).toBe(false);
   });
 });
