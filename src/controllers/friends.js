@@ -1,7 +1,5 @@
 const express = require('express');
 
-const sendInviteMail = require('../utils/email');
-
 const { fetchFriends, createFriend, sendInvites } = require('../services/friends');
 const ResponseUtil = require('../utils/response');
 
