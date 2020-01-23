@@ -12,7 +12,7 @@ const ResponseUtil = require('../utils/response');
 const dbRef = app.database().ref();
 
 /**
- * 
+ * Creates a new user
  * @param {{email: string, firstName: string, lastName: string, password: string}} userData
  */
 const createUser = (userData) => new Promise((resolve) => {
@@ -88,7 +88,7 @@ const createUser = (userData) => new Promise((resolve) => {
 });
 
 /**
- * 
+ * Authenticates existing user
  * @param {{email: string, password: string}} userData
  */
 const authenticateUser = (userData) => new Promise((resolve) => {
@@ -170,7 +170,7 @@ const authenticateUser = (userData) => new Promise((resolve) => {
 });
 
 /**
- * 
+ * Fetchs users from firebase
  */
 const fetchUsers = () => new Promise((resolve) => {
   dbRef.child('users').limitToLast(30).once("value")
