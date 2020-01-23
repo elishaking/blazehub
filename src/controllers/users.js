@@ -7,7 +7,7 @@ require('firebase/database');
 const validateSignupData = require('../validation/signup');
 const validateSigninData = require('../validation/signin');
 
-const { createUser, authenticateUser } = require('../services/users');
+const { createUser, authenticateUser, fetchUsers } = require('../services/users');
 const ResponseUtil = require('../utils/response');
 
 const dbRef = app.database().ref();
@@ -44,9 +44,11 @@ const signinUser = (req, res) => {
  * @param {express.Response} res 
  */
 const getUsers = (req, res) => {
-  dbRef.child('users').limitToLast(30).once("value", (usersSnapshot) => res.json({
-    users: usersSnapshot.val()
-  }));
+  fetchUsers()
+    .then((responseData) => ResponseUtil.sendResponse(
+      res,
+      responseData
+    ));
 };
 
 module.exports = {

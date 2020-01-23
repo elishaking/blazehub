@@ -169,7 +169,34 @@ const authenticateUser = (userData) => new Promise((resolve) => {
   });
 });
 
+/**
+ * 
+ */
+const fetchUsers = () => new Promise((resolve) => {
+  dbRef.child('users').limitToLast(30).once("value")
+    .then((usersSnapshot) => {
+      const usersExist = usersSnapshot.exists();
+      const data = usersExist ? usersSnapshot.val() : undefined;
+      resolve(ResponseUtil.createResponse(
+        true,
+        200,
+        usersExist ? "Found users" : "No users found",
+        data
+      ));
+    })
+    .catch((err) => {
+      console.log(err);
+
+      resolve(ResponseUtil.createResponse(
+        false,
+        500,
+        "Could not fetch users"
+      ));
+    });
+});
+
 module.exports = {
   createUser,
-  authenticateUser
+  authenticateUser,
+  fetchUsers
 };
