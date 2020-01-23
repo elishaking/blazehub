@@ -76,6 +76,7 @@ class Bookmarks extends Component {
                   postRef={this.db.ref('posts').child(bookmarkedPost.key)}
                   postImageRef={this.db.ref('post-images').child(bookmarkedPost.key)}
                   bookmarkRef={this.db.ref('bookmarks').child(bookmarkedPost.key)}
+                  profilePhotosRef={this.db.ref('profile-photos')}
                   post={bookmarkedPost}
                   user={user} />
               ))
