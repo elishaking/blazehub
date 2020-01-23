@@ -1,13 +1,9 @@
 const express = require('express');
-const app = require('firebase/app');
-require('firebase/database');
 
 const sendInviteMail = require('../utils/email');
 
 const { fetchFriends, createFriend } = require('../services/friends');
 const ResponseUtil = require('../utils/response');
-
-const dbRef = app.database().ref();
 
 /**
  * Get all friends
