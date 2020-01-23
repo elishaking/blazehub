@@ -29,15 +29,15 @@ SECRET_OR_KEY=<YOUR_SECRET_OR_KEY>
 - Run the following commands to install dependencies:
 
 ```
-npm i
+yarn install
 ```
 
 ```
-cd client && npm i
+cd client && yarn install
 ```
 
 - Finally, run this command in the project root to launch the project:
 
 ```
-npm run dev
+yarn dev
 ```
