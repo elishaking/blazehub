@@ -33,6 +33,43 @@ const fetchFriends = (userKey) => new Promise((resolve) => {
     });
 });
 
+/**
+ * Create a new friend in the database
+ * @param {{userKey: string, friendKey: string, friend: any, user: any}} data 
+ * @returns {Promise<{success: boolean, statusCode: number, message: string, data: any}>}
+ */
+const createFriend = (data) => new Promise((resolve) => {
+  const { userKey, friendKey, friend, user } = data;
+
+  // add new-friend to current-user's friends db
+  dbRef.child('friends').child(userKey).child(friendKey).set(friend, (err) => {
+    if (err) console.error(err);
+
+    // add current-user to new-friend's db
+    dbRef.child('friends').child(friendKey).child(userKey).set({
+      name: `${user.firstName} ${user.lastName}`
+    })
+      .then(() =>
+        resolve(ResponseUtil.createResponse(
+          true,
+          200,
+          "Friend created and added",
+          { [friendKey]: friend }
+        ))
+      )
+      .catch((err) => {
+        console.log(err);
+
+        resolve(ResponseUtil.createResponse(
+          false,
+          500,
+          "Could not create new friend"
+        ));
+      });
+  });
+});
+
 module.exports = {
-  fetchFriends
+  fetchFriends,
+  createFriend
 };
