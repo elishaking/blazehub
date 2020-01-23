@@ -28,18 +28,18 @@ class FindFriends extends Component {
   }
 
   componentDidMount() {
-    if (Object.keys(this.props.friends).length == 0) {
+    if (Object.keys(this.props.friends).length === 0) {
       this.props.getFriends(this.userKey);
     }
 
     axios.get("/api/users").then((res) => {
-      let { users } = res.data;
+      let users = res.data.data;
       delete users["blazebot"];
       delete users[this.userKey];
 
       const friendKeys = Object.keys(this.props.friends);
       Object.keys(users).forEach((userKey) => {
-        if (friendKeys.indexOf(userKey) != -1) delete users[userKey];
+        if (friendKeys.indexOf(userKey) !== -1) delete users[userKey];
       });
       // if (Object.keys(users).length == 2) users = {}
       this.setState({
@@ -54,7 +54,7 @@ class FindFriends extends Component {
     let { users } = this.state;
 
     Object.keys(users).forEach((userKey) => {
-      if (friendKeys.indexOf(userKey) != -1) delete users[userKey];
+      if (friendKeys.indexOf(userKey) !== -1) delete users[userKey];
     });
     // if (Object.keys(users).length == 2) users = {}
 
@@ -98,7 +98,6 @@ class FindFriends extends Component {
     const { users, loading } = this.state;
     const { user } = this.props.auth;
     const userKeys = Object.keys(users);
-    const hasProfilePic = false;
 
     return (
       <div className="container">
@@ -111,7 +110,7 @@ class FindFriends extends Component {
             {
               loading ? <Spinner /> :
                 (
-                  userKeys.length == 0 ? (
+                  userKeys.length === 0 ? (
                     <div style={{ textAlign: "center", padding: "1em 0" }}>
                       <h3 style={{ fontWeight: 500 }}>No friends to add</h3>
                     </div>

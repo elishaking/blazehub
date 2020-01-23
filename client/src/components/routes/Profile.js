@@ -342,7 +342,6 @@ class Profile extends Component {
   }
 
   render() {
-    const hasProfilePic = false;
     const { user } = this.props.auth;
     const { loadingAvatar, loadingCoverPhoto, avatar, coverPhoto, loadingProfile, loadingFriends, friends,
       editProfile, username, name, bio, location, website, birth, errors, loadingOtherUserId } = this.state;

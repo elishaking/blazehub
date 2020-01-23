@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import app from 'firebase/app';
 import 'firebase/database';
-import axios from 'axios';
 
 import AuthNav from '../nav/AuthNav';
 import MainNav from '../nav/MainNav';
@@ -52,7 +51,6 @@ class Bookmarks extends Component {
   }
 
   render() {
-    const hasProfilePic = false;
     const { user } = this.props.auth;
     const { bookmarkedPosts, loading } = this.state;
 
