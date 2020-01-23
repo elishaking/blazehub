@@ -32,7 +32,7 @@ export const signinUser = (userData) => (dispatch) => {
   axios.post("/api/users/signin", userData)
     .then((res) => {
       // save token to localStorage to enable global access
-      const token = res.data.token;
+      const token = res.data.data;
       localStorage.setItem('jwtToken', token);
 
       // add token to axios Authorization Header

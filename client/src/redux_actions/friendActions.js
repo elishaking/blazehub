@@ -23,7 +23,7 @@ export const setFriend = (friendData) => ({
 export const getFriends = (userKey) => (dispatch) => {
   axios.post('/api/friends', { userKey })
     .then((res) => {
-      const friends = res.data.friends;
+      const friends = res.data.data;
       dispatch(setFriends(friends));
 
       const friendsWithAvatars = {};
@@ -52,7 +52,7 @@ export const addFriend = (userKey, friendKey, friendData) => (dispatch) => {
     userKey,
     friendKey,
     friend: friendData
-  }).then((res) => dispatch(setFriend(res.data.friend)))
+  }).then((res) => dispatch(setFriend(res.data.data)))
     .catch((err) => console.error(err));
 };
 

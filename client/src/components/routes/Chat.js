@@ -123,7 +123,7 @@ class Chat extends Component {
           behavior: "smooth",
           top: chatMessagesDiv.scrollHeight - chatMessagesDiv.clientHeight
         });
-        if (chats[currentChatKey][newMessageKey].user.key != this.userKey) this.notificationSound.play();
+        if (chats[currentChatKey][newMessageKey].user.key !== this.userKey) this.notificationSound.play();
       });
     } else {
       // update UI with notification indicating message from another user
@@ -131,11 +131,11 @@ class Chat extends Component {
   };
 
   pageSmootScroll = (elem, to, current = -1) => {
-    if (current == -1) current = elem.scrollTop + elem.clientHeight;
+    if (current === -1) current = elem.scrollTop + elem.clientHeight;
     // document.getElementById('').clientHeight
     elem.scrollBy(0, 10);
     // console.log("scrolling")
-    if (elem.scrollTop < to + elem.clientHeight && current != elem.scrollHeight)
+    if (elem.scrollTop < to + elem.clientHeight && current !== elem.scrollHeight)
       setTimeout(this.pageSmootScroll, 10, elem, to, (elem.scrollTop + elem.clientHeight));
   }
 
@@ -201,7 +201,7 @@ class Chat extends Component {
 
   sendMessage = (event) => {
     const { messageText, currentChatKey } = this.state;
-    if (event.which == 13 && messageText !== '') {
+    if (event.which === 13 && messageText !== '') {
       const { user } = this.props.auth;
       const newMessage = {
         text: messageText,
@@ -236,7 +236,6 @@ class Chat extends Component {
   };
 
   render() {
-    const hasProfilePic = false;
     const { user } = this.props.auth;
     const { loading, avatar, friends, chatTitle, slideInStyle, chatsHeight, currentFriendKey, currentChatKey, chats, loadingChat } = this.state;
     const friendKeys = Object.keys(friends);
@@ -354,7 +353,7 @@ class Chat extends Component {
                     </div>
 
                     {
-                      friendKeys.length == 1 &&
+                      friendKeys.length === 1 &&
                       <div style={{ textAlign: "center", marginTop: "2em" }}>
                         <Link to="/find"><button className="btn">Find Friends</button></Link>
                       </div>

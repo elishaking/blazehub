@@ -160,7 +160,6 @@ class Home extends Component {
   };
 
   render() {
-    const hasProfilePic = false;
     const { user } = this.props.auth;
     const { postText, postImgDataUrl, avatar } = this.state;
 

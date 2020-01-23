@@ -1,10 +1,7 @@
 const express = require('express');
-const app = require('firebase/app');
-require('firebase/database');
 
-const sendInviteMail = require('../utils/email');
-
-const dbRef = app.database().ref();
+const { fetchFriends, createFriend, sendInvites } = require('../services/friends');
+const ResponseUtil = require('../utils/response');
 
 /**
  * Get all friends
@@ -12,9 +9,11 @@ const dbRef = app.database().ref();
  * @param {express.Response} res 
  */
 const getFriends = (req, res) => {
-  dbRef.child('friends').child(req.body.userKey).once('value', (friendsSnapShot) => {
-    res.json({ friends: friendsSnapShot.val() });
-  });
+  fetchFriends(req.body.userKey)
+    .then((responseData) => ResponseUtil.sendResponse(
+      res,
+      responseData
+    ));
 };
 
 /**
@@ -25,24 +24,12 @@ const getFriends = (req, res) => {
 const addFriend = (req, res) => {
   const { userKey, friendKey, friend } = req.body;
 
-  // add new-friend to current-user's friends db
-  dbRef.child('friends').child(userKey).child(friendKey).set(friend, (err) => {
-    if (err) console.error(err);
-
-    // add current-user to new-friend's db
-    const user = req.user;
-    dbRef.child('friends').child(friendKey).child(userKey).set({
-      name: `${user.firstName} ${user.lastName}`
-    }, (err) => {
-      if (err) console.error(err);
-
-      res.json({
-        friend: {
-          [friendKey]: friend
-        }
-      });
-    });
-  });
+  const data = { userKey, friendKey, friend, user: req.user };
+  createFriend(data)
+    .then((responseData) => ResponseUtil.sendResponse(
+      res,
+      responseData
+    ));
 };
 
 /**
@@ -52,14 +39,16 @@ const addFriend = (req, res) => {
  */
 const inviteFriends = async (req, res) => {
   const invitees = req.body;
-  if (invitees[0].email == '') return res.status(400).json({ success: false });
 
-  let success = true;
-  for (let i = 0; i < invitees.length; i++) {
-    success = await sendInviteMail(req.user, invitees[i].email) && success;
-  }
-
-  res.json({ success });
+  const data = {
+    invitees,
+    user: req.user
+  };
+  sendInvites(data)
+    .then((responseData) => ResponseUtil.sendResponse(
+      res,
+      responseData
+    ));
 }
 
 module.exports = {

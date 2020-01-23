@@ -1,5 +1,3 @@
-//@ts-check
-import axios from 'axios';
 import app from 'firebase/app';
 import 'firebase/database';
 import { ADD_CHAT } from './types';

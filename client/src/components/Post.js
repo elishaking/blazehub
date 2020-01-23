@@ -148,7 +148,7 @@ class Post extends Component {
 
   /** @param {React.KeyboardEvent<HTMLInputElement>} event */
   addComment = (event) => {
-    if (event.which == 13 && this.state.commentText !== '') {
+    if (event.which === 13 && this.state.commentText !== '') {
       let { commentText } = this.state;
       const { user } = this.props;
       const newComment = {
@@ -252,7 +252,7 @@ class Post extends Component {
             </div>
 
             {
-              !this.props.otherUser && post.user.email == this.props.user.email && (
+              !this.props.otherUser && post.user.email === this.props.user.email && (
                 <div className="delete-post" onClick={() => { this.deletePost(post.key) }}>
                   <FontAwesomeIcon icon={faTrash} />
                 </div>
@@ -273,7 +273,7 @@ class Post extends Component {
               </div>
             ) : (
                 <div className="post-image">
-                  <img onClick={this.togglePostImage} src={postImage} alt="Post Image" srcSet="" />
+                  <img onClick={this.togglePostImage} src={postImage} alt="Post" srcSet="" />
                 </div>
               ))
           }
