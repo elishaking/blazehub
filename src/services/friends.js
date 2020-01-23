@@ -1,6 +1,8 @@
 const app = require('firebase/app');
 require('firebase/database');
 
+const sendInviteMail = require('../utils/email');
+
 const ResponseUtil = require('../utils/response');
 
 const dbRef = app.database().ref();
@@ -69,7 +71,33 @@ const createFriend = (data) => new Promise((resolve) => {
   });
 });
 
+/**
+ * 
+ * @param {{invitees: {email: string}[], user: any}} data 
+ */
+const sendInvites = (data) => new Promise(async (resolve) => {
+  const { invitees, user } = data;
+
+  if (invitees[0].email == '') resolve(ResponseUtil.createResponse(
+    false,
+    400,
+    "All invitees must have email"
+  ));
+
+  let success = true;
+  for (let i = 0; i < invitees.length; i++) {
+    success = await sendInviteMail(user, invitees[i].email) && success;
+  }
+
+  resolve(ResponseUtil.createResponse(
+    success,
+    success ? 200 : 500,
+    "Could not send all emails"
+  ));
+});
+
 module.exports = {
   fetchFriends,
-  createFriend
+  createFriend,
+  sendInvites
 };

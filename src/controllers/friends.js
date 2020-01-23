@@ -2,7 +2,7 @@ const express = require('express');
 
 const sendInviteMail = require('../utils/email');
 
-const { fetchFriends, createFriend } = require('../services/friends');
+const { fetchFriends, createFriend, sendInvites } = require('../services/friends');
 const ResponseUtil = require('../utils/response');
 
 /**
@@ -41,14 +41,16 @@ const addFriend = (req, res) => {
  */
 const inviteFriends = async (req, res) => {
   const invitees = req.body;
-  if (invitees[0].email == '') return res.status(400).json({ success: false });
 
-  let success = true;
-  for (let i = 0; i < invitees.length; i++) {
-    success = await sendInviteMail(req.user, invitees[i].email) && success;
-  }
-
-  res.json({ success });
+  const data = {
+    invitees,
+    user: req.user
+  };
+  sendInvites(data)
+    .then((responseData) => ResponseUtil.sendResponse(
+      res,
+      responseData
+    ));
 }
 
 module.exports = {
