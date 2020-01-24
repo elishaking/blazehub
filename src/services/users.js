@@ -1,4 +1,3 @@
-const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const app = require('firebase/app');
@@ -19,7 +18,7 @@ const createUser = (userData) => new Promise((resolve) => {
   const { isValid, errors } = validateSignupData(userData);
 
   if (!isValid) {
-    resolve(ResponseUtil.createResponse(
+    return resolve(ResponseUtil.createResponse(
       false,
       400,
       "Could not create user",
@@ -35,7 +34,8 @@ const createUser = (userData) => new Promise((resolve) => {
     .then((dataSnapshot) => {
       if (dataSnapshot.exists()) {
         errors.email = "Email already exists";
-        resolve(ResponseUtil.createResponse(
+
+        return resolve(ResponseUtil.createResponse(
           false,
           400,
           "Could not create user",
@@ -188,6 +188,7 @@ const fetchUsers = () => new Promise((resolve) => {
     .then((usersSnapshot) => {
       const usersExist = usersSnapshot.exists();
       const data = usersExist ? usersSnapshot.val() : undefined;
+
       resolve(ResponseUtil.createResponse(
         true,
         200,
