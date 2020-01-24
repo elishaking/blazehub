@@ -95,10 +95,10 @@ const authenticateUser = (userData) => new Promise((resolve) => {
   const { isValid, errors } = validateSigninData(userData);
 
   if (!isValid) {
-    resolve(ResponseUtil.createResponse(
+    return resolve(ResponseUtil.createResponse(
       false,
       400,
-      "Could not authenticate user",
+      "Authentication failed",
       errors
     ));
   }
@@ -109,64 +109,75 @@ const authenticateUser = (userData) => new Promise((resolve) => {
   const userKey = email.replace(/\./g, "~").replace(/@/g, "~~");
   const userRef = dbRef.child('users').child(userKey);
 
-  userRef.once('value', (dataSnapshot) => {
-    if (!dataSnapshot.exists()) {
-      errors.signinEmail = "No user with this email, Please Sign Up";
-      resolve(ResponseUtil.createResponse(
-        false,
-        400,
-        "Could not authenticate user",
-        errors
-      ));
-    }
+  userRef.once('value')
+    .then((dataSnapshot) => {
+      if (!dataSnapshot.exists()) {
+        errors.signinEmail = "No user with this email, Please Sign Up";
 
-    const user = dataSnapshot.val();
-    bcrypt.compare(password, user.password).then((isMatch) => {
-      if (isMatch) {
-        app.database().ref('profiles').child(userKey).child('username').once("value")
-          .then((usernameSnapShot) => {
-            // JWT payload
-            const jwtPayload = {
-              id: userKey,
-              firstName: user.firstName,
-              lastName: user.lastName,
-              email: user.email,
-              username: usernameSnapShot.val()
-            };
-
-            // Sign Token <==> encodes payload into token
-            jwt.sign(
-              jwtPayload,
-              process.env.SECRET_OR_KEY,
-              {
-                expiresIn: 3600 * 24
-              },
-              (err, token) => {
-                if (err) {
-                  console.log(err);
-                }
-
-                resolve(ResponseUtil.createResponse(
-                  true,
-                  200,
-                  "User Authenticated",
-                  `Bearer ${token}`
-                ));
-              }
-            );
-          });
-      } else {
-        errors.signinPassword = 'Password incorrect';
-
-        resolve(ResponseUtil.createResponse(
+        return resolve(ResponseUtil.createResponse(
           false,
           400,
-          "Could not authenticate user",
+          "Authentication failed",
           errors
         ));
       }
+
+      const user = dataSnapshot.val();
+      bcrypt.compare(password, user.password).then((isMatch) => {
+        if (isMatch) {
+          app.database().ref('profiles').child(userKey).child('username').once("value")
+            .then((usernameSnapShot) => {
+              // JWT payload
+              const jwtPayload = {
+                id: userKey,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+                username: usernameSnapShot.val()
+              };
+
+              // Sign Token <==> encodes payload into token
+              jwt.sign(
+                jwtPayload,
+                process.env.SECRET_OR_KEY,
+                {
+                  expiresIn: 3600 * 24
+                },
+                (err, token) => {
+                  if (err) {
+                    console.log(err);
+                  }
+
+                  resolve(ResponseUtil.createResponse(
+                    true,
+                    200,
+                    "User Authenticated",
+                    `Bearer ${token}`
+                  ));
+                }
+              );
+            });
+        } else {
+          errors.signinPassword = 'Password incorrect';
+
+          resolve(ResponseUtil.createResponse(
+            false,
+            400,
+            "Could not authenticate user",
+            errors
+          ));
+        }
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+
+      resolve(ResponseUtil.createResponse(
+        false,
+        500,
+        "Authentication Failed"
+      ));
     });
-  });
 });
 
 /**
