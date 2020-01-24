@@ -17,6 +17,7 @@ const fetchFriends = (userKey) => new Promise((resolve) => {
     .then((friendsSnapShot) => {
       const friendsExist = friendsSnapShot.exists();
       const data = friendsExist ? friendsSnapShot.val() : undefined;
+
       resolve(ResponseUtil.createResponse(
         true,
         200,
@@ -78,7 +79,7 @@ const createFriend = (data) => new Promise((resolve) => {
 const sendInvites = (data) => new Promise(async (resolve) => {
   const { invitees, user } = data;
 
-  if (invitees[0].email == '') resolve(ResponseUtil.createResponse(
+  if (invitees[0].email == '') return resolve(ResponseUtil.createResponse(
     false,
     400,
     "All invitees must have email"
