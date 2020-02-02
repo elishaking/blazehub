@@ -49,39 +49,52 @@ const createUser = (userData) => new Promise((resolve) => {
         bcrypt.hash(userData.password, salt, (err, hash) => {
           if (err) return console.log(err);
 
-          const newUser = {
-            firstName: userData.firstName,
-            lastName: userData.lastName,
-            email: userData.email,
-            password: hash,
-          }
-          userRef.set(newUser)
-            .then(() => {
-              // create default blazebot friend
-              const data = {
-                "blazebot": {
-                  name: "BlazeBot",
+          let newUsername = `${userData.firstName.replace(/ /g, "")}.${userData.lastName.replace(/ /g, "")}`
+            .toLowerCase();
 
-                }
-              };
-              dbRef.child('friends').child(userKey).set(data)
+          dbRef.child('users').orderByChild('username').equalTo(newUsername).limitToFirst(1)
+            .once('value')
+            .then((userSnapShot) => {
+              if (userSnapShot.exists())
+                newUsername = `${newUsername}_${Date.now()}`;
+
+              const newUser = {
+                firstName: userData.firstName,
+                lastName: userData.lastName,
+                email: userData.email,
+                username: newUsername,
+                password: hash,
+              }
+              userRef.set(newUser)
                 .then(() => {
-                  const username = `${newUser.firstName.replace(/ /g, "")}.${newUser.lastName.replace(/ /g, "")}`
-                    .toLowerCase();
+                  // create default blazebot friend
+                  const data = {
+                    "blazebot": {
+                      name: "BlazeBot",
 
-                  dbRef.child('profiles').child(userKey).child('username').set(username)
+                    }
+                  };
+                  dbRef.child('friends').child(userKey).set(data)
                     .then(() => {
-                      resolve(ResponseUtil.createResponse(
-                        true,
-                        200,
-                        "User created"
-                      ));
+                      const username = `${newUser.firstName.replace(/ /g, "")}.${newUser.lastName.replace(/ /g, "")}`
+                        .toLowerCase();
+
+                      dbRef.child('profiles').child(userKey).child('username').set(username)
+                        .then(() => {
+                          resolve(ResponseUtil.createResponse(
+                            true,
+                            200,
+                            "User created"
+                          ));
+                        })
+                        .catch((err) => console.log(err));
                     })
                     .catch((err) => console.log(err));
                 })
                 .catch((err) => console.log(err));
-            })
-            .catch((err) => console.log(err));
+            });
+
+
         });
       });
     });
