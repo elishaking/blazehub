@@ -97,7 +97,7 @@ export default class Posts extends Component {
           ) : posts.map((post) => (
             <Post
               key={post.key}
-              // profilesRef={app.database().ref("profiles")}
+              profilesRef={app.database().ref("profiles")}
               postRef={this.postsRef.child(post.key)}
               postImageRef={this.postImagesRef.child(post.key)}
               profilePhotosRef={this.profilePhotosRef}
