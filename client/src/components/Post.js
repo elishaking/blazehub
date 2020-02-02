@@ -46,11 +46,11 @@ class Post extends Component {
     //     post: updatedPostSnapShot.val()
     //   });
     // });
-    const { bookmarkRef, postRef, profilePhotosRef, profilesRef, postImageRef } = this.props;
+    const { bookmarkRef, postRef, profilePhotosRef, postImageRef } = this.props;
 
-    profilesRef.child(this.state.post.user.id).child("username").once("value", (sn) => {
-      postRef.child("user").child("username").set(sn.val());
-    });
+    // profilesRef.child(this.state.post.user.id).child("username").once("value", (sn) => {
+    //   postRef.child("user").child("username").set(sn.val());
+    // });
 
     profilePhotosRef.child(this.state.post.user.id).child("avatar-small")
       .once("value", (postUserImageSnapShot) => {
