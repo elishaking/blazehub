@@ -38,3 +38,5 @@ const base64MimeType = (encoded) => {
 
   return result;
 }
+
+module.exports = { resizeImage };
