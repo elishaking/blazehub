@@ -76,10 +76,7 @@ const createUser = (userData) => new Promise((resolve) => {
                   };
                   dbRef.child('friends').child(userKey).set(data)
                     .then(() => {
-                      const username = `${newUser.firstName.replace(/ /g, "")}.${newUser.lastName.replace(/ /g, "")}`
-                        .toLowerCase();
-
-                      dbRef.child('profiles').child(userKey).child('username').set(username)
+                      dbRef.child('profiles').child(userKey).child('username').set(newUsername)
                         .then(() => {
                           resolve(ResponseUtil.createResponse(
                             true,
