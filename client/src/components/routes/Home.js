@@ -41,18 +41,18 @@ class Home extends Component {
     //   });
     // }
 
-    app.database().ref('users').once('value')
-      .then((usersSnapShot) => {
-        const users = usersSnapShot.val();
-        Object.keys(users)
-          .forEach((userKey) => {
-            const newUsername = `${users[userKey].firstName.replace(/ /g, "")}.${users[userKey].lastName.replace(/ /g, "")}`
-              .toLowerCase();
-            usersSnapShot.child(userKey).child('username').ref
-              .set(newUsername);
-          });
-        // console.log(usersSnapShot.val());
-      });
+    // app.database().ref('users').once('value')
+    //   .then((usersSnapShot) => {
+    //     const users = usersSnapShot.val();
+    //     Object.keys(users)
+    //       .forEach((userKey) => {
+    //         const newUsername = `${users[userKey].firstName.replace(/ /g, "")}.${users[userKey].lastName.replace(/ /g, "")}`
+    //           .toLowerCase();
+    //         usersSnapShot.child(userKey).child('username').ref
+    //           .set(newUsername);
+    //       });
+    //     // console.log(usersSnapShot.val());
+    //   });
 
     this.setupFirebase();
     // console.log("mounter");
