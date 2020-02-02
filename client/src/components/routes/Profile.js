@@ -138,25 +138,25 @@ class Profile extends Component {
     const coverPhoto = profile.coverPhoto;
     coverPhoto ? this.setPic("coverPhoto", coverPhoto) : this.props.getProfilePic(user.id, "coverPhoto");
 
-    app.database().ref('users').once("value", (usersSnapShot) => {
-      const users = usersSnapShot.val();
-      const userKeys = Object.keys(users);
-      userKeys.forEach((userKey) => {
-        app.database().ref('profiles').child(userKey)
-          .child('username').once('value', (usernameSnapShot) => {
+    // app.database().ref('users').once("value", (usersSnapShot) => {
+    //   const users = usersSnapShot.val();
+    //   const userKeys = Object.keys(users);
+    //   userKeys.forEach((userKey) => {
+    //     app.database().ref('profiles').child(userKey)
+    //       .child('username').once('value', (usernameSnapShot) => {
 
-            usernameSnapShot.ref
-              .set(`${users[userKey].firstName.replace(/ /g, "")}.${users[userKey].lastName.replace(/ /g, "")}`
-                .toLowerCase())
+    //         usernameSnapShot.ref
+    //           .set(`${users[userKey].firstName.replace(/ /g, "")}.${users[userKey].lastName.replace(/ /g, "")}`
+    //             .toLowerCase())
 
-          });
-        app.database().ref('profiles').child(userKey).child('name').once("value", (nameSnapShot) => {
-          if (nameSnapShot.exists()) return;
+    //       });
+    //     app.database().ref('profiles').child(userKey).child('name').once("value", (nameSnapShot) => {
+    //       if (nameSnapShot.exists()) return;
 
-          nameSnapShot.ref.set(`${users[userKey].firstName} ${users[userKey].lastName}`)
-        })
-      })
-    })
+    //       nameSnapShot.ref.set(`${users[userKey].firstName} ${users[userKey].lastName}`)
+    //     })
+    //   })
+    // })
 
 
     this.profileRef = app.database().ref('profiles').child(user.id);
