@@ -46,6 +46,14 @@ class Posts extends Component {
 
           if (this.state.loadingPosts) this.setState({ loadingPosts: false });
         });
+
+      this.postsRef.on("child_removed", (postSnapShot) => {
+        const { posts } = this.state;
+
+        const deleteIndex = posts.findIndex((post) => post.key === postSnapShot.key);
+        posts.splice(deleteIndex, 1);
+        this.setState({ posts });
+      });
     } else {
       this.postsRef.orderByChild("date").on('child_added', (newPostSnapShot) => {
         // console.log('child_added');
