@@ -555,6 +555,15 @@ button:focus {
     color: #000;
   }
 
+  .see-more {
+    background: none;
+    border: none;
+    outline: none;
+    font-family: inherit;
+    padding: 1em 0;
+    color: #7c62a9;
+  }
+
   header {
     display: flex;
     align-items: center;

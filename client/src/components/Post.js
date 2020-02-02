@@ -34,6 +34,8 @@ class Post extends Component {
       postUserImage: '',
       loadingImage: props.post.imageUrl,
       postImage: '',
+      postTextMaxHeight: '7em',
+      postTextOverflows: false,
       viewImage: false
     };
   }
@@ -100,7 +102,20 @@ class Post extends Component {
         post
       });
     });
+
+    this.setPostTextAction();
   }
+
+  setPostTextAction = () => {
+    const pText = document.getElementById(this.state.post.key);
+
+    if (pText.clientHeight < pText.scrollHeight) {
+      this.setState({
+        postTextMaxHeight: '7em',
+        postTextOverflows: true
+      });
+    }
+  };
 
   deletePost = (key) => {
     this.props.postRef.remove((err) => {
@@ -223,7 +238,8 @@ class Post extends Component {
   }
 
   render() {
-    const { post, liked, loadingImage, postUserImage, postImage, viewImage, showComments, transitionStyle, isBookmarked } = this.state;
+    const { post, postTextMaxHeight, postTextOverflows, liked, loadingImage,
+      postUserImage, postImage, viewImage, showComments, transitionStyle, isBookmarked } = this.state;
     return (
       <div>
         <div className="post" style={transitionStyle}>
@@ -260,7 +276,12 @@ class Post extends Component {
             }
           </header>
 
-          <p>{post.text}</p>
+          <p id={post.key} style={{
+            maxHeight: postTextMaxHeight,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis'
+          }}>{post.text}</p>
+          {postTextOverflows && (<button className="see-more">See more</button>)}
           {/* {post.imageUrl && (
           <div className="post-image">
             <img src={post.imageUrl} alt="" srcSet="" />
