@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import app from 'firebase/app';
 import 'firebase/database';
 import Post from './Post';
 import Spinner from './Spinner';
 
-export default class Posts extends Component {
+class Posts extends Component {
   state = {
     posts: [],
     loadingPosts: true
@@ -41,7 +42,9 @@ export default class Posts extends Component {
 
               return newPost;
             })
-          })
+          });
+
+          if (this.state.loadingPosts) this.setState({ loadingPosts: false });
         });
     } else {
       this.postsRef.orderByChild("date").on('child_added', (newPostSnapShot) => {
@@ -94,7 +97,7 @@ export default class Posts extends Component {
         {
           loadingPosts ? (
             <div className="loading-container"><Spinner /></div>
-          ) : posts.map((post) => (
+          ) : posts.length > 0 ? posts.map((post) => (
             <Post
               key={post.key}
               // profilesRef={app.database().ref("profiles")}
@@ -107,9 +110,26 @@ export default class Posts extends Component {
               user={this.user}
               canBookmark={true}
               otherUser={this.otherUser} />
-          ))
+          )) : (
+                <div className="loading-container" style={{
+                  padding: '1em',
+                  textAlign: 'center'
+                }}>
+                  <p>You have not created any Posts yet</p>
+                  <button
+                    className="btn"
+                    style={{
+                      marginTop: '1em'
+                    }}
+                    onClick={() => this.props.history.push('/home')} >
+                    Create Post
+                  </button>
+                </div>
+              )
         }
       </React.Fragment>
     )
   }
 }
+
+export default withRouter(Posts);
