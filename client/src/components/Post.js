@@ -237,6 +237,12 @@ class Post extends Component {
     this.setState({ viewImage: !this.state.viewImage });
   }
 
+  toggleSeeMore = () => {
+    this.setState({
+      postTextMaxHeight: this.state.postTextMaxHeight ? '' : '7em',
+    });
+  };
+
   render() {
     const { post, postTextMaxHeight, postTextOverflows, liked, loadingImage,
       postUserImage, postImage, viewImage, showComments, transitionStyle, isBookmarked } = this.state;
@@ -281,7 +287,15 @@ class Post extends Component {
             overflow: 'hidden',
             textOverflow: 'ellipsis'
           }}>{post.text}</p>
-          {postTextOverflows && (<button className="see-more">See more</button>)}
+          {
+            postTextOverflows && (
+              <button className="see-more" onClick={this.toggleSeeMore}>
+                {
+                  postTextMaxHeight ? 'See more' : 'See less'
+                }
+              </button>
+            )
+          }
           {/* {post.imageUrl && (
           <div className="post-image">
             <img src={post.imageUrl} alt="" srcSet="" />
