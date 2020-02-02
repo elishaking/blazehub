@@ -93,8 +93,6 @@ const createUser = (userData) => new Promise((resolve) => {
                 })
                 .catch((err) => console.log(err));
             });
-
-
         });
       });
     });
