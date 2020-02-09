@@ -1,4 +1,4 @@
-import { SET_CURRENT_USER } from '../redux_actions/types';
+import { SET_CURRENT_USER, GET_ERRORS } from '../redux_actions/types';
 import authReducer, { initialState } from './authReducer';
 
 describe('Auth Reducer', () => {
@@ -20,6 +20,21 @@ describe('Auth Reducer', () => {
       isAuthenticated: true,
       user,
       errors: {}
+    });
+  });
+
+  it('should return error state', () => {
+    const errors = { password: "Password is incorrect" };
+    const action = {
+      type: GET_ERRORS,
+      payload: errors
+    };
+
+    const newState = authReducer(undefined, action);
+    expect(newState).toEqual({
+      isAuthenticated: false,
+      user: {},
+      errors
     });
   });
 });
