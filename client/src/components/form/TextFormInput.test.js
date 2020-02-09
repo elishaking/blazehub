@@ -1,6 +1,7 @@
 import React from 'react';
-import { shallow, ShallowWrapper } from 'enzyme';
+import { shallow } from 'enzyme';
 import { TextFormInput, TextAreaFormInput } from './TextFormInput';
+import { findByAttr, findByTestAttr } from '../../utils/testUtils';
 
 /**
  * Shallow render component with props
@@ -16,23 +17,6 @@ import { TextFormInput, TextAreaFormInput } from './TextFormInput';
 const setUp = (props) => shallow(
   props.type ? <TextFormInput {...props} /> : <TextAreaFormInput {...props} />
 );
-
-/**
- * Find component with the specified test attribute
- * @param {ShallowWrapper} component 
- * @param {string} attr 
- */
-const findByTestAttr = (component, attr) => component
-  .find(`[data-test='${attr}']`);
-
-/**
- * Find item with the specified attribute
- * @param {ShallowWrapper} component 
- * @param {string} attrKey 
- * @param {string} attrVal 
- */
-const findByAttr = (component, attrKey, attrVal) => component
-  .find(`[${attrKey}='${attrVal}']`);
 
 describe('TextFormInput Component', () => {
   describe('With Props', () => {
