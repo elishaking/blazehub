@@ -18,7 +18,7 @@ export function TextFormInput({ type, name, placeholder, onChange, error, value 
 
 export function TextAreaFormInput({ name, placeholder, onChange, error, value = '' }) {
   return (
-    <div className="form-input">
+    <div className="form-input" data-test="textAreaFormInputComponent">
       <textarea
         name={name}
         value={value}

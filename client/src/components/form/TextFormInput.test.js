@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
-import { TextFormInput } from './TextFormInput';
+import { TextFormInput, TextAreaFormInput } from './TextFormInput';
 
 /**
  * Shallow render component with props
@@ -13,7 +13,9 @@ import { TextFormInput } from './TextFormInput';
       value?: string;
     }} props 
  */
-const setUp = (props) => shallow(<TextFormInput {...props} />);
+const setUp = (props) => shallow(
+  props.type ? <TextFormInput {...props} /> : <TextAreaFormInput {...props} />
+);
 
 /**
  * Find component with the specified test attribute
@@ -64,6 +66,48 @@ describe('TextFormInput Component', () => {
       expect(findByAttr(input, 'value', props.value).length).toEqual(1);
       expect(findByAttr(input, 'placeholder', props.placeholder).length).toEqual(1);
       expect(findByAttr(input, 'className', 'fill-parent error').length).toEqual(1);
+    });
+
+    it('should have error element (represented by small tag)', () => {
+      const small = wrapper.find('small');
+
+      expect(small.length).toEqual(1);
+    });
+  });
+});
+
+describe('TextAreaFormInput Component', () => {
+  describe('With Props', () => {
+    const props = {
+      type: '',
+      name: 'description',
+      placeholder: 'description',
+      onChange: () => { console.log('changed') },
+      error: 'description required',
+      value: '',
+    };
+    const wrapper = setUp(props);
+
+    it('should render without errors', () => {
+      const component = findByTestAttr(wrapper, 'textAreaFormInputComponent');
+
+      expect(component.length).toEqual(1);
+    });
+
+    it('should have input', () => {
+      const textarea = wrapper.find('textarea');
+
+      expect(textarea.length).toEqual(1);
+    });
+
+    it('should have input with correct attributes', () => {
+      const textarea = wrapper.find('textarea');
+
+      expect(findByAttr(textarea, 'name', props.name).length).toEqual(1);
+      expect(findByAttr(textarea, 'value', props.value).length).toEqual(1);
+      expect(findByAttr(textarea, 'placeholder', props.placeholder).length).toEqual(1);
+      expect(findByAttr(textarea, 'className', 'fill-parent error').length).toEqual(1);
+      expect(textarea.find(`[rows=3]`).length).toEqual(1);
     });
 
     it('should have error element (represented by small tag)', () => {
