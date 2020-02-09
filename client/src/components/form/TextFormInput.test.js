@@ -65,5 +65,11 @@ describe('TextFormInput Component', () => {
       expect(findByAttr(input, 'placeholder', props.placeholder).length).toEqual(1);
       expect(findByAttr(input, 'className', 'fill-parent error').length).toEqual(1);
     });
+
+    it('should have error element (represented by small tag)', () => {
+      const small = wrapper.find('small');
+
+      expect(small.length).toEqual(1);
+    });
   });
 });
