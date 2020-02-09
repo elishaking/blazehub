@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import { DateFormInput } from './DateFormInput';
-import { findByAttr, findByTestAttr } from '../../utils/testUtils';
+import { findByAttr, findByTestAttr } from '../../tests/utils/testUtils';
 
 /**
  * Shallow render component with props

@@ -1,7 +1,7 @@
 import { ShallowWrapper } from 'enzyme';
 import { applyMiddleware, createStore, compose } from 'redux';
-import rootReducer from '../redux_reducers';
-import { middleware } from '../store';
+import rootReducer from '../../redux_reducers';
+import { middleware } from '../../store';
 
 /**
  * Find component with the specified test attribute
