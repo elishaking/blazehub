@@ -4,7 +4,7 @@
   "description": "A platform for connecting people: A place to chat, follow interesting conversions and be a part of a growing community",
   "main": "server.js",
   "scripts": {
-    "test": "jest test/",
+    "test": "jest test/ && cd client && yarn test --watchAll=false",
     "server": "nodemon server.js",
     "client": "cd client && yarn start",
     "client:build": "cd client && yarn build",
