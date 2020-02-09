@@ -22,4 +22,4 @@ jobs:
           cd client && npm i
           npm test
         env:
-          CI: true
+          CI: false
