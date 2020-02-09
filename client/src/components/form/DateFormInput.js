@@ -2,7 +2,7 @@ import React from 'react';
 
 export function DateFormInput({ name, placeholder, onChange, error, value = null }) {
   return (
-    <div className="form-input">
+    <div className="form-input" data-test="dateFormInputComponent">
       <input
         type="date"
         name={name}
