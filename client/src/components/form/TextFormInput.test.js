@@ -25,9 +25,9 @@ const findByTestAttr = (component, attr) => component
 
 /**
  * Find item with the specified attribute
- * @param {*} component 
- * @param {*} attrKey 
- * @param {*} attrVal 
+ * @param {ShallowWrapper} component 
+ * @param {string} attrKey 
+ * @param {string} attrVal 
  */
 const findByAttr = (component, attrKey, attrVal) => component
   .find(`[${attrKey}='${attrVal}']`);
