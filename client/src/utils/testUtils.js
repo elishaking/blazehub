@@ -1,4 +1,7 @@
 import { ShallowWrapper } from 'enzyme';
+import { applyMiddleware, createStore, compose } from 'redux';
+import rootReducer from '../redux_reducers';
+import { middleware } from '../store';
 
 /**
  * Find component with the specified test attribute
@@ -16,3 +19,9 @@ export const findByTestAttr = (component, attr) => component
  */
 export const findByAttr = (component, attrKey, attrVal) => component
   .find(`[${attrKey}='${attrVal}']`);
+
+export const testStore = (initialState = {}) => createStore(
+  rootReducer,
+  initialState,
+  compose(applyMiddleware(...middleware))
+);
