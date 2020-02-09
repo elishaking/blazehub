@@ -1,8 +1,8 @@
 import React from 'react';
 
-export function TextFormInput({ type, name, placeholder, onChange, error, value = null }) {
+export function TextFormInput({ type, name, placeholder, onChange, error, value = '' }) {
   return (
-    <div className="form-input">
+    <div className="form-input" data-test="textFormInputComponent">
       <input
         type={type}
         name={name}
@@ -16,7 +16,7 @@ export function TextFormInput({ type, name, placeholder, onChange, error, value 
   )
 }
 
-export function TextAreaFormInput({ name, placeholder, onChange, error, value = null }) {
+export function TextAreaFormInput({ name, placeholder, onChange, error, value = '' }) {
   return (
     <div className="form-input">
       <textarea
