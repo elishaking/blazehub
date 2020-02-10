@@ -15,9 +15,10 @@ const setProfilePic = (key, dataUrl) => ({
  * @param {string} userKey
  * @param {string} key
  */
-export const getProfilePic = (userKey, key) => (dispatch) => {
-  app.database().ref('profile-photos').child(userKey).child(key)
-    .once("value", (picSnapShot) => {
+export const getProfilePic = (userKey, key) => async (dispatch) => {
+  await app.database().ref('profile-photos')
+    .child(userKey).child(key).once("value")
+    .then((picSnapShot) => {
       dispatch(setProfilePic(key, picSnapShot.val()));
     });
 };
