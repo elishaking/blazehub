@@ -1,5 +1,5 @@
 import { testStore } from '../utils/testUtils';
-import { getProfilePic } from '../../redux_actions/profileActions';
+import { getProfilePic, updateProfilePic } from '../../redux_actions/profileActions';
 import { initialState as initialProfileState } from '../../redux_reducers/profileReducer';
 import app from 'firebase/app';
 
@@ -9,7 +9,7 @@ describe('getProfilePic action', () => {
     dataUrl: "avatarDataUrl"
   };
 
-  beforeAll(() => {
+  beforeEach(() => {
     // @ts-ignore
     app.database = jest.fn().mockReturnValueOnce({
       ref: (path) => {
@@ -23,12 +23,19 @@ describe('getProfilePic action', () => {
           }
         };
 
+        const set = (value) => {
+          return new Promise((resolve) => {
+            resolve();
+          });
+        };
+
         const child = (path) => ({
           child,
-          once
+          once,
+          set
         });
 
-        return { child, once };
+        return { child, once, set };
       }
     });
   });
@@ -44,5 +51,18 @@ describe('getProfilePic action', () => {
       [profilePicData.key]: profilePicData.dataUrl
     };
     expect(newState.profile).toEqual(expectedProfileState);
+  });
+
+  it(`should update existing avatar profile pic in store`, async () => {
+    const store = testStore();
+    const currentProfileState = store.getState().profile;
+
+    await store.dispatch(updateProfilePic('', profilePicData.key, profilePicData.dataUrl));
+
+    const newState = store.getState();
+    expect(newState.profile).toEqual({
+      ...currentProfileState,
+      [profilePicData.key]: profilePicData.dataUrl
+    })
   });
 });
