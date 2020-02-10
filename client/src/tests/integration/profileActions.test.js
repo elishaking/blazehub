@@ -3,7 +3,7 @@ import { getProfilePic, updateProfilePic } from '../../redux_actions/profileActi
 import { initialState as initialProfileState } from '../../redux_reducers/profileReducer';
 import app from 'firebase/app';
 
-describe('getProfilePic action', () => {
+describe('profile action creators', () => {
   const profilePicData = {
     key: "avatar",
     dataUrl: "avatarDataUrl"
@@ -40,29 +40,34 @@ describe('getProfilePic action', () => {
     });
   });
 
-  it('should update store with new avatar profile pic', async () => {
-    const store = testStore();
+  describe('getProfilePic action creator', () => {
+    it(`should update store with new ${profilePicData.key} profile pic`, async () => {
+      const store = testStore();
 
-    await store.dispatch(getProfilePic('', profilePicData.key));
+      await store.dispatch(getProfilePic('', profilePicData.key));
 
-    const newState = store.getState();
-    const expectedProfileState = {
-      ...initialProfileState,
-      [profilePicData.key]: profilePicData.dataUrl
-    };
-    expect(newState.profile).toEqual(expectedProfileState);
+      const newState = store.getState();
+      const expectedProfileState = {
+        ...initialProfileState,
+        [profilePicData.key]: profilePicData.dataUrl
+      };
+      expect(newState.profile).toEqual(expectedProfileState);
+    });
   });
 
-  it(`should update existing avatar profile pic in store`, async () => {
-    const store = testStore();
-    const currentProfileState = store.getState().profile;
+  describe('updateProfilePic action creator', () => {
+    it(`should update existing ${profilePicData.key} profile pic in store`, async () => {
+      const store = testStore();
+      const currentProfileState = store.getState().profile;
 
-    await store.dispatch(updateProfilePic('', profilePicData.key, profilePicData.dataUrl));
+      await store.dispatch(updateProfilePic('', profilePicData.key, profilePicData.dataUrl));
 
-    const newState = store.getState();
-    expect(newState.profile).toEqual({
-      ...currentProfileState,
-      [profilePicData.key]: profilePicData.dataUrl
-    })
+      const newState = store.getState();
+      expect(newState.profile).toEqual({
+        ...currentProfileState,
+        [profilePicData.key]: profilePicData.dataUrl
+      });
+    });
   });
+
 });
