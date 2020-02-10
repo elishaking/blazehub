@@ -27,15 +27,14 @@ class Home extends Component {
       loadingAvatar: true
     }
 
-    // this.setupFirebase();
+    this.setupFirebase();
   }
 
   componentDidMount() {
-
     // initializeApp();
     // updateUsername();
 
-    this.setupFirebase();
+    // this.setupFirebase();
 
     const { profile, auth } = this.props;
     if (profile.avatar) {
@@ -58,9 +57,10 @@ class Home extends Component {
   }
 
   setupFirebase = () => {
-    this.postsRef = app.database().ref('posts');
-    this.postImagesRef = app.database().ref('post-images');
-    // this.notificationsRef = app.database().ref('notifications');
+    this.db = app.database();
+    this.postsRef = this.db.ref('posts');
+    this.postImagesRef = this.db.ref('post-images');
+    // this.notificationsRef = this.db.ref('notifications');
   }
 
   selectImage = () => {
@@ -129,12 +129,12 @@ class Home extends Component {
       // comments: { name: "comments" },
       // shares: { name: "shares" }
     };
-    this.postsRef.push(newPost, (err) => {
-      if (err) console.error(err);
-    }).then((post) => {
-      if (newPost.imageUrl)
-        this.postImagesRef.child(post.key).set(postImgDataUrl);
-    });
+    this.postsRef.push(newPost)
+      .then((post) => {
+        if (newPost.imageUrl)
+          this.postImagesRef.child(post.key).set(postImgDataUrl);
+      })
+      .catch((err) => console.log(err));
 
     this.setState({
       postText: '',
@@ -159,7 +159,7 @@ class Home extends Component {
           showSearch={true}
           hello="hello"
           avatar={avatar}
-          notificationsRef={app.database().ref('notifications')} />
+          notificationsRef={this.db.ref('notifications')} />
 
         <div className="main">
           <MainNav user={user} />

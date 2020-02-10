@@ -16,12 +16,21 @@ export const firebaseMock = (data = {}) => jest.fn().mockReturnValueOnce({
       });
     };
 
+    const push = (value) => {
+      return new Promise((resolve) => {
+        resolve({
+          key: `pushKey-${Date.now()}`,
+        });
+      });
+    }
+
     const child = (path) => ({
       child,
       once,
-      set
+      set,
+      push
     });
 
-    return { child, once, set };
+    return { child, once, set, push };
   }
 });
