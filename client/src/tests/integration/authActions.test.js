@@ -3,7 +3,7 @@ import { testStore } from '../utils/testUtils';
 import { signupUser } from '../../redux_actions/authActions';
 import { initialState as initialAuthState } from '../../redux_reducers/authReducer';
 
-describe('signupUser action', () => {
+describe('auth action creators', () => {
   beforeEach(() => {
     moxios.install();
   });
@@ -12,45 +12,47 @@ describe('signupUser action', () => {
     moxios.uninstall()
   });
 
-  it('should not update store for successful sign-up', () => {
-    const userData = {
-      name: "King"
-    };
-    const store = testStore();
+  describe('signupUser action creator', () => {
+    it('should not update store for successful sign-up', () => {
+      const userData = {
+        name: "King"
+      };
+      const store = testStore();
 
-    moxios.wait(() => {
-      const req = moxios.requests.mostRecent();
-      req.respondWith({
-        status: 201,
-        response: userData
+      moxios.wait(() => {
+        const req = moxios.requests.mostRecent();
+        req.respondWith({
+          status: 201,
+          response: userData
+        });
       });
+
+      return store.dispatch(signupUser())
+        .then(() => {
+          const newState = store.getState();
+          expect(newState.auth).toEqual(initialAuthState);
+        });
     });
 
-    return store.dispatch(signupUser())
-      .then(() => {
-        const newState = store.getState();
-        expect(newState.auth).toEqual(initialAuthState);
-      });
-  });
+    it('should update store correctly (with errors)', () => {
+      const expectedErrorState = {
+        name: "name is required"
+      };
+      const store = testStore();
 
-  it('should update store correctly (with errors)', () => {
-    const expectedErrorState = {
-      name: "name is required"
-    };
-    const store = testStore();
-
-    moxios.wait(() => {
-      const req = moxios.requests.mostRecent();
-      req.respondWith({
-        status: 400,
-        response: expectedErrorState
+      moxios.wait(() => {
+        const req = moxios.requests.mostRecent();
+        req.respondWith({
+          status: 400,
+          response: expectedErrorState
+        });
       });
+
+      return store.dispatch(signupUser())
+        .then(() => {
+          const newState = store.getState();
+          expect(newState.auth.errors).toEqual(expectedErrorState);
+        });
     });
-
-    return store.dispatch(signupUser())
-      .then(() => {
-        const newState = store.getState();
-        expect(newState.auth.errors).toEqual(expectedErrorState);
-      });
   });
 });
