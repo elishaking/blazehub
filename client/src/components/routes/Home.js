@@ -1,4 +1,3 @@
-//@ts-check
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -6,6 +5,7 @@ import { faUserAlt, faImage, faSmile } from '@fortawesome/free-solid-svg-icons';
 import app from 'firebase/app';
 import 'firebase/database';
 // import axios from 'axios';
+// import { initializeApp, updateUsername } from '../../utils/firebase';
 
 import { signoutUser } from '../../redux_actions/authActions';
 import { getProfilePic } from '../../redux_actions/profileActions';
@@ -15,9 +15,6 @@ import AuthNav from '../nav/AuthNav';
 import Posts from '../Posts';
 
 class Home extends Component {
-  /**
-   * @param {any} props
-   */
   constructor(props) {
     super(props);
 
@@ -29,33 +26,16 @@ class Home extends Component {
       avatar: "",
       loadingAvatar: true
     }
+
+    // this.setupFirebase();
   }
 
   componentDidMount() {
-    // if (app.apps.length > 0) {
-    //   this.setupFirebase();
-    // } else {
-    //   axios.get('/api/users/firebase').then((res) => {
-    //     app.initializeApp(res.data);
-    //     this.setupFirebase();
-    //   });
-    // }
 
-    // app.database().ref('users').once('value')
-    //   .then((usersSnapShot) => {
-    //     const users = usersSnapShot.val();
-    //     Object.keys(users)
-    //       .forEach((userKey) => {
-    //         const newUsername = `${users[userKey].firstName.replace(/ /g, "")}.${users[userKey].lastName.replace(/ /g, "")}`
-    //           .toLowerCase();
-    //         usersSnapShot.child(userKey).child('username').ref
-    //           .set(newUsername);
-    //       });
-    //     // console.log(usersSnapShot.val());
-    //   });
+    // initializeApp();
+    // updateUsername();
 
     this.setupFirebase();
-    // console.log("mounter");
 
     const { profile, auth } = this.props;
     if (profile.avatar) {
@@ -78,11 +58,8 @@ class Home extends Component {
   }
 
   setupFirebase = () => {
-    // const { user } = this.props.auth;
-
     this.postsRef = app.database().ref('posts');
     this.postImagesRef = app.database().ref('post-images');
-
     // this.notificationsRef = app.database().ref('notifications');
   }
 
@@ -233,7 +210,10 @@ class Home extends Component {
                       <FontAwesomeIcon icon={faSmile} />
                     </button>
                   </div>
-                  <button className="btn" onClick={this.createPost}>Post</button>
+                  <button
+                    className="btn"
+                    onClick={this.createPost}
+                    data-test="createPostBtn">Post</button>
                 </div>
               </div>
             </header>

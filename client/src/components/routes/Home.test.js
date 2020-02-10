@@ -36,7 +36,10 @@ describe('Home Component', () => {
 
   it('should render without errors', () => {
     const component = findByTestAttr(wrapper, 'homeComponent');
-    console.log(component.debug());
     expect(component.length).toEqual(1);
   });
+
+  // it('', () => {
+  //   const createPostBtn = findByTestAttr(wrapper, 'createPostBtn');
+  // });
 });
