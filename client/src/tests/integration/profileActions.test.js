@@ -2,6 +2,7 @@ import { testStore } from '../utils/testUtils';
 import { getProfilePic, updateProfilePic } from '../../redux_actions/profileActions';
 import { initialState as initialProfileState } from '../../redux_reducers/profileReducer';
 import app from 'firebase/app';
+import { firebaseMock } from '../utils/mocks';
 
 describe('profile action creators', () => {
   const profilePicData = {
@@ -11,33 +12,7 @@ describe('profile action creators', () => {
 
   beforeEach(() => {
     // @ts-ignore
-    app.database = jest.fn().mockReturnValueOnce({
-      ref: (path) => {
-        const once = (event) => {
-          if (event === "value") {
-            return new Promise((resolve) => {
-              resolve({
-                val: () => profilePicData.dataUrl
-              });
-            });
-          }
-        };
-
-        const set = (value) => {
-          return new Promise((resolve) => {
-            resolve();
-          });
-        };
-
-        const child = (path) => ({
-          child,
-          once,
-          set
-        });
-
-        return { child, once, set };
-      }
-    });
+    app.database = firebaseMock(profilePicData.dataUrl);
   });
 
   describe('getProfilePic action creator', () => {

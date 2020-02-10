@@ -177,7 +177,7 @@ class Home extends Component {
     const { postText, postImgDataUrl, avatar } = this.state;
 
     return (
-      <div className="container">
+      <div className="container" data-test="homeComponent">
         <AuthNav
           showSearch={true}
           hello="hello"
