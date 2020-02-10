@@ -13,8 +13,6 @@ const setUp = (initialState = {}) => {
 };
 
 describe('Home Component', () => {
-  // @ts-ignore
-  app.database = firebaseMock();
   let wrapper;
 
   beforeEach(() => {
@@ -44,5 +42,14 @@ describe('Home Component', () => {
   it('should render createPostBtn', () => {
     const createPostBtn = findByTestAttr(wrapper, 'createPostBtn');
     expect(createPostBtn.length).toEqual(1);
+  });
+
+  it('should (create new post) update postText', () => {
+    const homeInstance = wrapper.instance();
+    const postText = "New Test Post";
+    homeInstance.setState({ postText });
+    const createPostBtn = findByTestAttr(wrapper, 'createPostBtn');
+    createPostBtn.simulate('click');
+    expect(homeInstance.state.postText).toEqual('');
   });
 });
