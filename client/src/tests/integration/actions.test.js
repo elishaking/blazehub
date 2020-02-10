@@ -1,6 +1,7 @@
 import moxios from 'moxios';
 import { testStore } from '../utils/testUtils';
 import { signupUser } from '../../redux_actions/authActions';
+import { initialState as initialAuthState } from '../../redux_reducers/authReducer';
 
 describe('signupUser action', () => {
   beforeEach(() => {
@@ -9,6 +10,27 @@ describe('signupUser action', () => {
 
   afterEach(() => {
     moxios.uninstall()
+  });
+
+  it('should not update store for successful sign-up', () => {
+    const userData = {
+      name: "King"
+    };
+    const store = testStore();
+
+    moxios.wait(() => {
+      const req = moxios.requests.mostRecent();
+      req.respondWith({
+        status: 201,
+        response: userData
+      });
+    });
+
+    return store.dispatch(signupUser())
+      .then(() => {
+        const newState = store.getState();
+        expect(newState.auth).toEqual(initialAuthState);
+      });
   });
 
   it('should update store correctly (with errors)', () => {
