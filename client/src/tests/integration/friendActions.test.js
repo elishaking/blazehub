@@ -1,6 +1,6 @@
 import moxios from 'moxios';
 import { firebaseMock } from '../utils/mocks';
-import { getFriends } from '../../redux_actions/friendActions';
+import { getFriends, addFriend } from '../../redux_actions/friendActions';
 import { testStore } from '../utils/testUtils';
 import app from 'firebase/app';
 
@@ -41,6 +41,43 @@ describe('friend action creators', () => {
       await store.dispatch(getFriends());
       const newState = store.getState();
       expect(newState.friends).toEqual(friends);
+    });
+  });
+
+  describe('addFriend action creator', () => {
+    it('should update store with new friend', async () => {
+      const friends = {
+        "friend-1": {
+          name: "John"
+        },
+        "friend-2": {
+          name: "James"
+        },
+      };
+
+      const initialState = { friends };
+      const store = testStore(initialState);
+
+      const newFriend = {
+        "friend-3": { name: "Alexios" }
+      };
+
+      moxios.wait(() => {
+        const req = moxios.requests.mostRecent();
+        req.respondWith({
+          status: 201,
+          response: {
+            data: newFriend
+          }
+        });
+      });
+
+      await store.dispatch(addFriend());
+      const newState = store.getState();
+      expect(newState.friends).toEqual({
+        ...friends,
+        ...newFriend
+      });
     });
   });
 

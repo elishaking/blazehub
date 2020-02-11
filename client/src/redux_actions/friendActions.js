@@ -53,8 +53,8 @@ export const getFriends = (userKey) => async (dispatch) => {
 
 // @action-type ADD_FRIEND
 // @description add new friend
-export const addFriend = (userKey, friendKey, friendData) => (dispatch) => {
-  axios.post('/api/friends/add', {
+export const addFriend = (userKey, friendKey, friendData) => async (dispatch) => {
+  await axios.post('/api/friends/add', {
     userKey,
     friendKey,
     friend: friendData
