@@ -16,6 +16,7 @@ import { getProfilePic, updateProfilePic } from '../../redux_actions/profileActi
 import Posts from '../Posts';
 
 import { resizeImage } from '../../utils/resizeImage';
+import { validateProfileEditInput } from '../../validation/profile';
 // import { createProfileForExistingUser, createSmallAvatar } from '../../utils/firebase';
 
 class Profile extends Component {
@@ -52,7 +53,7 @@ class Profile extends Component {
     // createSmallAvatar();
 
     if (this.props.match.params && this.props.match.params.username) {
-      this.loadOtherProfileData();
+      this.loadOtherUserProfileData();
     }
     else {
       this.otherUser = false;
@@ -93,9 +94,35 @@ class Profile extends Component {
     })
   };
 
-  loadOtherProfileData = () => {
-    app.database().ref('profiles').orderByChild('username')
-      .equalTo(this.props.match.params.username).once("value", (profileSnapShot) => {
+  loadOtherUserFriends = () => {
+    app.database().ref('friends')
+      .child(this.otherUserId)
+      .once("value")
+      .then((friendsSnapShot) => {
+        if (friendsSnapShot.exists()) {
+          const friends = friendsSnapShot.val();
+          this.setFriends(Object.keys(friends), friends);
+        }
+      });
+  };
+
+  loadOtherUserProfilePhotos = () => {
+    app.database().ref('profile-photos')
+      .child(this.otherUserId)
+      .once("value")
+      .then((photosSnapShot) => {
+        const photos = photosSnapShot.exists() ? photosSnapShot.val() : { avatar: '', coverPhoto: '' };
+        this.setPic("avatar", photos.avatar);
+        this.setPic("coverPhoto", photos.coverPhoto);
+      });
+  };
+
+  loadOtherUserProfileData = () => {
+    app.database().ref('profiles')
+      .orderByChild('username')
+      .equalTo(this.props.match.params.username)
+      .once("value")
+      .then((profileSnapShot) => {
         if (!profileSnapShot.exists()) return window.location.href = "/home";
 
         const profile = profileSnapShot.val();
@@ -104,18 +131,9 @@ class Profile extends Component {
         // console.log(profileSnapShot.val())
         this.setState({ loadingOtherUserId: false });
 
-        app.database().ref('friends').child(this.otherUserId).once("value", (friendsSnapShot) => {
-          if (friendsSnapShot.exists()) {
-            const friends = friendsSnapShot.val();
-            this.setFriends(Object.keys(friends), friends);
-          }
-        });
+        this.loadOtherUserFriends();
 
-        app.database().ref('profile-photos').child(this.otherUserId).once("value", (photosSnapShot) => {
-          const photos = photosSnapShot.exists() ? photosSnapShot.val() : { avatar: '', coverPhoto: '' };
-          this.setPic("avatar", photos.avatar);
-          this.setPic("coverPhoto", photos.coverPhoto);
-        });
+        this.loadOtherUserProfilePhotos();
       });
   };
 
@@ -221,7 +239,9 @@ class Profile extends Component {
 
     const { name, bio, location, website, birth } = this.state;
 
-    const { isValid, errors } = this.validateInput({ name, bio, location, website, birth });
+    const { isValid, errors } = validateProfileEditInput(
+      { name, bio, location, website, birth }
+    );
 
     // console.log({ isValid, errors });
 
@@ -240,45 +260,6 @@ class Profile extends Component {
     } else {
       this.setState({ loadingProfile: false });
     }
-  };
-
-  /** @param {{name: string, bio: string, location: string, website: string,  birth: string,}} formData */
-  validateInput = (formData) => {
-    const errors = {};
-
-    if (formData.name === '')
-      errors.name = 'Your name is required';
-    else if (formData.name.length < 5 || formData.name.length > 30)
-      errors.name = 'Your name should be between 5-30 characters';
-
-    // if (formData.email === '')
-    //   errors.email = 'Your email is required';
-    // else if (!(new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/).test(formData.email)))
-    //   errors.email = 'Please enter a valid email';
-    // else if (formData.email.length < 5 || formData.email.length > 30)
-    //   errors.email = 'Your email should be between 5-30 characters';
-
-    // if (formData.phone.length > 30)
-    //   errors.phone = 'Your phone number should be less than 30 characters';
-    // else if (formData.phone !== '' && !(new RegExp(/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/).test(formData.phone)))
-    //   errors.phone = 'Please enter a valid phone number';
-
-
-    // if (formData.bio === '')
-    //   errors.bio = 'Your project needs a bio';
-    if (formData.bio !== '' && (formData.bio.length < 20 || formData.bio.length > 300))
-      errors.bio = 'Your bio should be between 20-300 characters';
-
-    if (formData.location.length > 300)
-      errors.location = 'Your location should be less than 300 characters';
-
-    if (formData.website.length > 100)
-      errors.website = 'Your website should be less than 100 characters';
-
-    return {
-      isValid: Object.keys(errors).length === 0,
-      errors: errors
-    };
   };
 
   findFriends = () => {
