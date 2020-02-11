@@ -1,5 +1,12 @@
 export const firebaseMock = (data = {}) => jest.fn().mockReturnValueOnce({
-  ref: (path) => {
+  ref: (path = '') => {
+    const getKey = (path) => {
+      const keys = path.split('/');
+      return keys[keys.length - 1];
+    };
+
+    const key = getKey(path);
+
     const once = (event) => {
       if (event === "value") {
         return new Promise((resolve) => {
@@ -24,13 +31,12 @@ export const firebaseMock = (data = {}) => jest.fn().mockReturnValueOnce({
       });
     }
 
-    const child = (path) => ({
-      child,
-      once,
-      set,
-      push
-    });
+    const child = (path) => {
+      const key = getKey(path);
 
-    return { child, once, set, push };
+      return { key, child, once, set, push };
+    };
+
+    return { key, child, once, set, push };
   }
 });
