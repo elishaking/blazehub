@@ -5,6 +5,15 @@ import { testStore } from '../utils/testUtils';
 import app from 'firebase/app';
 
 describe('friend action creators', () => {
+  const friends = {
+    "friend-1": {
+      name: "John"
+    },
+    "friend-2": {
+      name: "James"
+    },
+  };
+
   beforeEach(() => {
     moxios.install();
 
@@ -19,15 +28,6 @@ describe('friend action creators', () => {
   describe('getFriends action creator', () => {
     it('should update store with friends', async () => {
       const store = testStore();
-      const friends = {
-        "friend-1": {
-          name: "John"
-        },
-        "friend-2": {
-          name: "James"
-        },
-      };
-
       moxios.wait(() => {
         const req = moxios.requests.mostRecent();
         req.respondWith({
@@ -46,15 +46,6 @@ describe('friend action creators', () => {
 
   describe('addFriend action creator', () => {
     it('should update store with new friend', async () => {
-      const friends = {
-        "friend-1": {
-          name: "John"
-        },
-        "friend-2": {
-          name: "James"
-        },
-      };
-
       const initialState = { friends };
       const store = testStore(initialState);
 
