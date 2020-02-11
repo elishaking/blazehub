@@ -22,9 +22,7 @@ class Home extends Component {
       postText: '',
       postImgDataUrl: '',
       notifications: [],
-      loadingNotifications: true,
-      avatar: "",
-      loadingAvatar: true
+      loadingNotifications: true
     }
 
     this.setupFirebase();
@@ -37,23 +35,8 @@ class Home extends Component {
     // this.setupFirebase();
 
     const { profile, auth } = this.props;
-    if (profile.avatar) {
-      this.setState({
-        loadingAvatar: false,
-        avatar: profile.avatar
-      });
-    } else {
+    if (!profile.avatar)
       this.props.getProfilePic(auth.user.id, "avatar");
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.profile.avatar && nextProps.profile.avatar !== this.state.avatar) {
-      this.setState({
-        loadingAvatar: false,
-        avatar: nextProps.profile.avatar
-      });
-    }
   }
 
   setupFirebase = () => {
@@ -151,7 +134,8 @@ class Home extends Component {
 
   render() {
     const { user } = this.props.auth;
-    const { postText, postImgDataUrl, avatar } = this.state;
+    const { postText, postImgDataUrl } = this.state;
+    const { avatar } = this.props.profile || '';
 
     return (
       <div className="container" data-test="homeComponent">
