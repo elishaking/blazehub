@@ -39,6 +39,9 @@ class Home extends Component {
       this.props.getProfilePic(auth.user.id, "avatar");
   }
 
+  /**
+   * Initialize firebase references
+   */
   setupFirebase = () => {
     this.db = app.database();
     this.postsRef = this.db.ref('posts');
@@ -46,16 +49,25 @@ class Home extends Component {
     // this.notificationsRef = this.db.ref('notifications');
   }
 
+  /**
+   * Opens file explorer for image attachment to new post
+   */
   selectImage = () => {
     const postImgInput = document.getElementById("post-img");
     postImgInput.click();
   };
 
+  /**
+   * Remove image attached to new post
+   */
   removeImage = () => {
     this.setState({ postImgDataUrl: '' });
   };
 
-  /** @param {React.ChangeEvent<HTMLInputElement>} e */
+  /** 
+   * Display image attached to new post
+   * @param {React.ChangeEvent<HTMLInputElement>} e 
+   */
   showImage = (e) => {
     const postImgInput = e.target;
 
@@ -64,7 +76,7 @@ class Home extends Component {
 
       imgReader.onload = (e) => {
         if (postImgInput.files[0].size > 100000)
-          this.resizeImage(e.target.result, postImgInput.files[0].type).then((dataUrl) => {
+          this.resizeImage(e.target.result.toString(), postImgInput.files[0].type).then((dataUrl) => {
             this.setState({ postImgDataUrl: dataUrl });
           });
 
@@ -75,6 +87,12 @@ class Home extends Component {
     }
   };
 
+  /** 
+   * Resize image
+   * @param {string} dataUrl
+   * @param {string} type
+   * @param {number} maxSize
+  */
   resizeImage = (dataUrl, type, maxSize = 1000) => {
     const img = document.createElement("img");
     img.src = dataUrl;
@@ -100,6 +118,10 @@ class Home extends Component {
     });
   };
 
+  /**
+   * Create new post.
+   * Updates database with new post
+   */
   createPost = () => {
     const { postText, postImgDataUrl } = this.state;
     const newPost = {
@@ -125,7 +147,10 @@ class Home extends Component {
     });
   };
 
-  /** @param {React.ChangeEvent<HTMLTextAreaElement>} event */
+  /**
+   * Updates react-state with new data 
+   * @param {React.ChangeEvent<HTMLTextAreaElement>} event 
+   */
   onChange = (event) => {
     this.setState({
       [event.target.name]: event.target.value
