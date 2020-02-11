@@ -18,8 +18,8 @@ export const setCurrentUser = (userData) => ({
 
 // @action-type GET_ERRORS
 // @description sign-up user
-export const signupUser = (userData, history) => (dispatch) => {
-  axios.post('/api/users/signup', userData)
+export const signupUser = (userData, history) => async (dispatch) => {
+  await axios.post('/api/users/signup', userData)
     .then((res) => history.push('/signin'))
     .catch((err) => {
       if (err.response) dispatch(getErrors(err.response.data));
