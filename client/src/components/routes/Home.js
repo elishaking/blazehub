@@ -10,6 +10,8 @@ import 'firebase/database';
 import { signoutUser } from '../../redux_actions/authActions';
 import { getProfilePic } from '../../redux_actions/profileActions';
 
+import { resizeImage } from '../../utils/resizeImage';
+
 import MainNav from '../nav/MainNav';
 import AuthNav from '../nav/AuthNav';
 import Posts from '../Posts';
@@ -29,7 +31,7 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    // initializeApp();
+    // initializeApp(this);
     // updateUsername();
 
     // this.setupFirebase();
@@ -76,7 +78,7 @@ class Home extends Component {
 
       imgReader.onload = (e) => {
         if (postImgInput.files[0].size > 100000)
-          this.resizeImage(e.target.result.toString(), postImgInput.files[0].type).then((dataUrl) => {
+          resizeImage(e.target.result.toString(), postImgInput.files[0].type).then((dataUrl) => {
             this.setState({ postImgDataUrl: dataUrl });
           });
 
@@ -85,37 +87,6 @@ class Home extends Component {
 
       imgReader.readAsDataURL(postImgInput.files[0]);
     }
-  };
-
-  /** 
-   * Resize image
-   * @param {string} dataUrl
-   * @param {string} type
-   * @param {number} maxSize
-  */
-  resizeImage = (dataUrl, type, maxSize = 1000) => {
-    const img = document.createElement("img");
-    img.src = dataUrl;
-    return new Promise((resolve, reject) => {
-      img.onload = () => {
-        // console.log(img.height);
-        const canvas = document.createElement('canvas');
-        const max = img.height > img.width ? img.height : img.width;
-        if (max > maxSize) {
-          canvas.height = (img.height / max) * maxSize;
-          canvas.width = (img.width / max) * maxSize;
-
-          const context = canvas.getContext('2d');
-          context.scale(maxSize / max, maxSize / max);
-          context.drawImage(img, 0, 0);
-          // return canvas.toDataURL();
-          resolve(canvas.toDataURL(type, 0.5));
-        } else {
-          // return dataUrl;
-          resolve(dataUrl);
-        }
-      }
-    });
   };
 
   /**
