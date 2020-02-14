@@ -4,11 +4,8 @@
   "description": "A platform for connecting people: A place to chat, follow interesting conversions and be a part of a growing community",
   "main": "server.js",
   "scripts": {
-    "test": "jest test/ && cd client && yarn test",
-    "server": "nodemon server.js",
-    "client": "cd client && yarn start",
-    "client:build": "cd client && yarn build",
-    "dev": "concurrently \"yarn server\" \"yarn client\""
+    "test": "jest test/",
+    "start": "nodemon server.js"
   },
   "repository": {
     "type": "git",

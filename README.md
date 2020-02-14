@@ -1,4 +1,4 @@
-# BlazeHub Full Stack App
+# BlazeHub Backend App
 
 A platform for connecting people: A place to chat, follow interesting conversions and be a part of a growing community
 
@@ -32,12 +32,14 @@ SECRET_OR_KEY=<YOUR_SECRET_OR_KEY>
 yarn install
 ```
 
-```
-cd client && yarn install
-```
-
 - Finally, run this command in the project root to launch the project:
 
 ```
-yarn dev
+yarn start
+```
+
+- For testing
+
+```
+yarn test
 ```
