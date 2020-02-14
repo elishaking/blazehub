@@ -41,7 +41,7 @@ export const getFriends = (userKey) => async (dispatch) => {
             const friendKey = avatarSnapShot.ref.parent.key;
             friendsWithAvatars[friendKey] = {
               name: friends[friendKey].name,
-              avatar: "ddd" //avatarSnapShot.exists() ? avatarSnapShot.val() : ""
+              avatar: avatarSnapShot.exists() ? avatarSnapShot.val() : ""
             };
           });
 

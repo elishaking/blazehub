@@ -10,6 +10,8 @@ import 'firebase/database';
 import { signoutUser } from '../../redux_actions/authActions';
 import { getProfilePic } from '../../redux_actions/profileActions';
 
+import { resizeImage } from '../../utils/resizeImage';
+
 import MainNav from '../nav/MainNav';
 import AuthNav from '../nav/AuthNav';
 import Posts from '../Posts';
@@ -22,40 +24,26 @@ class Home extends Component {
       postText: '',
       postImgDataUrl: '',
       notifications: [],
-      loadingNotifications: true,
-      avatar: "",
-      loadingAvatar: true
+      loadingNotifications: true
     }
 
     this.setupFirebase();
   }
 
   componentDidMount() {
-    // initializeApp();
+    // initializeApp(this);
     // updateUsername();
 
     // this.setupFirebase();
 
     const { profile, auth } = this.props;
-    if (profile.avatar) {
-      this.setState({
-        loadingAvatar: false,
-        avatar: profile.avatar
-      });
-    } else {
+    if (!profile.avatar)
       this.props.getProfilePic(auth.user.id, "avatar");
-    }
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.profile.avatar && nextProps.profile.avatar !== this.state.avatar) {
-      this.setState({
-        loadingAvatar: false,
-        avatar: nextProps.profile.avatar
-      });
-    }
-  }
-
+  /**
+   * Initialize firebase references
+   */
   setupFirebase = () => {
     this.db = app.database();
     this.postsRef = this.db.ref('posts');
@@ -63,16 +51,25 @@ class Home extends Component {
     // this.notificationsRef = this.db.ref('notifications');
   }
 
+  /**
+   * Opens file explorer for image attachment to new post
+   */
   selectImage = () => {
     const postImgInput = document.getElementById("post-img");
     postImgInput.click();
   };
 
+  /**
+   * Remove image attached to new post
+   */
   removeImage = () => {
     this.setState({ postImgDataUrl: '' });
   };
 
-  /** @param {React.ChangeEvent<HTMLInputElement>} e */
+  /** 
+   * Display image attached to new post
+   * @param {React.ChangeEvent<HTMLInputElement>} e 
+   */
   showImage = (e) => {
     const postImgInput = e.target;
 
@@ -81,7 +78,7 @@ class Home extends Component {
 
       imgReader.onload = (e) => {
         if (postImgInput.files[0].size > 100000)
-          this.resizeImage(e.target.result, postImgInput.files[0].type).then((dataUrl) => {
+          resizeImage(e.target.result.toString(), postImgInput.files[0].type).then((dataUrl) => {
             this.setState({ postImgDataUrl: dataUrl });
           });
 
@@ -92,31 +89,10 @@ class Home extends Component {
     }
   };
 
-  resizeImage = (dataUrl, type, maxSize = 1000) => {
-    const img = document.createElement("img");
-    img.src = dataUrl;
-    return new Promise((resolve, reject) => {
-      img.onload = () => {
-        // console.log(img.height);
-        const canvas = document.createElement('canvas');
-        const max = img.height > img.width ? img.height : img.width;
-        if (max > maxSize) {
-          canvas.height = (img.height / max) * maxSize;
-          canvas.width = (img.width / max) * maxSize;
-
-          const context = canvas.getContext('2d');
-          context.scale(maxSize / max, maxSize / max);
-          context.drawImage(img, 0, 0);
-          // return canvas.toDataURL();
-          resolve(canvas.toDataURL(type, 0.5));
-        } else {
-          // return dataUrl;
-          resolve(dataUrl);
-        }
-      }
-    });
-  };
-
+  /**
+   * Create new post.
+   * Updates database with new post
+   */
   createPost = () => {
     const { postText, postImgDataUrl } = this.state;
     const newPost = {
@@ -142,7 +118,10 @@ class Home extends Component {
     });
   };
 
-  /** @param {React.ChangeEvent<HTMLTextAreaElement>} event */
+  /**
+   * Updates react-state with new data 
+   * @param {React.ChangeEvent<HTMLTextAreaElement>} event 
+   */
   onChange = (event) => {
     this.setState({
       [event.target.name]: event.target.value
@@ -151,7 +130,8 @@ class Home extends Component {
 
   render() {
     const { user } = this.props.auth;
-    const { postText, postImgDataUrl, avatar } = this.state;
+    const { postText, postImgDataUrl } = this.state;
+    const { avatar } = this.props.profile || '';
 
     return (
       <div className="container" data-test="homeComponent">

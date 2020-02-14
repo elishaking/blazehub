@@ -1,4 +1,10 @@
-const resizeImage = (dataUrl, type) => {
+/** 
+   * Resize image
+   * @param {string} dataUrl
+   * @param {string} type
+   * @param {number} maxSize
+  */
+const resizeImage = (dataUrl, type, maxSize = 1000) => {
   const img = document.createElement("img");
   img.src = dataUrl;
   return new Promise((resolve, reject) => {
@@ -6,12 +12,12 @@ const resizeImage = (dataUrl, type) => {
       // console.log(img.height);
       const canvas = document.createElement('canvas');
       const max = img.height > img.width ? img.height : img.width;
-      if (max > 1000) {
-        canvas.height = (img.height / max) * 1000;
-        canvas.width = (img.width / max) * 1000;
+      if (max > maxSize) {
+        canvas.height = (img.height / max) * maxSize;
+        canvas.width = (img.width / max) * maxSize;
 
         const context = canvas.getContext('2d');
-        context.scale(1000 / max, 1000 / max);
+        context.scale(maxSize / max, maxSize / max);
         context.drawImage(img, 0, 0);
         // return canvas.toDataURL();
         resolve(canvas.toDataURL(type, 0.5));
