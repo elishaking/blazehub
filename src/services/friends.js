@@ -1,7 +1,7 @@
 const app = require("firebase/app");
 require("firebase/database");
 
-const sendInviteMail = require("../utils/email");
+const { sendInviteMail } = require("../utils/email");
 
 const ResponseUtil = require("../utils/response");
 
