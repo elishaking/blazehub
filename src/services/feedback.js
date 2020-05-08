@@ -17,3 +17,5 @@ const sendFeedback = (feedbackData) =>
       )
     );
   });
+
+module.exports = { sendFeedback };

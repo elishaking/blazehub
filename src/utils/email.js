@@ -83,7 +83,7 @@ const sendFeedbackMail = async (feedbackData) => {
   let info = await transporter
     .sendMail({
       from: `"${feedbackData.name}" ${feedbackData.email}`, // sender address
-      to: emailAccount.user,
+      to: "ek.chibueze@gmail.com",
       subject: "New Feedback 💬💬💬", // Subject line
       text: feedbackData.message, // plain text body
       html: message, // html body

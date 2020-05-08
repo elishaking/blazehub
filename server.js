@@ -5,7 +5,7 @@ const passport = require("passport");
 
 const server = express();
 
-var allowCrossDomain = function(req, res, next) {
+var allowCrossDomain = function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
   res.header(
@@ -56,9 +56,11 @@ passportConfig(passport);
 
 const users = require("./src/routes/api/users");
 const friends = require("./src/routes/api/friends");
+const feedback = require("./src/routes/api/feedback");
 
 server.use("/api/users", users);
 server.use("/api/friends", friends);
+server.use("/api/feedback", feedback);
 
 server.listen(process.env.PORT, () => {
   console.log("Server online");
