@@ -1,4 +1,4 @@
-const nodemailer = require('nodemailer');
+const nodemailer = require("nodemailer");
 
 const sendInviteMail = async (user, receiverEmail) => {
   const message = `
@@ -16,7 +16,7 @@ const sendInviteMail = async (user, receiverEmail) => {
   // let testAccount = await nodemailer.createTestAccount();
   const emailAccount = {
     user: process.env.INVITE_EMAIL,
-    password: process.env.INVITE_EMAIL_PASSWORD
+    password: process.env.INVITE_EMAIL_PASSWORD,
   };
 
   // create reusable transporter object using the default SMTP transport
@@ -26,21 +26,23 @@ const sendInviteMail = async (user, receiverEmail) => {
     secure: true, // true for 465, false for other ports
     auth: {
       user: emailAccount.user,
-      pass: emailAccount.password
-    }
+      pass: emailAccount.password,
+    },
   });
 
   // send mail with defined transport object
-  let info = await transporter.sendMail({
-    from: `"${user.firstName} ${user.lastName}" ${emailAccount.user}`, // sender address
-    to: receiverEmail, //'bar@example.com, baz@example.com', // list of receivers
-    subject: 'Join me at BlazeHub 💬💬💬', // Subject line
-    text: 'Join me at BlazeHub', // plain text body
-    html: message, // html body
-  }).catch((err) => {
-    console.log(err);
-    return false;
-  });
+  let info = await transporter
+    .sendMail({
+      from: `"${user.firstName} ${user.lastName}" ${emailAccount.user}`, // sender address
+      to: receiverEmail, //'bar@example.com, baz@example.com', // list of receivers
+      subject: "Join me at BlazeHub 💬💬💬", // Subject line
+      text: "Join me at BlazeHub", // plain text body
+      html: message, // html body
+    })
+    .catch((err) => {
+      console.log(err);
+      return false;
+    });
 
   // console.log('Message sent: %s', info.messageId);
   // console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
@@ -48,4 +50,53 @@ const sendInviteMail = async (user, receiverEmail) => {
   return true;
 };
 
-module.exports = sendInviteMail;
+/**
+ *
+ * @param {{name: string; email: string; message: string;}} feedbackData
+ */
+const sendFeedbackMail = async (feedbackData) => {
+  const message = `
+    <div style="color: #7C62A9;">
+      <h1>Feedback from ${feedbackData.name} <${feedbackData.email}> 💬💬💬</h1>
+      
+      <p>${feedbackData.message}</p>
+    </div>
+  `;
+
+  const emailAccount = {
+    user: process.env.INVITE_EMAIL,
+    password: process.env.INVITE_EMAIL_PASSWORD,
+  };
+
+  // create reusable transporter object using the default SMTP transport
+  let transporter = nodemailer.createTransport({
+    host: process.env.INVITE_EMAIL_DOMAIN,
+    port: 465,
+    secure: true, // true for 465, false for other ports
+    auth: {
+      user: emailAccount.user,
+      pass: emailAccount.password,
+    },
+  });
+
+  // send mail with defined transport object
+  let info = await transporter
+    .sendMail({
+      from: `"${feedbackData.name}" ${feedbackData.email}`, // sender address
+      to: "ek.chibueze@gmail.com",
+      subject: "New Feedback 💬💬💬", // Subject line
+      text: feedbackData.message, // plain text body
+      html: message, // html body
+    })
+    .catch((err) => {
+      console.log(err);
+      return false;
+    });
+
+  // console.log('Message sent: %s', info.messageId);
+  // console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+
+  return true;
+};
+
+module.exports = { sendInviteMail, sendFeedbackMail };
