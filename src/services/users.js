@@ -79,49 +79,52 @@ const createUser = (userData) =>
         ""
       )}.${userData.lastName.replace(/ /g, "")}`.toLowerCase();
 
-      generateHashedPassword(userData.password).then((hash) => {
-        dbRef
-          .child("users")
-          .orderByChild("username")
-          .equalTo(newUsername)
-          .limitToFirst(1)
-          .once("value")
-          .then((userSnapShot) => {
-            if (userSnapShot.exists())
-              newUsername = `${newUsername}_${Date.now()}`;
+      const newUser = {
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        email: userData.email,
+        username: newUsername,
+        password: "hash",
+        verified: false,
+      };
 
-            const newUser = {
-              firstName: userData.firstName,
-              lastName: userData.lastName,
-              email: userData.email,
-              username: newUsername,
-              password: hash,
-              verified: false,
-            };
+      generateHashedPassword(userData.password)
+        .then((hash) => {
+          newUser.password = hash;
 
-            return userRef.set(newUser);
-          })
-          .then(() => {
-            // create default blazebot friend
-            const data = {
-              blazebot: {
-                name: "BlazeBot",
-              },
-            };
-            return dbRef.child("friends").child(userKey).set(data);
-          })
-          .then(() => {
-            return dbRef
-              .child("profiles")
-              .child(userKey)
-              .child("username")
-              .set(newUsername);
-          })
-          .then(() => {
-            resolve(ResponseUtil.createResponse(true, 200, "User created"));
-          })
-          .catch((err) => console.log(err));
-      });
+          return dbRef
+            .child("users")
+            .orderByChild("username")
+            .equalTo(newUsername)
+            .limitToFirst(1)
+            .once("value");
+        })
+        .then((userSnapShot) => {
+          if (userSnapShot.exists())
+            newUsername = `${newUsername}_${Date.now()}`;
+
+          return userRef.set(newUser);
+        })
+        .then(() => {
+          // create default blazebot friend
+          const data = {
+            blazebot: {
+              name: "BlazeBot",
+            },
+          };
+          return dbRef.child("friends").child(userKey).set(data);
+        })
+        .then(() => {
+          return dbRef
+            .child("profiles")
+            .child(userKey)
+            .child("username")
+            .set(newUsername);
+        })
+        .then(() => {
+          resolve(ResponseUtil.createResponse(true, 200, "User created"));
+        })
+        .catch((err) => console.log(err));
     });
   });
 
