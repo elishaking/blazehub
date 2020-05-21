@@ -33,20 +33,8 @@ const createUser = (userData) =>
     const userEmail = userData.email;
     const userKey = userEmail.replace(/\./g, "~").replace(/@/g, "~~");
 
-    const confirmUrl = await generateUrl(userKey, "confirm");
-    const message = generateMailMessage(
-      "Almost Done, Confirm your Account",
-      "Click on the link below to confirm your account",
-      confirmUrl,
-      "Confirm account"
-    );
-
     try {
-      const mailInfo = await sendMail(
-        "BlazeHub: Confirm your account",
-        message,
-        userEmail
-      );
+      const mailInfo = await sendConfirmationURL(userKey, userEmail);
       console.log(mailInfo);
     } catch (err) {
       return resolve(
@@ -315,6 +303,30 @@ const fetchUsers = () =>
         );
       });
   });
+
+/**
+ * Send confirmation URL
+ *
+ * @param {string} userKey
+ * @param {string} userEmail
+ */
+const sendConfirmationURL = async (userKey, userEmail) => {
+  const confirmUrl = await generateUrl(userKey, "confirm");
+  const message = generateMailMessage(
+    "Almost Done, Confirm your Account",
+    "Click on the link below to confirm your account",
+    confirmUrl,
+    "Confirm account"
+  );
+
+  const mailInfo = await sendMail(
+    "BlazeHub: Confirm your account",
+    message,
+    userEmail
+  );
+
+  return mailInfo;
+};
 
 /**
  * Hash password
