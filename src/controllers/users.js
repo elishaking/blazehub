@@ -1,50 +1,56 @@
-const express = require('express');
-require('firebase/database');
+const express = require("express");
+require("firebase/database");
 
-const { createUser, authenticateUser, fetchUsers } = require('../services/users');
-const ResponseUtil = require('../utils/response');
+const userService = require("../services/users");
+const ResponseUtil = require("../utils/response");
 
 /**
  * Create a new user and redirect to signin page
- * @param {express.Request} req 
- * @param {express.Response} res 
+ * @param {express.Request} req
+ * @param {express.Response} res
  */
 const signupUser = (req, res) => {
-  createUser(req.body)
-    .then((responseData) => ResponseUtil.sendResponse(
-      res,
-      responseData
-    ));
+  userService
+    .createUser(req.body)
+    .then((responseData) => ResponseUtil.sendResponse(res, responseData));
 };
 
 /**
  * Authenticates a user and responds with a token
- * @param {express.Request} req 
- * @param {express.Response} res 
+ * @param {express.Request} req
+ * @param {express.Response} res
  */
 const signinUser = (req, res) => {
-  authenticateUser(req.body)
-    .then((responseData) => ResponseUtil.sendResponse(
-      res,
-      responseData
-    ));
+  userService
+    .authenticateUser(req.body)
+    .then((responseData) => ResponseUtil.sendResponse(res, responseData));
+};
+
+/**
+ * Confirms user
+ * @param {express.Request} req
+ * @param {express.Response} res
+ */
+const confirmUser = (req, res) => {
+  userService
+    .confirmUser(req.body.token)
+    .then((responseData) => ResponseUtil.sendResponse(res, responseData));
 };
 
 /**
  * Get all Users
- * @param {express.Request} req 
- * @param {express.Response} res 
+ * @param {express.Request} req
+ * @param {express.Response} res
  */
 const getUsers = (req, res) => {
-  fetchUsers()
-    .then((responseData) => ResponseUtil.sendResponse(
-      res,
-      responseData
-    ));
+  fetchUsers().then((responseData) =>
+    ResponseUtil.sendResponse(res, responseData)
+  );
 };
 
 module.exports = {
   signupUser,
   signinUser,
-  getUsers
+  confirmUser,
+  getUsers,
 };

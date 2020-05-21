@@ -1,10 +1,15 @@
-const router = require('express').Router();
-const passport = require('passport');
-require('firebase/database');
+const router = require("express").Router();
+const passport = require("passport");
+require("firebase/database");
 
-const firebaseConfig = require('../../config/firebase');
+const firebaseConfig = require("../../config/firebase");
 
-const { signupUser, signinUser, getUsers } = require('../../controllers/users');
+const {
+  signupUser,
+  signinUser,
+  confirmUser,
+  getUsers,
+} = require("../../controllers/users");
 
 /**
  * @route POST api/users/signup
@@ -18,14 +23,21 @@ router.post("/signup", signupUser);
  * @description Authenticate user
  * @access Public
  */
-router.post('/signin', signinUser);
+router.post("/signin", signinUser);
+
+/**
+ * @route POST /api/users/confirm
+ * @description Confirm user
+ * @access Public
+ */
+router.post("/confirm", confirmUser);
 
 /**
  * @route GET /api/users/
  * @description Send All users
  * @access Private
  */
-router.get('/', passport.authenticate('jwt', { session: false }), getUsers);
+router.get("/", passport.authenticate("jwt", { session: false }), getUsers);
 
 //@route GET /api/users/token
 //@description Send Auth token
@@ -44,8 +56,12 @@ router.get('/', passport.authenticate('jwt', { session: false }), getUsers);
  * @description Send firebase credentials
  * @access Private
  */
-router.get('/firebase', passport.authenticate('jwt', { session: false }), (req, res) => {
-  res.json(firebaseConfig);
-});
+router.get(
+  "/firebase",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    res.json(firebaseConfig);
+  }
+);
 
 module.exports = router;

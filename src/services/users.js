@@ -368,7 +368,12 @@ const validateToken = (token) =>
         return reject(err);
       }
 
+      if (!data) {
+        return reject(new Error("Token does not exist"));
+      }
+
       resolve(data);
+      redisClient.del(token);
     });
   });
 
@@ -394,5 +399,6 @@ const generateJwtToken = (jwtPayload) =>
 module.exports = {
   createUser,
   authenticateUser,
+  confirmUser,
   fetchUsers,
 };
