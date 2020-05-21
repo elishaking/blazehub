@@ -74,59 +74,53 @@ const createUser = (userData) =>
         );
       }
 
-      bcrypt.genSalt(10, (err, salt) => {
-        if (err) console.log(err);
+      let newUsername = `${userData.firstName.replace(
+        / /g,
+        ""
+      )}.${userData.lastName.replace(/ /g, "")}`.toLowerCase();
 
-        bcrypt.hash(userData.password, salt, (err, hash) => {
-          if (err) return console.log(err);
+      generateHashedPassword(userData.password).then((hash) => {
+        dbRef
+          .child("users")
+          .orderByChild("username")
+          .equalTo(newUsername)
+          .limitToFirst(1)
+          .once("value")
+          .then((userSnapShot) => {
+            if (userSnapShot.exists())
+              newUsername = `${newUsername}_${Date.now()}`;
 
-          let newUsername = `${userData.firstName.replace(
-            / /g,
-            ""
-          )}.${userData.lastName.replace(/ /g, "")}`.toLowerCase();
+            const newUser = {
+              firstName: userData.firstName,
+              lastName: userData.lastName,
+              email: userData.email,
+              username: newUsername,
+              password: hash,
+              verified: false,
+            };
 
-          dbRef
-            .child("users")
-            .orderByChild("username")
-            .equalTo(newUsername)
-            .limitToFirst(1)
-            .once("value")
-            .then((userSnapShot) => {
-              if (userSnapShot.exists())
-                newUsername = `${newUsername}_${Date.now()}`;
-
-              const newUser = {
-                firstName: userData.firstName,
-                lastName: userData.lastName,
-                email: userData.email,
-                username: newUsername,
-                password: hash,
-                verified: false,
-              };
-
-              return userRef.set(newUser);
-            })
-            .then(() => {
-              // create default blazebot friend
-              const data = {
-                blazebot: {
-                  name: "BlazeBot",
-                },
-              };
-              return dbRef.child("friends").child(userKey).set(data);
-            })
-            .then(() => {
-              return dbRef
-                .child("profiles")
-                .child(userKey)
-                .child("username")
-                .set(newUsername);
-            })
-            .then(() => {
-              resolve(ResponseUtil.createResponse(true, 200, "User created"));
-            })
-            .catch((err) => console.log(err));
-        });
+            return userRef.set(newUser);
+          })
+          .then(() => {
+            // create default blazebot friend
+            const data = {
+              blazebot: {
+                name: "BlazeBot",
+              },
+            };
+            return dbRef.child("friends").child(userKey).set(data);
+          })
+          .then(() => {
+            return dbRef
+              .child("profiles")
+              .child(userKey)
+              .child("username")
+              .set(newUsername);
+          })
+          .then(() => {
+            resolve(ResponseUtil.createResponse(true, 200, "User created"));
+          })
+          .catch((err) => console.log(err));
       });
     });
   });
@@ -261,6 +255,29 @@ const fetchUsers = () =>
           ResponseUtil.createResponse(false, 500, "Could not fetch users")
         );
       });
+  });
+
+/**
+ * Hash password
+ * @param {string} password
+ */
+const generateHashedPassword = (password) =>
+  new Promise((resolve, reject) => {
+    bcrypt.genSalt(10, (err, salt) => {
+      if (err) {
+        console.log(err);
+        return reject(err);
+      }
+
+      bcrypt.hash(password, salt, (err, hash) => {
+        if (err) {
+          console.log(err);
+          return reject(err);
+        }
+
+        resolve(hash);
+      });
+    });
   });
 
 /**
