@@ -85,7 +85,7 @@ const createUser = (userData) =>
         email: userData.email,
         username: newUsername,
         password: "hash",
-        verified: false,
+        confirmed: false,
       };
 
       generateHashedPassword(userData.password)
@@ -184,26 +184,26 @@ const authenticateUser = (userData) =>
                 };
 
                 // Sign Token <==> encodes payload into token
-                jwt.sign(
-                  jwtPayload,
-                  process.env.SECRET_OR_KEY,
-                  {
-                    expiresIn: 3600 * 24,
-                  },
-                  (err, token) => {
-                    if (err) {
-                      console.log(err);
-                    }
-
-                    resolve(
-                      ResponseUtil.createResponse(
-                        true,
-                        200,
-                        "User Authenticated",
-                        `Bearer ${token}`
-                      )
-                    );
-                  }
+                return generateJwtToken();
+              })
+              .then((token) => {
+                resolve(
+                  ResponseUtil.createResponse(
+                    true,
+                    200,
+                    "User Authenticated",
+                    `Bearer ${token}`
+                  )
+                );
+              })
+              .catch((err) => {
+                resolve(
+                  ResponseUtil.createResponse(
+                    false,
+                    400,
+                    "Could not authenticate user",
+                    err.message
+                  )
                 );
               });
           } else {
@@ -297,6 +297,25 @@ const generateUrl = (userID, route) =>
 
       resolve(`${frontendConfig.url}/${route}/${token}`);
     });
+  });
+
+const generateJwtToken = (jwtPayload) =>
+  new Promise((resolve, reject) => {
+    jwt.sign(
+      jwtPayload,
+      process.env.SECRET_OR_KEY,
+      {
+        expiresIn: 3600 * 24,
+      },
+      (err, token) => {
+        if (err) {
+          console.log(err);
+          return reject(err);
+        }
+
+        resolve(token);
+      }
+    );
   });
 
 module.exports = {
