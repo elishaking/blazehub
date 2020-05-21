@@ -165,6 +165,19 @@ const authenticateUser = (userData) =>
         }
 
         const user = dataSnapshot.val();
+
+        // user.confirmed may not exist for earlier users
+        if (user.confirmed === false) {
+          return resolve(
+            ResponseUtil.createResponse(
+              false,
+              403,
+              "Authentication failed",
+              "User is not verified"
+            )
+          );
+        }
+
         bcrypt.compare(password, user.password).then((isMatch) => {
           if (isMatch) {
             app
