@@ -10,6 +10,8 @@ const frontendConfig = require("../config/frontend");
 const validateSignupData = require("../validation/signup");
 const validateSigninData = require("../validation/signin");
 
+const { generateMailMessage, sendMail } = require("./email");
+
 const ResponseUtil = require("../utils/response");
 
 const dbRef = app.database().ref();
@@ -19,7 +21,7 @@ const dbRef = app.database().ref();
  * @param {{email: string, firstName: string, lastName: string, password: string}} userData
  */
 const createUser = (userData) =>
-  new Promise((resolve) => {
+  new Promise(async (resolve) => {
     const { isValid, errors } = validateSignupData(userData);
 
     if (!isValid) {
@@ -30,6 +32,32 @@ const createUser = (userData) =>
 
     const userEmail = userData.email;
     const userKey = userEmail.replace(/\./g, "~").replace(/@/g, "~~");
+
+    const confirmUrl = await generateUrl(userKey, "confirm");
+    const message = generateMailMessage(
+      "Almost Done, Confirm your Account",
+      "Click on the link below to confirm your account",
+      confirmUrl,
+      "Confirm account"
+    );
+
+    try {
+      const mailInfo = await sendMail(
+        "BlazeHub: Confirm your account",
+        message,
+        userEmail
+      );
+      console.log(mailInfo);
+    } catch (err) {
+      return resolve(
+        ResponseUtil.createResponse(
+          false,
+          400,
+          "Could not create user",
+          err.message
+        )
+      );
+    }
 
     const userRef = dbRef.child("users").child(userKey);
     userRef.once("value").then((dataSnapshot) => {

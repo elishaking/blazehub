@@ -61,4 +61,4 @@ const sendMail = async (subject, message, receiverAddress) => {
   return info;
 };
 
-module.exports = { sendMail };
+module.exports = { generateMailMessage, sendMail };
