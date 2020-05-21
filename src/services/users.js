@@ -31,7 +31,7 @@ const createUser = (userData) =>
     }
 
     const userEmail = userData.email;
-    const userKey = userEmail.replace(/\./g, "~").replace(/@/g, "~~");
+    const userKey = generateUserKey(userEmail);
 
     try {
       const mailInfo = await sendConfirmationURL(userKey, userEmail);
@@ -274,6 +274,52 @@ const confirmUser = (token) =>
   });
 
 /**
+ * Resends user confirmation url
+ *
+ * @param {string} email
+ */
+const resendConfirmationURL = (email) =>
+  new Promise((resolve) => {
+    const userKey = generateUserKey(email);
+    dbRef
+      .child("users")
+      .child(userKey)
+      .once("value")
+      .then((userSnapshot) => {
+        if (!userSnapshot.exists())
+          return resolve(
+            ResponseUtil.createResponse(
+              false,
+              403,
+              "Failed",
+              "User with specified email does not exist"
+            )
+          );
+
+        return sendConfirmationURL(userKey, email);
+      })
+      .then((info) => {
+        console.log(info);
+
+        resolve(
+          ResponseUtil.createResponse(true, 200, "Confirmation URL Sent")
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+
+        resolve(
+          ResponseUtil.createResponse(
+            false,
+            500,
+            "Failed",
+            "Something went wrong"
+          )
+        );
+      });
+  });
+
+/**
  * Fetchs users from firebase
  */
 const fetchUsers = () =>
@@ -327,6 +373,14 @@ const sendConfirmationURL = async (userKey, userEmail) => {
 
   return mailInfo;
 };
+
+/**
+ * Generates user-key from email
+ *
+ * @param {string} email
+ */
+const generateUserKey = (email) =>
+  email.replace(/\./g, "~").replace(/@/g, "~~");
 
 /**
  * Hash password

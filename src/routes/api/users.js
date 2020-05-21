@@ -30,7 +30,7 @@ router.post("/signin", signinUser);
  * @description Confirm user
  * @access Public
  */
-router.post("/password/confirm", confirmUser);
+router.post("/confirm", confirmUser);
 
 /**
  * @route GET /api/users/
