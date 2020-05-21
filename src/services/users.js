@@ -73,41 +73,31 @@ const createUser = (userData) =>
                 email: userData.email,
                 username: newUsername,
                 password: hash,
+                verified: false,
               };
-              userRef
-                .set(newUser)
-                .then(() => {
-                  // create default blazebot friend
-                  const data = {
-                    blazebot: {
-                      name: "BlazeBot",
-                    },
-                  };
-                  dbRef
-                    .child("friends")
-                    .child(userKey)
-                    .set(data)
-                    .then(() => {
-                      dbRef
-                        .child("profiles")
-                        .child(userKey)
-                        .child("username")
-                        .set(newUsername)
-                        .then(() => {
-                          resolve(
-                            ResponseUtil.createResponse(
-                              true,
-                              200,
-                              "User created"
-                            )
-                          );
-                        })
-                        .catch((err) => console.log(err));
-                    })
-                    .catch((err) => console.log(err));
-                })
-                .catch((err) => console.log(err));
-            });
+
+              return userRef.set(newUser);
+            })
+            .then(() => {
+              // create default blazebot friend
+              const data = {
+                blazebot: {
+                  name: "BlazeBot",
+                },
+              };
+              return dbRef.child("friends").child(userKey).set(data);
+            })
+            .then(() => {
+              return dbRef
+                .child("profiles")
+                .child(userKey)
+                .child("username")
+                .set(newUsername);
+            })
+            .then(() => {
+              resolve(ResponseUtil.createResponse(true, 200, "User created"));
+            })
+            .catch((err) => console.log(err));
         });
       });
     });
