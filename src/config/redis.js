@@ -12,5 +12,6 @@ const options =
       };
 
 const redisClient = redis.createClient(options);
+console.log("Redis client created");
 
 module.exports = { redisClient };

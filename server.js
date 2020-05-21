@@ -63,5 +63,5 @@ server.use("/api/friends", friends);
 server.use("/api/feedback", feedback);
 
 server.listen(process.env.PORT, () => {
-  console.log("Server online");
+  console.log(`Server online on port: ${process.env.PORT}`);
 });
