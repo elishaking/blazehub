@@ -242,6 +242,49 @@ const authenticateUser = (userData) =>
       });
   });
 
+const confirmUser = (token) =>
+  new Promise(async (resolve) => {
+    try {
+      const userID = await validateToken(token);
+
+      dbRef
+        .child("users")
+        .child(userID)
+        .once("value")
+        .then((userSnapshot) => {
+          if (!userSnapshot.exists()) {
+            return resolve(
+              ResponseUtil.createResponse(
+                false,
+                403,
+                "Confirmation failed",
+                "User does not exist"
+              )
+            );
+          }
+
+          return userSnapshot.ref.child("confirmed").set(true);
+        })
+        .then(() => {
+          resolve(ResponseUtil.createResponse(true, 200, "User confirmed"));
+        })
+        .catch((err) => {
+          resolve(
+            ResponseUtil.createResponse(false, 500, "Something went wrong")
+          );
+        });
+    } catch (err) {
+      resolve(
+        ResponseUtil.createResponse(
+          false,
+          403,
+          "Confirmation failed",
+          "Invalid Confirmation URL"
+        )
+      );
+    }
+  });
+
 /**
  * Fetchs users from firebase
  */
@@ -309,6 +352,23 @@ const generateUrl = (userID, route) =>
       if (err) return reject(err);
 
       resolve(`${frontendConfig.url}/${route}/${token}`);
+    });
+  });
+
+/**
+ * Checks if token exists
+ *
+ * @param {string} token
+ */
+const validateToken = (token) =>
+  new Promise((resolve, reject) => {
+    redisClient.get(token, (err, data) => {
+      if (err) {
+        console.log(err);
+        return reject(err);
+      }
+
+      resolve(data);
     });
   });
 
