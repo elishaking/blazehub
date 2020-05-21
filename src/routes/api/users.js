@@ -8,6 +8,7 @@ const {
   signupUser,
   signinUser,
   confirmUser,
+  resendConfirmationURL,
   getUsers,
 } = require("../../controllers/users");
 
@@ -31,6 +32,13 @@ router.post("/signin", signinUser);
  * @access Public
  */
 router.post("/confirm", confirmUser);
+
+/**
+ * @route POST /api/users/resend
+ * @description Resends confirmation URL to user email
+ * @access Public
+ */
+router.post("/resend", resendConfirmationURL);
 
 /**
  * @route GET /api/users/

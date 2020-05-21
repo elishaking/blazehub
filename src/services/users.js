@@ -466,5 +466,6 @@ module.exports = {
   createUser,
   authenticateUser,
   confirmUser,
+  resendConfirmationURL,
   fetchUsers,
 };
