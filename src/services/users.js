@@ -274,7 +274,7 @@ const confirmUser = (token) =>
   });
 
 /**
- * Resends user confirmation url
+ * Resends user confirmation url to users email
  *
  * @param {string} email
  */
@@ -313,6 +313,52 @@ const resendConfirmationURL = (email) =>
 
         resolve(
           ResponseUtil.createResponse(true, 200, "Confirmation URL Sent")
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+
+        resolve(
+          ResponseUtil.createResponse(
+            false,
+            500,
+            "Failed",
+            "Something went wrong"
+          )
+        );
+      });
+  });
+
+/**
+ * Sends password reset url to users email
+ *
+ * @param {string} email
+ */
+const sendPasswordResetURL = (email) =>
+  new Promise((resolve) => {
+    const userKey = generateUserKey(email);
+    dbRef
+      .child("users")
+      .child(userKey)
+      .once("value")
+      .then((userSnapshot) => {
+        if (!userSnapshot.exists())
+          return resolve(
+            ResponseUtil.createResponse(
+              false,
+              403,
+              "Failed",
+              "You have not signed up yet, please sign up"
+            )
+          );
+
+        return sendResetURL(userKey, email);
+      })
+      .then((info) => {
+        console.log(info);
+
+        resolve(
+          ResponseUtil.createResponse(true, 200, "Password reset URL Sent")
         );
       })
       .catch((err) => {
@@ -377,6 +423,30 @@ const sendConfirmationURL = async (userKey, userEmail) => {
 
   const mailInfo = await sendMail(
     "BlazeHub: Confirm your account",
+    message,
+    userEmail
+  );
+
+  return mailInfo;
+};
+
+/**
+ * Send password reset URL
+ *
+ * @param {string} userKey
+ * @param {string} userEmail
+ */
+const sendResetURL = async (userKey, userEmail) => {
+  const resetUrl = await generateUrl(userKey, "password/reset");
+  const message = generateMailMessage(
+    "Reset your password",
+    "Click on the link below to reset your password",
+    resetUrl,
+    "Reset password"
+  );
+
+  const mailInfo = await sendMail(
+    "BlazeHub: Reset your password",
     message,
     userEmail
   );
