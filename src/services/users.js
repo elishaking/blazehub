@@ -466,7 +466,7 @@ const sendConfirmationURL = async (userKey, userEmail) => {
   const confirmUrl = await generateUrl(userKey, "confirm");
   const message = generateMailMessage(
     "Almost Done, Confirm your Account",
-    "Click on the link below to confirm your account",
+    "Click on the link below to confirm your account. It expires in <strong>1 hour</strong>",
     confirmUrl,
     "Confirm account"
   );
@@ -490,7 +490,7 @@ const sendResetURL = async (userKey, userEmail) => {
   const resetUrl = await generateUrl(userKey, "password/reset");
   const message = generateMailMessage(
     "Reset your password",
-    "Click on the link below to reset your password",
+    "Click on the link below to reset your password. It expires in <strong>1 hour</strong>",
     resetUrl,
     "Reset password"
   );
