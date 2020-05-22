@@ -49,6 +49,17 @@ const resendConfirmationURL = (req, res) => {
 };
 
 /**
+ * Resends confirmation URL to user email
+ * @param {express.Request} req
+ * @param {express.Response} res
+ */
+const sendPasswordResetURL = (req, res) => {
+  userService
+    .sendPasswordResetURL(req.body.email)
+    .then((responseData) => ResponseUtil.sendResponse(res, responseData));
+};
+
+/**
  * Get all Users
  * @param {express.Request} req
  * @param {express.Response} res
@@ -64,5 +75,6 @@ module.exports = {
   signinUser,
   confirmUser,
   resendConfirmationURL,
+  sendPasswordResetURL,
   getUsers,
 };

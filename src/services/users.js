@@ -547,5 +547,6 @@ module.exports = {
   authenticateUser,
   confirmUser,
   resendConfirmationURL,
+  sendPasswordResetURL,
   fetchUsers,
 };
