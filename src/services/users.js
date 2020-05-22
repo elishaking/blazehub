@@ -330,6 +330,56 @@ const resendConfirmationURL = (email) =>
   });
 
 /**
+ * Confirms the url sent for password reset
+ *
+ * @param {string} token
+ */
+const confirmPasswordResetURL = (token) =>
+  new Promise(async (resolve) => {
+    let userID;
+    try {
+      userID = await validateToken(token);
+    } catch (err) {
+      return resolve(
+        ResponseUtil.createResponse(
+          false,
+          403,
+          "Confirmation failed",
+          "Password reset URL is invalid"
+        )
+      );
+    }
+
+    dbRef
+      .child("users")
+      .child(userID)
+      .once("value")
+      .then((userSnapshot) => {
+        if (!userSnapshot.exists()) {
+          return resolve(
+            ResponseUtil.createResponse(
+              false,
+              403,
+              "Confirmation failed",
+              "Your account does not exist, please sign up"
+            )
+          );
+        }
+
+        resolve(
+          ResponseUtil.createResponse(true, 200, "Your password has been reset")
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+
+        resolve(
+          ResponseUtil.createResponse(false, 500, "Something went wrong")
+        );
+      });
+  });
+
+/**
  * Sends password reset url to users email
  *
  * @param {string} email
@@ -348,7 +398,7 @@ const sendPasswordResetURL = (email) =>
               false,
               403,
               "Failed",
-              "You have not signed up yet, please sign up"
+              "You account does not exist, please sign up"
             )
           );
 
@@ -548,5 +598,6 @@ module.exports = {
   confirmUser,
   resendConfirmationURL,
   sendPasswordResetURL,
+  confirmPasswordResetURL,
   fetchUsers,
 };
