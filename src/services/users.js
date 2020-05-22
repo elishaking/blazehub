@@ -292,7 +292,17 @@ const resendConfirmationURL = (email) =>
               false,
               403,
               "Failed",
-              "User with specified email does not exist"
+              "You have not signed up yet, please sign up"
+            )
+          );
+
+        if (userSnapshot.val().confirmed)
+          return resolve(
+            ResponseUtil.createResponse(
+              false,
+              403,
+              "Failed",
+              "Your account has already been confirmed"
             )
           );
 
