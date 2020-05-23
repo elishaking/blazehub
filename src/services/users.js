@@ -367,8 +367,62 @@ const confirmPasswordResetURL = (token) =>
         }
 
         resolve(
-          ResponseUtil.createResponse(true, 200, "Your password has been reset")
+          ResponseUtil.createResponse(true, 200, "Password reset url confirmed")
         );
+      })
+      .catch((err) => {
+        console.log(err);
+
+        resolve(
+          ResponseUtil.createResponse(false, 500, "Something went wrong")
+        );
+      });
+  });
+
+/**
+ * Resets the users password
+ *
+ * @param {string} token
+ * @param {string} password
+ */
+const resetPassword = (token, password) =>
+  new Promise(async (resolve) => {
+    let userID;
+    try {
+      userID = await validateToken(token);
+    } catch (err) {
+      return resolve(
+        ResponseUtil.createResponse(
+          false,
+          403,
+          "Password reset failed",
+          "Password reset URL is invalid"
+        )
+      );
+    }
+
+    dbRef
+      .child("users")
+      .child(userID)
+      .once("value")
+      .then(async (userSnapshot) => {
+        if (!userSnapshot.exists()) {
+          return resolve(
+            ResponseUtil.createResponse(
+              false,
+              403,
+              "Password reset failed",
+              "Your account does not exist, please sign up"
+            )
+          );
+        }
+
+        const hash = await generateHashedPassword(password);
+
+        return userSnapshot.ref.child("password").set(hash);
+      })
+      .then(() => {
+        ResponseUtil.createResponse(true, 200, "Password reset successful", "Your password has been reset")
       })
       .catch((err) => {
         console.log(err);
