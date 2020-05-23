@@ -11,6 +11,7 @@ const {
   resendConfirmationURL,
   sendPasswordResetURL,
   confirmPasswordResetURL,
+  resetPassword,
   getUsers,
 } = require("../../controllers/users");
 
@@ -55,6 +56,13 @@ router.post("/password/forgot", sendPasswordResetURL);
  * @access Public
  */
 router.post("/password/confirm", confirmPasswordResetURL);
+
+/**
+ * @route POST /api/users/password/reset
+ * @description Resets user password
+ * @access Public
+ */
+router.post("/password/reset", resetPassword);
 
 /**
  * @route GET /api/users/

@@ -422,7 +422,14 @@ const resetPassword = (token, password) =>
         return userSnapshot.ref.child("password").set(hash);
       })
       .then(() => {
-        ResponseUtil.createResponse(true, 200, "Password reset successful", "Your password has been reset")
+        redisClient.del(token);
+
+        ResponseUtil.createResponse(
+          true,
+          200,
+          "Password reset successful",
+          "Your password has been reset"
+        );
       })
       .catch((err) => {
         console.log(err);
@@ -623,7 +630,6 @@ const validateToken = (token) =>
       }
 
       resolve(data);
-      redisClient.del(token);
     });
   });
 
@@ -653,5 +659,6 @@ module.exports = {
   resendConfirmationURL,
   sendPasswordResetURL,
   confirmPasswordResetURL,
+  resetPassword,
   fetchUsers,
 };

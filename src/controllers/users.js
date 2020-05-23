@@ -72,6 +72,19 @@ const confirmPasswordResetURL = (req, res) => {
 };
 
 /**
+ * Resets user password
+ *
+ * @param {express.Request} req
+ * @param {express.Response} res
+ */
+const resetPassword = (req, res) => {
+  const { token, password } = req.body;
+  userService
+    .resetPassword(token, password)
+    .then((responseData) => ResponseUtil.sendResponse(res, responseData));
+};
+
+/**
  * Get all Users
  * @param {express.Request} req
  * @param {express.Response} res
@@ -89,5 +102,6 @@ module.exports = {
   resendConfirmationURL,
   sendPasswordResetURL,
   confirmPasswordResetURL,
+  resetPassword,
   getUsers,
 };
