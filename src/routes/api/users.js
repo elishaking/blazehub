@@ -1,159 +1,75 @@
-const router = require('express').Router();
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const passport = require('passport');
-const app = require('firebase/app');
-require('firebase/database');
+const router = require("express").Router();
+const passport = require("passport");
+require("firebase/database");
 
-const sendInviteMail = require('./email');
+const firebaseConfig = require("../../config/firebase");
 
-const validateSignupData = require('../../validation/signup');
-const validateSigninData = require('../../validation/signin');
+const {
+  signupUser,
+  signinUser,
+  confirmUser,
+  resendConfirmationURL,
+  sendPasswordResetURL,
+  confirmPasswordResetURL,
+  resetPassword,
+  getUsers,
+} = require("../../controllers/users");
 
-const firebaseConfig = {
-  apiKey: process.env.FIREBASE_API_KEY,
-  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-  databaseURL: process.env.FIREBASE_DATABASE_URL,
-  projectId: process.env.FIREBASE_PROJECT_ID,
-  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.FIREBASE_MESSEGING_SENDER_ID,
-  appId: process.env.FIREBASE_APP_ID,
-  measurementId: process.env.FIREBASE_MEASUREMENT_ID
-};
-const firebaseApp = app.initializeApp(firebaseConfig);
+/**
+ * @route POST api/users/signup
+ * @description Register new user
+ * @access Public
+ */
+router.post("/signup", signupUser);
 
-const dbRef = firebaseApp.database().ref();
+/**
+ * @route POST /api/users/signin
+ * @description Authenticate user
+ * @access Public
+ */
+router.post("/signin", signinUser);
 
-// @route POST api/users/signup
-// @description Register new user
-// @access Public
-router.post("/signup", (req, res) => {
-  const { isValid, errors } = validateSignupData(req.body);
+/**
+ * @route POST /api/users/confirm
+ * @description Confirm user
+ * @access Public
+ */
+router.post("/confirm", confirmUser);
 
-  if (!isValid) {
-    return res.status(400).json(errors);
-  }
+/**
+ * @route POST /api/users/resend
+ * @description Resends confirmation URL to user email
+ * @access Public
+ */
+router.post("/resend", resendConfirmationURL);
 
-  const userEmail = req.body.email;
-  const userKey = userEmail.replace(/\./g, "~").replace(/@/g, "~~");
+/**
+ * @route POST /api/users/password/forgot
+ * @description Sends password reset URL to user email
+ * @access Public
+ */
+router.post("/password/forgot", sendPasswordResetURL);
 
-  const userRef = dbRef.child('users').child(userKey);
-  userRef
-    .once('value', (dataSnapshot) => {
-      if (dataSnapshot.exists()) {
-        errors.email = "Email already exists";
-        return res.status(400).json(errors);
-      }
+/**
+ * @route POST /api/users/password/confirm
+ * @description Confirms the url sent for password reset
+ * @access Public
+ */
+router.post("/password/confirm", confirmPasswordResetURL);
 
-      bcrypt.genSalt(10, (err, salt) => {
-        if (err) console.error(err);
-        bcrypt.hash(req.body.password, salt, (err, hash) => {
-          if (err) return console.error(err);
+/**
+ * @route POST /api/users/password/reset
+ * @description Resets user password
+ * @access Public
+ */
+router.post("/password/reset", resetPassword);
 
-          const newUser = {
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            email: req.body.email,
-            password: hash,
-          }
-          userRef
-            .set(newUser, (err) => {
-              if (err) return console.error(err);
-
-              // create default blazebot friend
-              dbRef.child('friends').child(userKey).set({
-                "blazebot": {
-                  name: "BlazeBot",
-
-                }
-              }, (err) => {
-                if (err) return console.error(err);
-
-                dbRef.child('profiles').child(userKey)
-                  .child('username').set(`${newUser.firstName.replace(/ /g, "")}.${newUser.lastName.replace(/ /g, "")}`.toLowerCase(), (err) => {
-                    if (err) return console.log(err);
-
-                    res.json({ success: true });
-                  });
-              });
-            });
-        });
-      });
-    });
-});
-
-//@route POST /api/users/signin
-//@description Authenticate user
-//@access Public
-router.post('/signin', (req, res) => {
-  const { isValid, errors } = validateSigninData(req.body);
-
-  if (!isValid) {
-    return res.status(400).json(errors);
-  }
-
-  const email = req.body.email;
-  const password = req.body.password;
-
-  const userKey = email.replace(/\./g, "~").replace(/@/g, "~~");
-  const userRef = dbRef.child('users').child(userKey);
-
-  userRef.once('value', (dataSnapshot) => {
-    if (!dataSnapshot.exists()) {
-      errors.signinEmail = "No user with this email, Please Sign Up";
-      return res.status(400).json(errors);
-    }
-
-    const user = dataSnapshot.val();
-    bcrypt.compare(password, user.password).then((isMatch) => {
-      if (isMatch) {
-        app.database().ref('profiles').child(userKey).child('username')
-          .once("value", (usernameSnapShot) => {
-            // JWT payload
-            const jwtPayload = {
-              id: userKey,
-              firstName: user.firstName,
-              lastName: user.lastName,
-              email: user.email,
-              username: usernameSnapShot.val()
-            };
-
-            // Sign Token <==> encodes payload into token
-            jwt.sign(
-              jwtPayload,
-              process.env.SECRET_OR_KEY,
-              {
-                expiresIn: 3600 * 24
-              },
-              (err, token) => {
-                // dbRef.child('tokens').child(userKey).set(token, (err) => {
-                //   if (err) return console.error(err);
-
-
-                // });
-                return res.json({
-                  success: true,
-                  token: `Bearer ${token}`
-                });
-              }
-            );
-          });
-      } else {
-        errors.signinPassword = 'Password incorrect';
-        res.status(400).json(errors);
-      }
-    });
-  })
-});
-
-//@route GET /api/users/
-//@description Send All users
-//@access Private
-router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
-  dbRef.child('users').limitToLast(30).once("value", (usersSnapshot) => res.json({
-    users: usersSnapshot.val()
-  }));
-});
+/**
+ * @route GET /api/users/
+ * @description Send All users
+ * @access Private
+ */
+router.get("/", passport.authenticate("jwt", { session: false }), getUsers);
 
 //@route GET /api/users/token
 //@description Send Auth token
@@ -167,61 +83,17 @@ router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => 
 //   });
 // });
 
-//@route GET /api/users/firebase
-//@description Send firebase credentials
-//@access Private
-router.get('/firebase', passport.authenticate('jwt', { session: false }), (req, res) => {
-  res.json(firebaseConfig);
-});
-
-//@route POST /api/users/friends
-//@description Send all user friends
-//@access Private
-router.post('/friends', passport.authenticate('jwt', { session: false }), (req, res) => {
-  dbRef.child('friends').child(req.body.userKey).once('value', (friendsSnapShot) => {
-    res.json({ friends: friendsSnapShot.val() });
-  });
-});
-
-//@route POST /api/users/friends/add
-//@description Add a new friend
-//@access Private
-router.post('/friends/add', passport.authenticate('jwt', { session: false }), (req, res) => {
-  const { userKey, friendKey, friend } = req.body;
-
-  // add new-friend to current-user's friends db
-  dbRef.child('friends').child(userKey).child(friendKey).set(friend, (err) => {
-    if (err) console.error(err);
-
-    // add current-user to new-friend's db
-    const user = req.user;
-    dbRef.child('friends').child(friendKey).child(userKey).set({
-      name: `${user.firstName} ${user.lastName}`
-    }, (err) => {
-      if (err) console.error(err);
-
-      res.json({
-        friend: {
-          [friendKey]: friend
-        }
-      });
-    });
-  })
-});
-
-//@route POST /api/users/friends/invite
-//@description Invite friends to Blazehub
-//@access Private
-router.post('/friends/invite', passport.authenticate('jwt', { session: false }), async (req, res) => {
-  const invitees = req.body;
-  if (invitees[0].email == '') return res.status(400).json({ success: false });
-
-  let success = true;
-  for (let i = 0; i < invitees.length; i++) {
-    success = await sendInviteMail(req.user, invitees[i].email) && success;
+/**
+ * @route GET /api/users/firebase
+ * @description Send firebase credentials
+ * @access Private
+ */
+router.get(
+  "/firebase",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    res.json(firebaseConfig);
   }
-
-  res.json({ success });
-});
+);
 
 module.exports = router;

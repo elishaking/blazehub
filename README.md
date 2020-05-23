@@ -1,8 +1,10 @@
-# BlazeHub Full Stack App
+# BlazeHub Backend App
 
 A platform for connecting people: A place to chat, follow interesting conversions and be a part of a growing community
 
 https://blazehub.skyblazar.com
+
+Find the frontend repo here: https://github.com/elishaking/blazehub-frontend
 
 ### _Under development_
 
@@ -29,15 +31,17 @@ SECRET_OR_KEY=<YOUR_SECRET_OR_KEY>
 - Run the following commands to install dependencies:
 
 ```
-npm i
-```
-
-```
-cd client && npm i
+yarn install
 ```
 
 - Finally, run this command in the project root to launch the project:
 
 ```
-npm run dev
+yarn start
+```
+
+- For testing
+
+```
+yarn test
 ```
