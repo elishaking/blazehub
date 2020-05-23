@@ -185,7 +185,7 @@ const authenticateUser = (userData) =>
                 };
 
                 // Sign Token <==> encodes payload into token
-                return generateJwtToken();
+                return generateJwtToken(jwtPayload);
               })
               .then((token) => {
                 resolve(
