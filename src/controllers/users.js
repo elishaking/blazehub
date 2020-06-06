@@ -90,9 +90,9 @@ const resetPassword = (req, res) => {
  * @param {express.Response} res
  */
 const getUsers = (req, res) => {
-  fetchUsers().then((responseData) =>
-    ResponseUtil.sendResponse(res, responseData)
-  );
+  userService
+    .fetchUsers()
+    .then((responseData) => ResponseUtil.sendResponse(res, responseData));
 };
 
 module.exports = {
