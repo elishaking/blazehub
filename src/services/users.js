@@ -4,7 +4,7 @@ const crypto = require("crypto");
 const app = require("firebase/app");
 require("firebase/database");
 
-const { redisClient } = require("../config/redis");
+// const { redisClient } = require("../config/redis");
 const frontendConfig = require("../config/frontend");
 
 const validateSignupData = require("../validation/signup");
@@ -12,9 +12,11 @@ const validateSigninData = require("../validation/signin");
 
 const { generateMailMessage, sendMail } = require("./email");
 
+const { logError } = require("../utils/log");
 const ResponseUtil = require("../utils/response");
 
 const dbRef = app.database().ref();
+const tokensRef = dbRef.child("tokens");
 
 /**
  * Creates a new user
@@ -222,7 +224,7 @@ const authenticateUser = (userData) =>
         });
       })
       .catch((err) => {
-        console.log(err);
+        logError(err);
 
         resolve(
           ResponseUtil.createResponse(false, 500, "Authentication Failed")
@@ -316,7 +318,7 @@ const resendConfirmationURL = (email) =>
         );
       })
       .catch((err) => {
-        console.log(err);
+        logError(err);
 
         resolve(
           ResponseUtil.createResponse(
@@ -371,7 +373,7 @@ const confirmPasswordResetURL = (token) =>
         );
       })
       .catch((err) => {
-        console.log(err);
+        logError(err);
 
         resolve(
           ResponseUtil.createResponse(false, 500, "Something went wrong")
@@ -422,7 +424,8 @@ const resetPassword = (token, password) =>
         return userSnapshot.ref.child("password").set(hash);
       })
       .then(() => {
-        redisClient.del(token);
+        // redisClient.del(token);
+        tokensRef.child(token).remove();
 
         ResponseUtil.createResponse(
           true,
@@ -432,7 +435,7 @@ const resetPassword = (token, password) =>
         );
       })
       .catch((err) => {
-        console.log(err);
+        logError(err);
 
         resolve(
           ResponseUtil.createResponse(false, 500, "Something went wrong")
@@ -473,7 +476,7 @@ const sendPasswordResetURL = (email) =>
         );
       })
       .catch((err) => {
-        console.log(err);
+        logError(err);
 
         resolve(
           ResponseUtil.createResponse(
@@ -509,7 +512,7 @@ const fetchUsers = () =>
         );
       })
       .catch((err) => {
-        console.log(err);
+        logError(err);
 
         resolve(
           ResponseUtil.createResponse(false, 500, "Could not fetch users")
@@ -581,13 +584,13 @@ const generateHashedPassword = (password) =>
   new Promise((resolve, reject) => {
     bcrypt.genSalt(10, (err, salt) => {
       if (err) {
-        console.log(err);
+        logError(err);
         return reject(err);
       }
 
       bcrypt.hash(password, salt, (err, hash) => {
         if (err) {
-          console.log(err);
+          logError(err);
           return reject(err);
         }
 
@@ -605,11 +608,26 @@ const generateHashedPassword = (password) =>
 const generateUrl = (userID, route) =>
   new Promise((resolve, reject) => {
     const token = crypto.randomBytes(64).toString("hex");
-    redisClient.set(token, userID, "EX", 60 * 60, (err, reply) => {
-      if (err) return reject(err);
+    // redisClient.set(token, userID, "EX", 60 * 60, (err, reply) => {
+    //   if (err) return reject(err);
 
-      resolve(`${frontendConfig.url}/${route}/${token}`);
-    });
+    //   resolve(`${frontendConfig.url}/${route}/${token}`);
+    // });
+
+    const tokenData = {
+      userID,
+      exp: 60 * 60,
+    };
+    tokensRef
+      .child(token)
+      .push(tokenData)
+      .then((val) => {
+        resolve(`${frontendConfig.url}/${route}/${token}`);
+      })
+      .catch((err) => {
+        logError(err);
+        reject(err);
+      });
   });
 
 /**
@@ -619,18 +637,33 @@ const generateUrl = (userID, route) =>
  */
 const validateToken = (token) =>
   new Promise((resolve, reject) => {
-    redisClient.get(token, (err, data) => {
-      if (err) {
-        console.log(err);
-        return reject(err);
-      }
+    // redisClient.get(token, (err, data) => {
+    //   if (err) {
+    //     logError(err);
+    //     return reject(err);
+    //   }
 
-      if (!data) {
-        return reject(new Error("Token does not exist"));
-      }
+    //   if (!data) {
+    //     return reject(new Error("Token does not exist"));
+    //   }
 
-      resolve(data);
-    });
+    //   resolve(data);
+    // });
+
+    tokensRef
+      .child(token)
+      .once("value")
+      .then((tokenDataSnapshot) => {
+        if (!tokenDataSnapshot.exists()) {
+          return reject(new Error("Token does not exist"));
+        }
+
+        resolve(tokenDataSnapshot.val().userID);
+      })
+      .catch((err) => {
+        logError(err);
+        reject(err);
+      });
   });
 
 const generateJwtToken = (jwtPayload) =>
@@ -643,7 +676,7 @@ const generateJwtToken = (jwtPayload) =>
       },
       (err, token) => {
         if (err) {
-          console.log(err);
+          logError(err);
           return reject(err);
         }
 
