@@ -616,7 +616,7 @@ const generateUrl = (userID, route) =>
 
     const tokenData = {
       userID,
-      exp: 60 * 60,
+      exp: Date.now() + 60 * 60,
     };
     tokensRef
       .child(token)
@@ -654,9 +654,12 @@ const validateToken = (token) =>
       .child(token)
       .once("value")
       .then((tokenDataSnapshot) => {
-        if (!tokenDataSnapshot.exists()) {
+        if (!tokenDataSnapshot.exists())
           return reject(new Error("Token does not exist"));
-        }
+
+        const token = tokenDataSnapshot.val();
+        if (token.exp < Date.now())
+          return reject(new Error("Token does not exist"));
 
         resolve(tokenDataSnapshot.val().userID);
       })
