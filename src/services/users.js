@@ -293,8 +293,8 @@ const resendConfirmationURL = (email) =>
             ResponseUtil.createResponse(
               false,
               403,
-              "Failed",
-              "You have not signed up yet, please sign up"
+              "You have not signed up yet, please sign up",
+              { email: "You have not signed up yet, please sign up" }
             )
           );
 
@@ -303,8 +303,8 @@ const resendConfirmationURL = (email) =>
             ResponseUtil.createResponse(
               false,
               403,
-              "Failed",
-              "Your account has already been confirmed"
+              "Your account has already been confirmed",
+              { email: "Your account has already been confirmed" }
             )
           );
 
