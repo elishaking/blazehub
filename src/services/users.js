@@ -427,11 +427,13 @@ const resetPassword = (token, password) =>
         // redisClient.del(token);
         tokensRef.child(token).remove();
 
-        ResponseUtil.createResponse(
-          true,
-          200,
-          "Password reset successful",
-          "Your password has been reset"
+        resolve(
+          ResponseUtil.createResponse(
+            true,
+            200,
+            "Password reset successful",
+            "Your password has been reset"
+          )
         );
       })
       .catch((err) => {
@@ -658,9 +660,11 @@ const validateToken = (token) =>
           return reject(new Error("Token does not exist"));
 
         const tokenData = tokenDataSnapshot.val();
-        console.log(tokenData, Date.now());
-        if (tokenData.exp < Date.now())
+        if (tokenData.exp < Date.now()) {
+          tokenDataSnapshot.ref.remove();
+
           return reject(new Error("Token does not exist"));
+        }
 
         resolve(tokenData.userID);
       })
