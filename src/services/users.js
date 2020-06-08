@@ -235,7 +235,7 @@ const authenticateUser = (userData) =>
 const confirmUser = (token) =>
   new Promise(async (resolve) => {
     try {
-      const userID = await validateToken(token);
+      const userID = await validateToken(token, true);
 
       dbRef
         .child("users")
@@ -647,7 +647,7 @@ const generateUrl = (userID, route) =>
  *
  * @param {string} token
  */
-const validateToken = (token) =>
+const validateToken = (token, deleteAfterValidation = false) =>
   new Promise((resolve, reject) => {
     // redisClient.get(token, (err, data) => {
     //   if (err) {
@@ -675,6 +675,8 @@ const validateToken = (token) =>
 
           return reject(new Error("Token does not exist"));
         }
+
+        if (deleteAfterValidation) tokenDataSnapshot.ref.remove();
 
         resolve(tokenData.userID);
       })
