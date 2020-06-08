@@ -248,7 +248,7 @@ const confirmUser = (token) =>
                 false,
                 403,
                 "Confirmation failed",
-                "User does not exist"
+                "Your account does not exist, please sign up"
               )
             );
           }
@@ -256,7 +256,13 @@ const confirmUser = (token) =>
           return userSnapshot.ref.child("confirmed").set(true);
         })
         .then(() => {
-          resolve(ResponseUtil.createResponse(true, 200, "User confirmed"));
+          resolve(
+            ResponseUtil.createResponse(
+              true,
+              200,
+              "You have been confirmed, proceed to sign up"
+            )
+          );
         })
         .catch((err) => {
           resolve(
@@ -269,7 +275,7 @@ const confirmUser = (token) =>
           false,
           403,
           "Confirmation failed",
-          "Invalid Confirmation URL"
+          "Invalid confirmation link"
         )
       );
     }
@@ -314,7 +320,7 @@ const resendConfirmationURL = (email) =>
         console.log(info);
 
         resolve(
-          ResponseUtil.createResponse(true, 200, "Confirmation URL Sent")
+          ResponseUtil.createResponse(true, 200, "Confirmation link Sent")
         );
       })
       .catch((err) => {
@@ -347,7 +353,7 @@ const confirmPasswordResetURL = (token) =>
           false,
           403,
           "Confirmation failed",
-          "Password reset URL is invalid"
+          "Password reset link is invalid"
         )
       );
     }
@@ -369,7 +375,11 @@ const confirmPasswordResetURL = (token) =>
         }
 
         resolve(
-          ResponseUtil.createResponse(true, 200, "Password reset url confirmed")
+          ResponseUtil.createResponse(
+            true,
+            200,
+            "Password reset link confirmed"
+          )
         );
       })
       .catch((err) => {
@@ -398,7 +408,7 @@ const resetPassword = (token, password) =>
           false,
           403,
           "Password reset failed",
-          "Password reset URL is invalid"
+          "Password reset link is invalid"
         )
       );
     }
@@ -474,7 +484,7 @@ const sendPasswordResetURL = (email) =>
         console.log(info);
 
         resolve(
-          ResponseUtil.createResponse(true, 200, "Password reset URL Sent")
+          ResponseUtil.createResponse(true, 200, "Password reset link Sent")
         );
       })
       .catch((err) => {
