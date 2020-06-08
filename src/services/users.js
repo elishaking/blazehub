@@ -4,7 +4,7 @@ const crypto = require("crypto");
 const app = require("firebase/app");
 require("firebase/database");
 
-const { redisClient } = require("../config/redis");
+// const { redisClient } = require("../config/redis");
 const frontendConfig = require("../config/frontend");
 
 const validateSignupData = require("../validation/signup");
@@ -12,9 +12,11 @@ const validateSigninData = require("../validation/signin");
 
 const { generateMailMessage, sendMail } = require("./email");
 
+const { logError } = require("../utils/log");
 const ResponseUtil = require("../utils/response");
 
 const dbRef = app.database().ref();
+const tokensRef = dbRef.child("tokens");
 
 /**
  * Creates a new user
@@ -155,16 +157,16 @@ const authenticateUser = (userData) =>
         const user = dataSnapshot.val();
 
         // user.confirmed may not exist for earlier users
-        // if (user.confirmed === false) {
-        //   return resolve(
-        //     ResponseUtil.createResponse(
-        //       false,
-        //       403,
-        //       "Authentication failed",
-        //       "User is not verified"
-        //     )
-        //   );
-        // }
+        if (user.confirmed === false) {
+          return resolve(
+            ResponseUtil.createResponse(
+              false,
+              403,
+              "Authentication failed",
+              "User is not verified"
+            )
+          );
+        }
 
         bcrypt.compare(password, user.password).then((isMatch) => {
           if (isMatch) {
@@ -222,7 +224,7 @@ const authenticateUser = (userData) =>
         });
       })
       .catch((err) => {
-        console.log(err);
+        logError(err);
 
         resolve(
           ResponseUtil.createResponse(false, 500, "Authentication Failed")
@@ -233,7 +235,7 @@ const authenticateUser = (userData) =>
 const confirmUser = (token) =>
   new Promise(async (resolve) => {
     try {
-      const userID = await validateToken(token);
+      const userID = await validateToken(token, true);
 
       dbRef
         .child("users")
@@ -246,7 +248,7 @@ const confirmUser = (token) =>
                 false,
                 403,
                 "Confirmation failed",
-                "User does not exist"
+                "Your account does not exist, please sign up"
               )
             );
           }
@@ -254,7 +256,13 @@ const confirmUser = (token) =>
           return userSnapshot.ref.child("confirmed").set(true);
         })
         .then(() => {
-          resolve(ResponseUtil.createResponse(true, 200, "User confirmed"));
+          resolve(
+            ResponseUtil.createResponse(
+              true,
+              200,
+              "You have been confirmed, proceed to sign up"
+            )
+          );
         })
         .catch((err) => {
           resolve(
@@ -267,7 +275,7 @@ const confirmUser = (token) =>
           false,
           403,
           "Confirmation failed",
-          "Invalid Confirmation URL"
+          "Invalid confirmation link"
         )
       );
     }
@@ -291,8 +299,8 @@ const resendConfirmationURL = (email) =>
             ResponseUtil.createResponse(
               false,
               403,
-              "Failed",
-              "You have not signed up yet, please sign up"
+              "You have not signed up yet, please sign up",
+              { email: "You have not signed up yet, please sign up" }
             )
           );
 
@@ -301,8 +309,8 @@ const resendConfirmationURL = (email) =>
             ResponseUtil.createResponse(
               false,
               403,
-              "Failed",
-              "Your account has already been confirmed"
+              "Your account has already been confirmed",
+              { email: "Your account has already been confirmed" }
             )
           );
 
@@ -312,11 +320,11 @@ const resendConfirmationURL = (email) =>
         console.log(info);
 
         resolve(
-          ResponseUtil.createResponse(true, 200, "Confirmation URL Sent")
+          ResponseUtil.createResponse(true, 200, "Confirmation link Sent")
         );
       })
       .catch((err) => {
-        console.log(err);
+        logError(err);
 
         resolve(
           ResponseUtil.createResponse(
@@ -345,7 +353,7 @@ const confirmPasswordResetURL = (token) =>
           false,
           403,
           "Confirmation failed",
-          "Password reset URL is invalid"
+          "Password reset link is invalid"
         )
       );
     }
@@ -367,11 +375,15 @@ const confirmPasswordResetURL = (token) =>
         }
 
         resolve(
-          ResponseUtil.createResponse(true, 200, "Password reset url confirmed")
+          ResponseUtil.createResponse(
+            true,
+            200,
+            "Password reset link confirmed"
+          )
         );
       })
       .catch((err) => {
-        console.log(err);
+        logError(err);
 
         resolve(
           ResponseUtil.createResponse(false, 500, "Something went wrong")
@@ -396,7 +408,7 @@ const resetPassword = (token, password) =>
           false,
           403,
           "Password reset failed",
-          "Password reset URL is invalid"
+          "Password reset link is invalid"
         )
       );
     }
@@ -422,17 +434,20 @@ const resetPassword = (token, password) =>
         return userSnapshot.ref.child("password").set(hash);
       })
       .then(() => {
-        redisClient.del(token);
+        // redisClient.del(token);
+        tokensRef.child(token).remove();
 
-        ResponseUtil.createResponse(
-          true,
-          200,
-          "Password reset successful",
-          "Your password has been reset"
+        resolve(
+          ResponseUtil.createResponse(
+            true,
+            200,
+            "Password reset successful",
+            "Your password has been reset"
+          )
         );
       })
       .catch((err) => {
-        console.log(err);
+        logError(err);
 
         resolve(
           ResponseUtil.createResponse(false, 500, "Something went wrong")
@@ -469,11 +484,11 @@ const sendPasswordResetURL = (email) =>
         console.log(info);
 
         resolve(
-          ResponseUtil.createResponse(true, 200, "Password reset URL Sent")
+          ResponseUtil.createResponse(true, 200, "Password reset link Sent")
         );
       })
       .catch((err) => {
-        console.log(err);
+        logError(err);
 
         resolve(
           ResponseUtil.createResponse(
@@ -509,7 +524,7 @@ const fetchUsers = () =>
         );
       })
       .catch((err) => {
-        console.log(err);
+        logError(err);
 
         resolve(
           ResponseUtil.createResponse(false, 500, "Could not fetch users")
@@ -581,13 +596,13 @@ const generateHashedPassword = (password) =>
   new Promise((resolve, reject) => {
     bcrypt.genSalt(10, (err, salt) => {
       if (err) {
-        console.log(err);
+        logError(err);
         return reject(err);
       }
 
       bcrypt.hash(password, salt, (err, hash) => {
         if (err) {
-          console.log(err);
+          logError(err);
           return reject(err);
         }
 
@@ -605,11 +620,26 @@ const generateHashedPassword = (password) =>
 const generateUrl = (userID, route) =>
   new Promise((resolve, reject) => {
     const token = crypto.randomBytes(64).toString("hex");
-    redisClient.set(token, userID, "EX", 60 * 60, (err, reply) => {
-      if (err) return reject(err);
+    // redisClient.set(token, userID, "EX", 60 * 60, (err, reply) => {
+    //   if (err) return reject(err);
 
-      resolve(`${frontendConfig.url}/${route}/${token}`);
-    });
+    //   resolve(`${frontendConfig.url}/${route}/${token}`);
+    // });
+
+    const tokenData = {
+      userID: userID,
+      exp: Date.now() + 60 * 60 * 1000,
+    };
+    tokensRef
+      .child(token)
+      .set(tokenData)
+      .then((val) => {
+        resolve(`${frontendConfig.url}/${route}/${token}`);
+      })
+      .catch((err) => {
+        logError(err);
+        reject(err);
+      });
   });
 
 /**
@@ -617,20 +647,43 @@ const generateUrl = (userID, route) =>
  *
  * @param {string} token
  */
-const validateToken = (token) =>
+const validateToken = (token, deleteAfterValidation = false) =>
   new Promise((resolve, reject) => {
-    redisClient.get(token, (err, data) => {
-      if (err) {
-        console.log(err);
-        return reject(err);
-      }
+    // redisClient.get(token, (err, data) => {
+    //   if (err) {
+    //     logError(err);
+    //     return reject(err);
+    //   }
 
-      if (!data) {
-        return reject(new Error("Token does not exist"));
-      }
+    //   if (!data) {
+    //     return reject(new Error("Token does not exist"));
+    //   }
 
-      resolve(data);
-    });
+    //   resolve(data);
+    // });
+
+    tokensRef
+      .child(token)
+      .once("value")
+      .then((tokenDataSnapshot) => {
+        if (!tokenDataSnapshot.exists())
+          return reject(new Error("Token does not exist"));
+
+        const tokenData = tokenDataSnapshot.val();
+        if (tokenData.exp < Date.now()) {
+          tokenDataSnapshot.ref.remove();
+
+          return reject(new Error("Token does not exist"));
+        }
+
+        if (deleteAfterValidation) tokenDataSnapshot.ref.remove();
+
+        resolve(tokenData.userID);
+      })
+      .catch((err) => {
+        logError(err);
+        reject(err);
+      });
   });
 
 const generateJwtToken = (jwtPayload) =>
@@ -643,7 +696,7 @@ const generateJwtToken = (jwtPayload) =>
       },
       (err, token) => {
         if (err) {
-          console.log(err);
+          logError(err);
           return reject(err);
         }
 
