@@ -615,12 +615,12 @@ const generateUrl = (userID, route) =>
     // });
 
     const tokenData = {
-      userID,
-      exp: Date.now() + 60 * 60,
+      userID: userID,
+      exp: Date.now() + 60 * 60 * 1000,
     };
     tokensRef
       .child(token)
-      .push(tokenData)
+      .set(tokenData)
       .then((val) => {
         resolve(`${frontendConfig.url}/${route}/${token}`);
       })
@@ -657,11 +657,12 @@ const validateToken = (token) =>
         if (!tokenDataSnapshot.exists())
           return reject(new Error("Token does not exist"));
 
-        const token = tokenDataSnapshot.val();
-        if (token.exp < Date.now())
+        const tokenData = tokenDataSnapshot.val();
+        console.log(tokenData, Date.now());
+        if (tokenData.exp < Date.now())
           return reject(new Error("Token does not exist"));
 
-        resolve(tokenDataSnapshot.val().userID);
+        resolve(tokenData.userID);
       })
       .catch((err) => {
         logError(err);
