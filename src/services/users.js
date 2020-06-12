@@ -38,12 +38,13 @@ const createUser = (userData) =>
     try {
       const mailInfo = await sendConfirmationURL(userKey, userEmail);
       console.log(mailInfo);
+      if (!mailInfo) throw new Error("Could not verify your email");
     } catch (err) {
       return resolve(
         ResponseUtil.createResponse(
           false,
           400,
-          "Could not create user",
+          "Could not verify your email",
           err.message
         )
       );
@@ -259,8 +260,8 @@ const confirmUser = (token) =>
           resolve(
             ResponseUtil.createResponse(
               true,
-              200,
-              "You have been confirmed, proceed to sign up"
+              422,
+              "You have been confirmed, proceed to sign in"
             )
           );
         })
